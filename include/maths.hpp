@@ -15,6 +15,10 @@ namespace raytracer::maths {
         T y() const { return y_; }
         T z() const { return z_; }
         T w() const { return w_; }
+        T& x() { return x_; }
+        T& y() { return y_; }
+        T& z() { return z_; }
+        T& w() { return w_; }
         friend std::ostream& operator<<(std::ostream& os, const Point3D<T>& p) {
             os << "(" << p.x_ << ", " << p.y_ << ", " << p.z_ << ")";
             return os;
@@ -31,6 +35,10 @@ namespace raytracer::maths {
         T y() const { return y_; }
         T z() const { return z_; }
         T w() const { return w_; }
+        T& x() { return x_; }
+        T& y() { return y_; }
+        T& z() { return z_; }
+        T& w() { return w_; }
         friend std::ostream& operator<<(std::ostream& os, const Vector3D<T>& v) {
             os << "[" << v.x_ << ", " << v.y_ << ", " << v.z_ << "]";
             return os;
