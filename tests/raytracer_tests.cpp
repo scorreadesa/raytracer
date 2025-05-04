@@ -19,6 +19,18 @@ TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
     }
 }
 
+TEST(FPTests, ApproximatelyEqualEpsilonMultiplySmall) {
+    float a = 0.01;
+    float b = 0.01;
+
+    for (unsigned int i = 0; i < 10000; i++) {
+        a *= 0.001;
+        b *= 0.001;
+        bool almostEqualEpsilon = raytracer::maths::AlmostEqualEpsilon(a, b);
+        EXPECT_TRUE(almostEqualEpsilon);
+    }
+}
+
 TEST(PointTests, CreatePoint) {
     raytracer::maths::Point3D point(0, 0, 0);
     EXPECT_EQ(point.x(), 0);
