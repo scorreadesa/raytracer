@@ -194,3 +194,123 @@ TEST(VectorTests, RightDivByScalar) {
     EXPECT_NEAR(result.z(), 1.5, 1e-6);
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
+
+TEST(VectorTests, VectorLengthFloat) {
+    raytracer::maths::Vector3D v(1, 0, 0);
+    auto length = v.length<float>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthDouble) {
+    raytracer::maths::Vector3D v(1, 0, 0);
+    auto length = v.length<double>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthFloat2) {
+    raytracer::maths::Vector3D v(0, 1, 0);
+    auto length = v.length<float>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthDouble2) {
+    raytracer::maths::Vector3D v(0, 1, 0);
+    auto length = v.length<double>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthFloat3) {
+    raytracer::maths::Vector3D v(0, 0, 1);
+    auto length = v.length<float>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthDouble3) {
+    raytracer::maths::Vector3D v(0, 0, 1);
+    auto length = v.length<double>();
+    EXPECT_NEAR(length, 1.0, 1e-6);
+}
+
+TEST(VectorTests, VectorLengthFloat4) {
+    raytracer::maths::Vector3D v(1, 2, 3);
+    auto length = v.length<float>();
+    EXPECT_NEAR(length, std::sqrt(14), 1e-6);
+}
+
+TEST(VectorTests, VectorLengthDouble4) {
+    raytracer::maths::Vector3D v(1, 2, 3);
+    auto length = v.length<double>();
+    EXPECT_NEAR(length, std::sqrt(14), 1e-6);
+}
+
+TEST(VectorTests, VectorLengthFloat5) {
+    raytracer::maths::Vector3D v(-1, -2, -3);
+    auto length = v.length<float>();
+    EXPECT_NEAR(length, std::sqrt(14), 1e-6);
+}
+
+TEST(VectorTests, VectorLengthDouble5) {
+    raytracer::maths::Vector3D v(-1, -2, -3);
+    auto length = v.length<double>();
+    EXPECT_NEAR(length, std::sqrt(14), 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat) {
+    raytracer::maths::Vector3D v(4, 0, 0);
+    v.normalize<float>();
+    EXPECT_NEAR(v.length<float>(), 1.0, 1e-6);
+    EXPECT_NEAR(v.x(), 1.0, 1e-6);
+    EXPECT_NEAR(v.y(), 0.0, 1e-6);
+    EXPECT_NEAR(v.z(), 0.0, 1e-6);
+    EXPECT_NEAR(v.w(), 0.0, 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble) {
+    raytracer::maths::Vector3D v(4, 0, 0);
+    v.normalize<double>();
+    EXPECT_NEAR(v.length<double>(), 1.0, 1e-6);
+    EXPECT_NEAR(v.x(), 1.0, 1e-6);
+    EXPECT_NEAR(v.y(), 0.0, 1e-6);
+    EXPECT_NEAR(v.z(), 0.0, 1e-6);
+    EXPECT_NEAR(v.w(), 0.0, 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat2) {
+    raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
+    v.normalize<float>();
+    EXPECT_NEAR(v.length<float>(), 1.0, 1e-6);
+    EXPECT_NEAR(v.x(), (1.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.y(), (2.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.z(), (3.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.w(), 0.0, 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble2) {
+    raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
+    v.normalize<double>();
+    EXPECT_NEAR(v.length<double>(), 1.0, 1e-6);
+    EXPECT_NEAR(v.x(), (1.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.y(), (2.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.z(), (3.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(v.w(), 0.0, 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithFreeFunctionFloat) {
+    raytracer::maths::Vector3D<float> v(1.0, 2.0, 3.0);
+    auto result = normalize<float>(v);
+    EXPECT_NEAR(result.length<float>(), 1.0, 1e-6);
+    EXPECT_NEAR(result.x(), (1.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.y(), (2.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.z(), (3.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.w(), 0.0, 1e-6);
+}
+
+TEST(VectorTests, NormalizeVectorWithFreeFunctionDouble2) {
+    raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
+    auto result = normalize<double>(v);
+    EXPECT_NEAR(result.length<double>(), 1.0, 1e-6);
+    EXPECT_NEAR(result.x(), (1.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.y(), (2.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.z(), (3.0 / std::sqrt(14)), 1e-6);
+    EXPECT_NEAR(result.w(), 0.0, 1e-6);
+}

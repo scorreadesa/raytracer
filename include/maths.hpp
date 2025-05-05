@@ -1,6 +1,6 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
-#include <cstdint>
+#include <cmath>
 #include <iostream>
 
 namespace raytracer::maths {
@@ -74,6 +74,22 @@ namespace raytracer::maths {
             y_ = -y_;
             z_ = -z_;
             return *this;
+        }
+
+        template<std::floating_point R> R length() const {
+            return std::sqrt((x_ * x_) + (y_ * y_) + (z_ * z_));
+        }
+
+        template<std::floating_point R> void normalize() {
+            auto l = length<R>();
+            x_ /= l;
+            y_ /= l;
+            z_ /= l;
+        }
+
+        template<std::floating_point R> friend Vector3D normalize(const Vector3D<R> &v) {
+            auto l = v.template length<R>();
+            return Vector3D(v.x_ / l , v.y_ / l, v.z_ / l);
         }
     };
 
