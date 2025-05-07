@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace raytracer::maths {
-    template<typename T>
+    template<std::floating_point T>
     class Vector3D {
     private:
         T x_, y_, z_, w_;
@@ -76,24 +76,46 @@ namespace raytracer::maths {
             return *this;
         }
 
-        template<std::floating_point R> R length() const {
+        T length() const {
             return std::sqrt((x_ * x_) + (y_ * y_) + (z_ * z_));
         }
 
-        template<std::floating_point R> void normalize() {
-            auto l = length<R>();
+        void normalize() {
+            auto l = length();
             x_ /= l;
             y_ /= l;
             z_ /= l;
         }
 
         template<std::floating_point R> friend Vector3D normalize(const Vector3D<R> &v) {
-            auto l = v.template length<R>();
+            auto l = v.length();
             return Vector3D(v.x_ / l , v.y_ / l, v.z_ / l);
+        }
+
+        T dot(const Vector3D<T> &rhs) const {
+            return x_ * rhs.x_ + y_ * rhs.y_ + z_ * rhs.z_;
+        }
+
+        template<std::floating_point R> friend T dot(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
+            return lhs.x_ * rhs.x_ + lhs.y_ * rhs.y_ + lhs.z_ * rhs.z_;
+        }
+
+        Vector3D<T> cross(const Vector3D<T> &rhs) const {
+            T a_1 = y_ * rhs.z_ - z_ * rhs.y_;
+            T a_2 = z_ * rhs.x_ - x_ * rhs.z_;
+            T a_3 = x_ * rhs.y_ - y_ * rhs.x_;
+            return Vector3D<T>(a_1, a_2, a_3);
+        }
+
+        template<std::floating_point R> friend Vector3D<T> cross(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
+            T a_1 = lhs.y_ * rhs.z_ - lhs.z_ * rhs.y_;
+            T a_2 = lhs.z_ * rhs.x_ - lhs.x_ * rhs.z_;
+            T a_3 = lhs.x_ * rhs.y_ - lhs.y_ * rhs.x_;
+            return Vector3D<T>(a_1, a_2, a_3);
         }
     };
 
-    template<typename T>
+    template<std::floating_point T>
     class Point3D {
     private:
         T x_, y_, z_, w_;
