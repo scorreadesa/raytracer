@@ -53,6 +53,14 @@ namespace raytracer::drawing {
             return Color(lhs.red_ * rhs.red_, lhs.green_ * rhs.green_, lhs.blue_ * rhs.blue_);
         }
 
+        friend Color<T> operator/(const Color<T> &lhs, T scalar) {
+            return Color(lhs.red_ / scalar, lhs.green_ / scalar, lhs.blue_ / scalar);
+        }
+
+        friend Color<T> operator/(T scalar, const Color<T> &rhs) {
+            return Color(rhs.red_ / scalar, rhs.green_ / scalar, rhs.blue_ / scalar);
+        }
+
         Color<T> &operator+=(const Color<T> &rhs) {
             red_ += rhs.red_;
             green_ += rhs.green_;
@@ -78,6 +86,13 @@ namespace raytracer::drawing {
             red_ *= scalar;
             green_ *= scalar;
             blue_ *= scalar;
+            return *this;
+        }
+
+        Color<T> &operator/=(T scalar) {
+            red_ /= scalar;
+            green_ /= scalar;
+            blue_ /= scalar;
             return *this;
         }
     };
