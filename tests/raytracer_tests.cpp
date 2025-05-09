@@ -462,7 +462,7 @@ TEST(ColorTests, MultColors) {
 }
 
 TEST(CanvasTests, CreateBlackCanvas) {
-    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
 
@@ -477,7 +477,7 @@ TEST(CanvasTests, CreateBlackCanvas) {
 }
 
 TEST(CanvasTests, MakeRedCanvas) {
-    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
 
@@ -499,17 +499,17 @@ TEST(CanvasTests, MakeRedCanvas) {
 }
 
 TEST(CanvasTests, AccessRowOutsideRange) {
-    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    raytracer::drawing::Canvas<double> canvas(4, 3);
     EXPECT_THROW(canvas(4, 0), raytracer::exceptions::RowOutOfRangeException);
 }
 
 TEST(CanvasTests, AccessColOutsideRange) {
-    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    raytracer::drawing::Canvas<double> canvas(4, 3);
     EXPECT_THROW(canvas(0, 4), raytracer::exceptions::ColumnOutOfRangeException);
 }
 
 TEST(CanvasTests, NonSquareBlueCanvas) {
-    raytracer::drawing::Canvas<double, 4, 3> canvas{};
+    raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
         for (size_t col = 0; col < canvas.width(); ++col) {
