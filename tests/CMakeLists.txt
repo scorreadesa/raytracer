@@ -11,7 +11,11 @@ enable_testing()
 add_executable(raytracer_tests raytracer_tests.cpp
         ../src/maths.cpp
         ../include/maths.hpp
-        ../include/drawing.hpp)
+        ../include/drawing.hpp
+        ../include/IFileWriter.hpp
+        ../src/PPMFileWriter.cpp
+        ../include/PPMFileWriter.h
+        ../include/FileWriter.hpp)
 
 
 target_link_libraries(raytracer_tests GTest::gtest_main)
