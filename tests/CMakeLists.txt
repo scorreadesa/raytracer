@@ -9,11 +9,9 @@ enable_testing()
 
 # Set up the raytracer_tests executable
 add_executable(raytracer_tests raytracer_tests.cpp
-        ../src/maths.cpp
         ../include/maths.hpp
         ../include/drawing.hpp
         ../include/IFileWriter.hpp
-        ../src/PPMFileWriter.cpp
         ../include/PPMFileWriter.h
         ../include/FileWriter.hpp)
 
