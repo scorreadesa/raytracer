@@ -9,7 +9,7 @@ public:
     explicit FileWriter(std::unique_ptr<IFileWriter<Canvas> > writer) : writer_(std::move(writer)) {
     }
 
-    void write(const Canvas& canvas, const std::filesystem::path& path, const std::string& file) {
+    void write(const Canvas &canvas, const std::filesystem::path &path, const std::string &file) {
         writer_->write(canvas, path, file);
     }
 
