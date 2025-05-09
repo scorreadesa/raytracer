@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "exceptions.h"
+#include "exceptions.hpp"
 
 namespace raytracer::drawing {
 
