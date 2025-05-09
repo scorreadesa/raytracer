@@ -11,13 +11,13 @@ namespace raytracer::exceptions {
     class ColumnOutOfRangeException : public std::out_of_range {
     public:
         explicit ColumnOutOfRangeException(const std::string &message) : std::out_of_range(message) {
-        };
+        }
     };
 
     class RowOutOfRangeException : public std::out_of_range {
     public:
         explicit RowOutOfRangeException(const std::string &message) : std::out_of_range(message) {
-        };
+        }
     };
 }
 
