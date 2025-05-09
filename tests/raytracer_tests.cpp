@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include <boost/math/special_functions/next.hpp>
+
+#include "../include/drawing.hpp"
 #include "../include/maths.hpp"
 
 TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
@@ -360,4 +362,166 @@ TEST(VectorTests, VectorCrossProductFloat) {
     EXPECT_NEAR(cross_prod_v2v1.x(), 1.0, 1e-6);
     EXPECT_NEAR(cross_prod_v2v1.y(), -2.0, 1e-6);
     EXPECT_NEAR(cross_prod_v2v1.z(), 1.0, 1e-6);
+}
+
+TEST(ColorTests, CreateColor) {
+    auto color = raytracer::drawing::Color<double>(1.0, 0.4, 0.6);
+
+    EXPECT_NEAR(color.red(), 1.0, 1e-6);
+    EXPECT_NEAR(color.green(), 0.4, 1e-6);
+    EXPECT_NEAR(color.blue(), 0.6, 1e-6);
+
+    color.red() = 0.3;
+    color.green() = 0.6;
+    color.blue() = 0.5;
+
+    EXPECT_NEAR(color.red(), 0.3, 1e-6);
+    EXPECT_NEAR(color.green(), 0.6, 1e-6);
+    EXPECT_NEAR(color.blue(), 0.5, 1e-6);
+}
+
+TEST(ColorTests, AddColors) {
+    auto c1 = raytracer::drawing::Color<double>(0.9, 0.6, 0.75);
+    auto c2 = raytracer::drawing::Color<double>(0.7, 0.1, 0.25);
+
+    auto result = c1 + c2;
+
+    EXPECT_NEAR(result.red(), 1.6, 1e-6);
+    EXPECT_NEAR(result.green(), 0.7, 1e-6);
+    EXPECT_NEAR(result.blue(), 1.0, 1e-6);
+
+    c1 += c2;
+
+    EXPECT_NEAR(c1.red(), 1.6, 1e-6);
+    EXPECT_NEAR(c1.green(), 0.7, 1e-6);
+    EXPECT_NEAR(c1.blue(), 1.0, 1e-6);
+}
+
+TEST(ColorTests, SubColors) {
+    auto c1 = raytracer::drawing::Color<double>(0.9, 0.6, 0.75);
+    auto c2 = raytracer::drawing::Color<double>(0.7, 0.1, 0.25);
+
+    auto result = c1 - c2;
+
+    EXPECT_NEAR(result.red(), 0.2, 1e-6);
+    EXPECT_NEAR(result.green(), 0.5, 1e-6);
+    EXPECT_NEAR(result.blue(), 0.5, 1e-6);
+
+    c1 -= c2;
+
+    EXPECT_NEAR(c1.red(), 0.2, 1e-6);
+    EXPECT_NEAR(c1.green(), 0.5, 1e-6);
+    EXPECT_NEAR(c1.blue(), 0.5, 1e-6);
+}
+
+TEST(ColorTests, RightMultColorByScalar) {
+    auto c1 = raytracer::drawing::Color<double>(0.2, 0.3, 0.4);
+
+    auto result1 = c1 * 2.0;
+    EXPECT_NEAR(result1.red(), 0.4, 1e-6);
+    EXPECT_NEAR(result1.green(), 0.6, 1e-6);
+    EXPECT_NEAR(result1.blue(), 0.8, 1e-6);
+
+    c1 *= 2.0;
+
+    EXPECT_NEAR(c1.red(), 0.4, 1e-6);
+    EXPECT_NEAR(c1.green(), 0.6, 1e-6);
+    EXPECT_NEAR(c1.blue(), 0.8, 1e-6);
+}
+
+TEST(ColorTests, LeftMultColorByScalar) {
+    auto c1 = raytracer::drawing::Color<double>(0.2, 0.3, 0.4);
+
+    auto result1 = 2.0 * c1;
+    EXPECT_NEAR(result1.red(), 0.4, 1e-6);
+    EXPECT_NEAR(result1.green(), 0.6, 1e-6);
+    EXPECT_NEAR(result1.blue(), 0.8, 1e-6);
+
+    c1 *= 2.0;
+
+    EXPECT_NEAR(c1.red(), 0.4, 1e-6);
+    EXPECT_NEAR(c1.green(), 0.6, 1e-6);
+    EXPECT_NEAR(c1.blue(), 0.8, 1e-6);
+}
+
+TEST(ColorTests, MultColors) {
+    auto c1 = raytracer::drawing::Color<double>(1.0, 0.2, 0.4);
+    auto c2 = raytracer::drawing::Color<double>(0.9, 1.0, 0.1);
+
+    auto result = c1 * c2;
+
+    EXPECT_NEAR(result.red(), 0.9, 1e-6);
+    EXPECT_NEAR(result.green(), 0.2, 1e-6);
+    EXPECT_NEAR(result.blue(), 0.04, 1e-6);
+
+    c1 *= c2;
+
+    EXPECT_NEAR(c1.red(), 0.9, 1e-6);
+    EXPECT_NEAR(c1.green(), 0.2, 1e-6);
+    EXPECT_NEAR(c1.blue(), 0.04, 1e-6);
+}
+
+TEST(CanvasTests, CreateBlackCanvas) {
+    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+
+    for (size_t row = 0; row < canvas.height(); ++row) {
+
+        for (size_t col = 0; col < canvas.width(); ++col) {
+
+            auto color = canvas(row, col);
+            EXPECT_NEAR(color.red(), 0.0, 1e-6);
+            EXPECT_NEAR(color.green(), 0.0, 1e-6);
+            EXPECT_NEAR(color.blue(), 0.0, 1e-6);
+        }
+    }
+}
+
+TEST(CanvasTests, MakeRedCanvas) {
+    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+
+    for (size_t row = 0; row < canvas.height(); ++row) {
+
+        for (size_t col = 0; col < canvas.width(); ++col) {
+
+            canvas(row, col) = raytracer::drawing::Color(1.0, 0.0, 0.0);
+        }
+    }
+
+    for (size_t row = 0; row < canvas.height(); ++row) {
+
+        for (size_t col = 0; col < canvas.width(); ++col) {
+
+            EXPECT_NEAR(canvas(row, col).red(), 1.0, 1e-6);
+            EXPECT_NEAR(canvas(row, col).green(), 0.0, 1e-6);
+            EXPECT_NEAR(canvas(row, col).blue(), 0.0, 1e-6);
+        }
+    }
+}
+
+TEST(CanvasTests, AccessRowOutsideRange) {
+    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    EXPECT_THROW(canvas(4, 0), raytracer::exceptions::RowOutOfRangeException);
+}
+
+TEST(CanvasTests, AccessColOutsideRange) {
+    raytracer::drawing::Canvas<double, 4, 4> canvas{};
+    EXPECT_THROW(canvas(0, 4), raytracer::exceptions::ColumnOutOfRangeException);
+}
+
+TEST(CanvasTests, NonSquareBlueCanvas) {
+    raytracer::drawing::Canvas<double, 4, 3> canvas{};
+
+    for (size_t row = 0; row < canvas.height(); ++row) {
+        for (size_t col = 0; col < canvas.width(); ++col) {
+            canvas(row, col) = raytracer::drawing::Color(0.0, 0.0, 1.0);
+        }
+    }
+
+    for (size_t row = 0; row < canvas.height(); ++row) {
+        for (size_t col = 0; col < canvas.width(); ++col) {
+            EXPECT_NEAR(canvas(row, col).red(), 0.0, 1e-6);
+            EXPECT_NEAR(canvas(row, col).green(), 0.0, 1e-6);
+            EXPECT_NEAR(canvas(row, col).blue(), 1.0, 1e-6);
+        }
+    }
 }

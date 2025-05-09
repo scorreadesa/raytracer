@@ -10,7 +10,8 @@ enable_testing()
 # Set up the raytracer_tests executable
 add_executable(raytracer_tests raytracer_tests.cpp
         ../src/maths.cpp
-        ../include/maths.hpp)
+        ../include/maths.hpp
+        ../include/drawing.hpp)
 
 
 target_link_libraries(raytracer_tests GTest::gtest_main)
