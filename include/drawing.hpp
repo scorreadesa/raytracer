@@ -1,8 +1,8 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#include <array>
-
+#include <iostream>
+#include <vector>
 #include "exceptions.hpp"
 
 namespace raytracer::drawing {
@@ -82,51 +82,53 @@ namespace raytracer::drawing {
         }
     };
 
-    template<std::floating_point T, std::size_t Height, std::size_t Width>
+    template<std::floating_point T>
     class Canvas {
     private:
-        std::array<Color<T>, Height * Width> colors_;
+        std::vector<Color<T>> colors_;
+        std::size_t height_;
+        std::size_t width_;
     public:
-        Canvas() = default;
+        Canvas(std::size_t height, std::size_t width) : height_(height), width_(width), colors_(width * height) {};
 
         constexpr const Color<T>& operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
             auto err_msg_row = "Row index out of range: "
             + std::to_string(row) + "(valid range 0 <= row <=" + std::to_string(row) + ")";
-            if (row >= Height) {
+            if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             auto err_msg_col = "Col index out of range: "
             + std::to_string(col) + "(valid range 0 <= col " + std::to_string(col) + ")";
-            if (col >= Width) {
+            if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
 
-            return colors_[row * Width + col];
+            return colors_[row * width_ + col];
         }
 
         constexpr Color<T>& operator()(const std::size_t row, const std::size_t col) noexcept(false) {
             auto err_msg_row = "Row index out of range: "
             + std::to_string(row) + " (valid range 0 <= row < " + std::to_string(row) + ")";
-            if (row >= Height) {
+            if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             auto err_msg_col = "Col index out of range: "
             + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(col) + ")";
-            if (col >= Width) {
+            if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
 
-            return colors_[row * Width + col];
+            return colors_[row * width_ + col];
         }
 
         [[nodiscard]] constexpr std::size_t height() const noexcept {
-            return Height;
+            return height_;
         }
 
         [[nodiscard]] constexpr std::size_t width() const noexcept {
-            return Width;
+            return width_;
         }
     };
 }
