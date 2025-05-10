@@ -577,6 +577,27 @@ TEST(MatrixTests, CreateIdentityMatrix)
             }
         }
     }
+}
 
-    std::cout << identity << std::endl;
+TEST(MatrixTests, CreateMatrixWithValues) {
+    auto m = raytracer::maths::Matrix<double>(3, 4, {
+        0, 1, 2, 3,
+        4, 5, 6, 7,
+        8, 9, 10, 11,
+    });
+
+    EXPECT_NEAR(m(0, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m(0, 1), 1.0, 1e-6);
+    EXPECT_NEAR(m(0, 2), 2.0, 1e-6);
+    EXPECT_NEAR(m(0, 3), 3.0, 1e-6);
+    EXPECT_NEAR(m(1, 0), 4.0, 1e-6);
+    EXPECT_NEAR(m(1, 1), 5.0, 1e-6);
+    EXPECT_NEAR(m(1, 2), 6.0, 1e-6);
+    EXPECT_NEAR(m(1, 3), 7.0, 1e-6);
+    EXPECT_NEAR(m(2, 0), 8.0, 1e-6);
+    EXPECT_NEAR(m(2, 1), 9.0, 1e-6);
+    EXPECT_NEAR(m(2, 2), 10.0, 1e-6);
+    EXPECT_NEAR(m(2, 3), 11.0, 1e-6);
+
+    std::cout << m << std::endl;
 }
