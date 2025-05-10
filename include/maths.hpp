@@ -175,7 +175,13 @@ namespace raytracer::maths {
         std::size_t rows_, cols_;
     public:
         Matrix(const std::size_t rows, const std::size_t cols) : data_(rows * cols, 0), rows_(rows), cols_(cols) {}
-        Matrix(const std::initializer_list<T>& data) : data_(data), rows_(data.size()), cols_(data.size()) {}
+        Matrix(const std::size_t rows, const std::size_t cols, const std::initializer_list<T>& data) noexcept(false) : data_(data), rows_(rows), cols_(cols) {
+            if ((rows_ * cols_) != data_.size()) {
+                const auto err_msg_mismatch = "Shape mismatch: given storage size is " + std::to_string(rows_ * cols_)
+                + ", but should be " + std::to_string(data_.size());
+                throw exceptions::ShapeMismatchException(err_msg_mismatch);
+            }
+        }
 
         constexpr const T &operator()(std::size_t row, std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
