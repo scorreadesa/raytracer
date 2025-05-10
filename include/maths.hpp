@@ -167,6 +167,89 @@ namespace raytracer::maths {
     T lerp(T v0, T v1, T t) {
         return (1 - t) * v0 + t * v1;
     }
+
+    template<std::floating_point T>
+    class Matrix {
+    private:
+        std::vector<T> data_;
+        std::size_t rows_, cols_;
+    public:
+        Matrix(const std::size_t rows, const std::size_t cols) : data_(rows * cols, 0), rows_(rows), cols_(cols) {}
+        Matrix(const std::initializer_list<T>& data) : data_(data), rows_(data.size()), cols_(data.size()) {}
+
+        constexpr const T &operator()(std::size_t row, std::size_t col) const noexcept(false) {
+            const auto err_msg_row = "Row index out of range: "
+            + std::to_string(row) + "(valid range 0 <= row <" + std::to_string(rows_) + ")";
+            if (row >= rows_) {
+                throw exceptions::RowOutOfRangeException(err_msg_row);
+            }
+
+            const auto err_msg_col = "Col index out of range: "
+            + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+            if (col >= cols_) {
+                throw exceptions::ColumnOutOfRangeException(err_msg_col);
+            }
+
+            return data_[row * cols_ + col];
+        }
+
+        constexpr T &operator()(std::size_t row, std::size_t col) noexcept(false) {
+            const auto err_msg_row = "Row index out of range: "
+            + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(rows_) + ")";
+            if (row >= rows_) {
+                throw exceptions::RowOutOfRangeException(err_msg_row);
+            }
+
+            const auto err_msg_col = "Col index out of range: "
+            + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+            if (col >= cols_) {
+                throw exceptions::ColumnOutOfRangeException(err_msg_col);
+            }
+
+            return data_[row * cols_ + col];
+        }
+
+        static Matrix<T> identity(std::size_t size) {
+            Matrix<T> m(size, size);
+            for (std::size_t i = 0; i < size; i++) {
+                for (std::size_t j = 0; j < size; j++) {
+                    if (i == j) {
+                        m(i, j) = 1;
+                    } else {
+                        m(i, j) = 0;
+                    }
+                }
+            }
+            return m;
+        }
+
+        friend std::ostream &operator<<(std::ostream &os, const Matrix<T> &m) {
+            std::vector<std::size_t> col_widths(m.data_.size(), 0);
+
+            for (std::size_t j = 0; j < m.data_.size(); ++j) {
+                    std::size_t width = std::to_string(m.data_.at(j)).size();
+                    col_widths.at(j) = std::max(col_widths.at(j), width);
+            }
+
+            os << "[\n";
+            for (std::size_t i = 0; i < m.rows_; i++) {
+                os << "  [";
+                for (std::size_t j = 0; j < m.cols_; j++) {
+                    os << std::setw(col_widths.at(j)) << m(i, j);
+                    if (j != m.cols_ - 1) {
+                        os << ",";
+                    }
+                }
+                os << "]";
+                if (i != m.rows_ - 1) {
+                    os << ",\n";
+                } else {
+                    os << "\n]";
+                }
+            }
+            return os;
+        }
+    };
 }
 
 #endif //GEOMETRY_H
