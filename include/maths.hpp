@@ -162,6 +162,11 @@ namespace raytracer::maths {
                             T tolerance = std::numeric_limits<T>::epsilon()) {
         return std::abs(a - b) < tolerance;
     }
+
+    template<std::floating_point T>
+    T lerp(T v0, T v1, T t) {
+        return (1 - t) * v0 + t * v1;
+    }
 }
 
 #endif //GEOMETRY_H
