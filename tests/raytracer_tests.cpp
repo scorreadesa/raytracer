@@ -525,3 +525,58 @@ TEST(CanvasTests, NonSquareBlueCanvas) {
         }
     }
 }
+
+TEST(MatrixTests, CreateMatrix) {
+    raytracer::maths::Matrix<double> matrix(4, 4);
+
+    matrix(0, 0) = 1.0;
+    matrix(0, 1) = 2.0;
+    matrix(0, 2) = 3.0;
+    matrix(0, 3) = 4.0;
+    matrix(1, 0) = 5.5;
+    matrix(1, 1) = 6.5;
+    matrix(1, 2) = 7.5;
+    matrix(1, 3) = 8.5;
+    matrix(2, 0) = 9.0;
+    matrix(2, 1) = 10.0;
+    matrix(2, 2) = 11.0;
+    matrix(2, 3) = 12.0;
+    matrix(3, 0) = 13.5;
+    matrix(3, 1) = 14.5;
+    matrix(3, 2) = 15.5;
+    matrix(3, 3) = 16.5;
+
+    EXPECT_NEAR(matrix(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(matrix(0, 1), 2.0, 1e-6);
+    EXPECT_NEAR(matrix(0, 2), 3.0, 1e-6);
+    EXPECT_NEAR(matrix(0, 3), 4.0, 1e-6);
+    EXPECT_NEAR(matrix(1, 0), 5.5, 1e-6);
+    EXPECT_NEAR(matrix(1, 1), 6.5, 1e-6);
+    EXPECT_NEAR(matrix(1, 2), 7.5, 1e-6);
+    EXPECT_NEAR(matrix(1, 3), 8.5, 1e-6);
+    EXPECT_NEAR(matrix(2, 0), 9.0, 1e-6);
+    EXPECT_NEAR(matrix(2, 1), 10.0, 1e-6);
+    EXPECT_NEAR(matrix(2, 2), 11.0, 1e-6);
+    EXPECT_NEAR(matrix(2, 3), 12.0, 1e-6);
+    EXPECT_NEAR(matrix(3, 0), 13.5, 1e-6);
+    EXPECT_NEAR(matrix(3, 1), 14.5, 1e-6);
+    EXPECT_NEAR(matrix(3, 2), 15.5, 1e-6);
+    EXPECT_NEAR(matrix(3, 3), 16.5, 1e-6);
+}
+
+TEST(MatrixTests, CreateIdentityMatrix)
+{
+    auto identity = raytracer::maths::Matrix<double>::identity(4);
+
+    for (size_t row = 0; row < 4; ++row) {
+        for (size_t col = 0; col < 4; ++col) {
+            if (row == col) {
+                EXPECT_NEAR(identity(row, col), 1.0, 1e-6);
+            } else {
+                EXPECT_NEAR(identity(row, col), 0.0, 1e-6);
+            }
+        }
+    }
+
+    std::cout << identity << std::endl;
+}
