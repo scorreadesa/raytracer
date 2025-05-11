@@ -1,7 +1,9 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 #include <cmath>
-#include <iostream>
+#include <iomanip>
+#include <vector>
+#include "exceptions.hpp"
 
 namespace raytracer::maths {
     template<std::floating_point T>
