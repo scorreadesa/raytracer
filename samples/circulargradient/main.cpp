@@ -3,7 +3,7 @@
 #include "../../include/drawing.hpp"
 #include "../../include/FileWriter.hpp"
 #include "../../include/maths.hpp"
-#include "../../include/PPMFileWriter.h"
+#include "../../include/PPMFileWriter.hpp"
 
 using raytracer::drawing::Canvas;
 using raytracer::drawing::Color;

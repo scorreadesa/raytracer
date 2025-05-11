@@ -1,6 +1,6 @@
 #include "../../include/drawing.hpp"
 #include "../../include/FileWriter.hpp"
-#include "../../include/PPMFileWriter.h"
+#include "../../include/PPMFileWriter.hpp"
 
 int main(int argc, const char *argv[]) {
 
