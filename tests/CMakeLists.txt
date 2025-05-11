@@ -12,7 +12,7 @@ add_executable(raytracer_tests raytracer_tests.cpp
         ../include/maths.hpp
         ../include/drawing.hpp
         ../include/IFileWriter.hpp
-        ../include/PPMFileWriter.h
+        ../include/PPMFileWriter.hpp
         ../include/FileWriter.hpp)
 
 

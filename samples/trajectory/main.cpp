@@ -3,7 +3,7 @@
 #include "../../include/drawing.hpp"
 #include "../../include/FileWriter.hpp"
 #include "../../include/maths.hpp"
-#include "../../include/PPMFileWriter.h"
+#include "../../include/PPMFileWriter.hpp"
 
 struct Projectile {
     raytracer::maths::Point3D<double> position_;
