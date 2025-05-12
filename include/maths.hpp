@@ -89,16 +89,18 @@ namespace raytracer::maths {
             z_ /= l;
         }
 
-        template<std::floating_point R> friend Vector3D normalize(const Vector3D<R> &v) {
+
+        friend Vector3D normalize(const Vector3D<T> &v) {
             auto l = v.length();
-            return Vector3D(v.x_ / l , v.y_ / l, v.z_ / l);
+            return Vector3D(v.x_ / l, v.y_ / l, v.z_ / l);
         }
 
         T dot(const Vector3D<T> &rhs) const {
             return x_ * rhs.x_ + y_ * rhs.y_ + z_ * rhs.z_;
         }
 
-        template<std::floating_point R> friend T dot(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
+
+        friend T dot(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
             return lhs.x_ * rhs.x_ + lhs.y_ * rhs.y_ + lhs.z_ * rhs.z_;
         }
 
@@ -109,7 +111,8 @@ namespace raytracer::maths {
             return Vector3D<T>(a_1, a_2, a_3);
         }
 
-        template<std::floating_point R> friend Vector3D<T> cross(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
+
+        friend Vector3D<T> cross(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {
             T a_1 = lhs.y_ * rhs.z_ - lhs.z_ * rhs.y_;
             T a_2 = lhs.z_ * rhs.x_ - lhs.x_ * rhs.z_;
             T a_3 = lhs.x_ * rhs.y_ - lhs.y_ * rhs.x_;
@@ -141,19 +144,19 @@ namespace raytracer::maths {
             return os;
         }
 
-        friend Point3D<T> operator+(const Point3D<T> &lhs, Vector3D<T>& rhs) {
+        friend Point3D<T> operator+(const Point3D<T> &lhs, Vector3D<T> &rhs) {
             return Point3D<T>(lhs.x_ + rhs.x(), lhs.y_ + rhs.y(), lhs.z_ + rhs.z());
         }
 
-        friend Point3D<T> operator+(const Vector3D<T> &lhs, Point3D<T>& rhs) {
+        friend Point3D<T> operator+(const Vector3D<T> &lhs, Point3D<T> &rhs) {
             return Point3D(rhs.x_ + lhs.x(), rhs.y_ + lhs.y(), rhs.z_ + lhs.z());
         }
 
-        friend Vector3D<T> operator-(const Point3D<T> &lhs, Point3D<T>& rhs) {
+        friend Vector3D<T> operator-(const Point3D<T> &lhs, Point3D<T> &rhs) {
             return Vector3D<T>(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_, lhs.z_ - rhs.z_);
         }
 
-        friend Point3D<T> operator-(const Point3D<T> &lhs, Vector3D<T>& rhs) {
+        friend Point3D<T> operator-(const Point3D<T> &lhs, Vector3D<T> &rhs) {
             return Point3D<T>(lhs.x_ - rhs.x(), lhs.y_ - rhs.y(), lhs.z_ - rhs.z());
         }
     };
@@ -175,25 +178,29 @@ namespace raytracer::maths {
     private:
         std::vector<T> data_;
         std::size_t rows_, cols_;
+
     public:
-        Matrix(const std::size_t rows, const std::size_t cols) : data_(rows * cols, 0), rows_(rows), cols_(cols) {}
-        Matrix(const std::size_t rows, const std::size_t cols, const std::initializer_list<T>& data) noexcept(false) : data_(data), rows_(rows), cols_(cols) {
+        Matrix(const std::size_t rows, const std::size_t cols) : data_(rows * cols, 0), rows_(rows), cols_(cols) {
+        }
+
+        Matrix(const std::size_t rows, const std::size_t cols,
+               const std::initializer_list<T> &data) noexcept(false) : data_(data), rows_(rows), cols_(cols) {
             if ((rows_ * cols_) != data_.size()) {
                 const auto err_msg_mismatch = "Shape mismatch: given storage size is " + std::to_string(rows_ * cols_)
-                + ", but should be " + std::to_string(data_.size());
+                                              + ", but should be " + std::to_string(data_.size());
                 throw exceptions::ShapeMismatchException(err_msg_mismatch);
             }
         }
 
         constexpr const T &operator()(std::size_t row, std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-            + std::to_string(row) + "(valid range 0 <= row <" + std::to_string(rows_) + ")";
+                                     + std::to_string(row) + "(valid range 0 <= row <" + std::to_string(rows_) + ")";
             if (row >= rows_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-            + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+                                     + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
             if (col >= cols_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
@@ -203,13 +210,13 @@ namespace raytracer::maths {
 
         constexpr T &operator()(std::size_t row, std::size_t col) noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-            + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(rows_) + ")";
+                                     + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(rows_) + ")";
             if (row >= rows_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-            + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+                                     + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
             if (col >= cols_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
@@ -235,8 +242,8 @@ namespace raytracer::maths {
             std::vector<std::size_t> col_widths(m.data_.size(), 0);
 
             for (std::size_t j = 0; j < m.data_.size(); ++j) {
-                    std::size_t width = std::to_string(m.data_.at(j)).size();
-                    col_widths.at(j) = std::max(col_widths.at(j), width);
+                std::size_t width = std::to_string(m.data_.at(j)).size();
+                col_widths.at(j) = std::max(col_widths.at(j), width);
             }
 
             os << "[\n";
@@ -256,6 +263,10 @@ namespace raytracer::maths {
                 }
             }
             return os;
+        }
+
+        friend Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+
         }
     };
 }
