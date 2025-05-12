@@ -324,7 +324,7 @@ TEST(VectorTests, VectorDotProductFloat) {
     float dot_prod = v1.dot(v2);
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 
-    dot_prod = dot<float>(v1, v2);
+    dot_prod = dot(v1, v2);
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 }
 
@@ -335,7 +335,7 @@ TEST(VectorTests, VectorDotProductDouble) {
     double dot_prod = v1.dot(v2);
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 
-    dot_prod = dot<double>(v1, v2);
+    dot_prod = dot(v1, v2);
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 }
 
@@ -353,12 +353,12 @@ TEST(VectorTests, VectorCrossProductFloat) {
     EXPECT_NEAR(cross_prod_v2v1.y(), -2.0, 1e-6);
     EXPECT_NEAR(cross_prod_v2v1.z(), 1.0, 1e-6);
 
-    cross_prod_v1v2 = cross<float>(v1, v2);
+    cross_prod_v1v2 = cross(v1, v2);
     EXPECT_NEAR(cross_prod_v1v2.x(), -1.0, 1e-6);
     EXPECT_NEAR(cross_prod_v1v2.y(), 2.0, 1e-6);
     EXPECT_NEAR(cross_prod_v1v2.z(), -1.0, 1e-6);
 
-    cross_prod_v2v1 = cross<double>(v2, v1);
+    cross_prod_v2v1 = cross(v2, v1);
     EXPECT_NEAR(cross_prod_v2v1.x(), 1.0, 1e-6);
     EXPECT_NEAR(cross_prod_v2v1.y(), -2.0, 1e-6);
     EXPECT_NEAR(cross_prod_v2v1.z(), 1.0, 1e-6);
