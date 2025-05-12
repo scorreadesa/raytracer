@@ -601,3 +601,34 @@ TEST(MatrixTests, CreateMatrixWithValues) {
 
     std::cout << m << std::endl;
 }
+
+TEST(MatrixTests, AddMatrices) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+    auto m2 = raytracer::maths::Matrix<double>(2, 2, {
+        5, 6,
+        7, 8.
+    });
+
+    auto res1 = m1 + m2;
+
+    EXPECT_NEAR(res1(0, 0), 6.0, 1e-6);
+    EXPECT_NEAR(res1(0, 1), 8.0, 1e-6);
+    EXPECT_NEAR(res1(1, 0), 10.0, 1e-6);
+    EXPECT_NEAR(res1(1, 1), 12.0, 1e-6);
+
+    EXPECT_EQ(res1.rows(), 2);
+    EXPECT_EQ(res1.cols(), 2);
+
+    auto res2 = m2 + m1;
+
+    EXPECT_NEAR(res2(0, 0), 6.0, 1e-6);
+    EXPECT_NEAR(res2(0, 1), 8.0, 1e-6);
+    EXPECT_NEAR(res2(1, 0), 10.0, 1e-6);
+    EXPECT_NEAR(res2(1, 1), 12.0, 1e-6);
+
+    EXPECT_EQ(res2.rows(), 2);
+    EXPECT_EQ(res2.cols(), 2);
+}
