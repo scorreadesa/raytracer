@@ -192,7 +192,7 @@ namespace raytracer::maths {
             }
         }
 
-        constexpr const T &operator()(std::size_t row, std::size_t col) const noexcept(false) {
+        constexpr const T &operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
                                      + std::to_string(row) + "(valid range 0 <= row <" + std::to_string(rows_) + ")";
             if (row >= rows_) {
@@ -208,7 +208,7 @@ namespace raytracer::maths {
             return data_[row * cols_ + col];
         }
 
-        constexpr T &operator()(std::size_t row, std::size_t col) noexcept(false) {
+        constexpr T &operator()(const std::size_t row, const std::size_t col) noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
                                      + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(rows_) + ")";
             if (row >= rows_) {
