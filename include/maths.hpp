@@ -178,6 +178,15 @@ namespace raytracer::maths {
     private:
         std::vector<T> data_;
         std::size_t rows_, cols_;
+        void handleShapeMismatch(const Matrix<T> &rhs) const noexcept(false) {
+            if (this->rows_ != rhs.rows_ || this->cols_ != rhs.cols_) {
+                auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(this->rows_) + ","
+                                        + std::to_string(this->cols_) + ") but rhs has shape (" + std::to_string(
+                                            rhs.rows_)
+                                        + "," + std::to_string(rhs.cols_) + ")";
+                throw exceptions::ShapeMismatchException(err_msg_mismatch);
+            }
+        }
 
     public:
         Matrix(const std::size_t rows, const std::size_t cols) : data_(rows * cols, 0), rows_(rows), cols_(cols) {
@@ -262,13 +271,7 @@ namespace raytracer::maths {
         }
 
         friend Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-            if (lhs.rows_ != rhs.rows_ || lhs.cols_ != rhs.cols_) {
-                auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(lhs.rows_) + ","
-                                        + std::to_string(lhs.cols_) + ") but rhs has shape (" + std::to_string(
-                                            rhs.rows_)
-                                        + "," + std::to_string(rhs.cols_) + ")";
-                throw exceptions::ShapeMismatchException(err_msg_mismatch);
-            }
+            lhs.handleShapeMismatch(rhs);
             Matrix<T> result(lhs.rows_, rhs.cols_);
             for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
                 result.data_.at(i) = lhs.data_.at(i) + rhs.data_.at(i);
@@ -277,13 +280,7 @@ namespace raytracer::maths {
         }
 
         friend Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-            if (lhs.rows_ != rhs.rows_ || lhs.cols_ != rhs.cols_) {
-                auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(lhs.rows_) + ","
-                        + std::to_string(lhs.cols_) + ") but rhs has shape (" + std::to_string(
-                            rhs.rows_)
-                        + "," + std::to_string(rhs.cols_) + ")";
-                throw exceptions::ShapeMismatchException(err_msg_mismatch);
-            }
+            lhs.handleShapeMismatch(rhs);
             Matrix<T> result(lhs.rows_, rhs.cols_);
             for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
                 result.data_.at(i) = lhs.data_.at(i) - rhs.data_.at(i);
@@ -308,11 +305,47 @@ namespace raytracer::maths {
         }
 
         friend Matrix<T> operator/(const Matrix<T> &lhs, T scalar) {
+            if (scalar == 0.0) {
+                throw std::invalid_argument("division by zero");
+            }
             Matrix<T> result(lhs.rows_, lhs.cols_);
             for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
                 result.data_.at(i) = lhs.data_.at(i) / scalar;
             }
             return result;
+        }
+
+        Matrix<T> &operator+=(const Matrix<T> &rhs) {
+            handleShapeMismatch(rhs);
+            for (std::size_t i = 0; i < rows_ * cols_; i++) {
+                data_.at(i) += rhs.data_.at(i);
+            }
+            return *this;
+        }
+
+        Matrix<T> &operator-=(const Matrix<T> &rhs) {
+            handleShapeMismatch(rhs);
+            for (std::size_t i = 0; i < rows_ * cols_; i++) {
+                data_.at(i) -= rhs.data_.at(i);
+            }
+            return *this;
+        }
+
+        Matrix<T> &operator*=(T scalar) {
+            for (std::size_t i = 0; i < rows_ * cols_; i++) {
+                data_.at(i) *= scalar;
+            }
+            return *this;
+        }
+
+        Matrix<T> &operator/=(T scalar) {
+            if (scalar == 0.0) {
+                throw std::invalid_argument("division by zero");
+            }
+            for (std::size_t i = 0; i < rows_ * cols_; i++) {
+                data_.at(i) /= scalar;
+            }
+            return *this;
         }
 
         [[nodiscard]] std::size_t rows() const noexcept { return rows_; }

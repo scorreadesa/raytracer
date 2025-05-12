@@ -633,7 +633,7 @@ TEST(MatrixTests, AddMatrices) {
     EXPECT_EQ(res2.cols(), 2);
 }
 
-TEST(MatrixTests, SubMatrices) {
+TEST(MatrixTests, SubtractMatrices) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
         1, 2,
         3, 4,
@@ -710,4 +710,98 @@ TEST(MatrixTests, DivByScalar) {
 
     EXPECT_EQ(res1.rows(), 2);
     EXPECT_EQ(res1.cols(), 2);
+}
+
+TEST(MatrixTests, CompoundAddTwoMatrices) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+    const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
+        5, 6,
+        7, 8,
+    });
+
+    m1 += m2;
+
+    EXPECT_NEAR(m1(0, 0), 6.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 8.0, 1e-6);
+    EXPECT_NEAR(m1(1, 0), 10.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 12.0, 1e-6);
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.cols(), 2);
+}
+
+TEST(MatrixTests, CompoundSubTwoMatrices) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+    const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
+        5, 6,
+        7, 8,
+    });
+
+    m1 -= m2;
+
+    EXPECT_NEAR(m1(0, 0), -4.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), -4.0, 1e-6);
+    EXPECT_NEAR(m1(1, 0), -4.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), -4.0, 1e-6);
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.cols(), 2);
+}
+
+TEST(MatrixTests, CompoundMultMatScalar) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+
+    m1 *= 2.0;
+
+    EXPECT_NEAR(m1(0, 0), 2.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 4.0, 1e-6);
+    EXPECT_NEAR(m1(1, 0), 6.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 8.0, 1e-6);
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.cols(), 2);
+}
+
+TEST(MatrixTest, CompoundDivMatScalar) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+
+    m1 /= 2.0;
+
+    EXPECT_NEAR(m1(0, 0), 0.5, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 1.0, 1e-6);
+    EXPECT_NEAR(m1(1, 0), 1.5, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 2.0, 1e-6);
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.cols(), 2);
+}
+
+TEST(MatrixTest, CompoundDivMatScalarByZero) {
+    auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+
+    EXPECT_THROW(m1 /= 0, std::invalid_argument);
+}
+
+TEST(MatrixTest, DivMatScalarByZero) {
+    const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+
+    EXPECT_THROW(m1 / 0, std::invalid_argument);
 }
