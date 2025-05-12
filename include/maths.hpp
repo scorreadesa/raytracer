@@ -276,6 +276,45 @@ namespace raytracer::maths {
             return result;
         }
 
+        friend Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+            if (lhs.rows_ != rhs.rows_ || lhs.cols_ != rhs.cols_) {
+                auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(lhs.rows_) + ","
+                        + std::to_string(lhs.cols_) + ") but rhs has shape (" + std::to_string(
+                            rhs.rows_)
+                        + "," + std::to_string(rhs.cols_) + ")";
+                throw exceptions::ShapeMismatchException(err_msg_mismatch);
+            }
+            Matrix<T> result(lhs.rows_, rhs.cols_);
+            for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
+                result.data_.at(i) = lhs.data_.at(i) - rhs.data_.at(i);
+            }
+            return result;
+        }
+
+        friend Matrix<T> operator*(const Matrix<T> &lhs, T scalar) {
+            Matrix<T> result(lhs.rows_, lhs.cols_);
+            for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
+                result.data_.at(i) = lhs.data_.at(i) * scalar;
+            }
+            return result;
+        }
+
+        friend Matrix<T> operator*(T scalar, const Matrix<T> &rhs) {
+            Matrix<T> result(rhs.rows_, rhs.cols_);
+            for (std::size_t i = 0; i < rhs.rows_ * rhs.cols_; i++) {
+                result.data_.at(i) = rhs.data_.at(i) * scalar;
+            }
+            return result;
+        }
+
+        friend Matrix<T> operator/(const Matrix<T> &lhs, T scalar) {
+            Matrix<T> result(lhs.rows_, lhs.cols_);
+            for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
+                result.data_.at(i) = lhs.data_.at(i) / scalar;
+            }
+            return result;
+        }
+
         [[nodiscard]] std::size_t rows() const noexcept { return rows_; }
         [[nodiscard]] std::size_t cols() const noexcept { return cols_; }
     };
