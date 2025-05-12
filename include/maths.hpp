@@ -225,16 +225,12 @@ namespace raytracer::maths {
         }
 
         static Matrix<T> identity(std::size_t size) {
-            Matrix<T> m(size, size);
-            for (std::size_t i = 0; i < size; i++) {
-                for (std::size_t j = 0; j < size; j++) {
-                    if (i == j) {
-                        m(i, j) = 1;
-                    } else {
-                        m(i, j) = 0;
-                    }
-                }
-            }
+            Matrix<T> m(size, size, {
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            });
             return m;
         }
 
