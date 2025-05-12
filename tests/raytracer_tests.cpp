@@ -632,3 +632,82 @@ TEST(MatrixTests, AddMatrices) {
     EXPECT_EQ(res2.rows(), 2);
     EXPECT_EQ(res2.cols(), 2);
 }
+
+TEST(MatrixTests, SubMatrices) {
+    const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        3, 4,
+    });
+    const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
+        5, 6,
+        7, 8,
+    });
+
+    auto res1 = m1 - m2;
+
+    EXPECT_NEAR(res1(0, 0), -4.0, 1e-6);
+    EXPECT_NEAR(res1(0, 1), -4.0, 1e-6);
+    EXPECT_NEAR(res1(1, 0), -4.0, 1e-6);
+    EXPECT_NEAR(res1(1, 1), -4.0, 1e-6);
+
+    EXPECT_EQ(res1.rows(), 2);
+    EXPECT_EQ(res1.cols(), 2);
+
+    auto res2 = m2 - m1;
+
+    EXPECT_NEAR(res2(0, 0), 4.0, 1e-6);
+    EXPECT_NEAR(res2(0, 1), 4.0, 1e-6);
+    EXPECT_NEAR(res2(1, 0), 4.0, 1e-6);
+    EXPECT_NEAR(res2(1, 1), 4.0, 1e-6);
+
+    EXPECT_EQ(res2.rows(), 2);
+    EXPECT_EQ(res2.cols(), 2);
+}
+
+TEST(MatrixTests, LeftMultByScalar) {
+    const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        4, 5,
+    });
+    auto res1 = 2 * m1;
+
+    EXPECT_NEAR(res1(0, 0), 2.0, 1e-6);
+    EXPECT_NEAR(res1(0, 1), 4.0, 1e-6);
+    EXPECT_NEAR(res1(1, 0), 8.0, 1e-6);
+    EXPECT_NEAR(res1(1, 1), 10.0, 1e-6);
+
+    EXPECT_EQ(res1.rows(), 2);
+    EXPECT_EQ(res1.cols(), 2);
+}
+
+TEST(MatrixTests, RightMultByScalar) {
+    const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        4, 5,
+    });
+    auto res1 = m1 * 2;
+
+    EXPECT_NEAR(res1(0, 0), 2.0, 1e-6);
+    EXPECT_NEAR(res1(0, 1), 4.0, 1e-6);
+    EXPECT_NEAR(res1(1, 0), 8.0, 1e-6);
+    EXPECT_NEAR(res1(1, 1), 10.0, 1e-6);
+
+    EXPECT_EQ(res1.rows(), 2);
+    EXPECT_EQ(res1.cols(), 2);
+}
+
+TEST(MatrixTests, DivByScalar) {
+    const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
+        1, 2,
+        4, 5,
+    });
+    auto res1 = m1 / 2;
+
+    EXPECT_NEAR(res1(0, 0), 0.5, 1e-6);
+    EXPECT_NEAR(res1(0, 1), 1.0, 1e-6);
+    EXPECT_NEAR(res1(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(res1(1, 1), 2.5, 1e-6);
+
+    EXPECT_EQ(res1.rows(), 2);
+    EXPECT_EQ(res1.cols(), 2);
+}
