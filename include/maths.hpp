@@ -304,6 +304,28 @@ namespace raytracer::maths {
             return result;
         }
 
+        friend Matrix<T> matmul(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+            if (lhs.cols_ != rhs.rows_) {
+                lhs.handleShapeMismatch(rhs);
+            }
+            Matrix<T> result(lhs.rows_, rhs.cols_);
+
+            for (std::size_t i = 0; i < lhs.rows_; i++) {
+                for (std::size_t j = 0; j < rhs.cols_; j++) {
+                    T sum = 0;
+                    for (std::size_t k = 0; k < lhs.cols_; k++) {
+                        sum += lhs(i, k) * rhs(k, j);
+                    }
+                    result(i, j) = sum;
+                }
+            }
+            return result;
+        }
+
+        friend Matrix<T> operator*(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+            return matmul(lhs, rhs);
+        }
+
         friend Matrix<T> operator/(const Matrix<T> &lhs, T scalar) {
             if (scalar == 0.0) {
                 throw std::invalid_argument("division by zero");
@@ -335,6 +357,13 @@ namespace raytracer::maths {
             for (std::size_t i = 0; i < rows_ * cols_; i++) {
                 data_.at(i) *= scalar;
             }
+            return *this;
+        }
+
+        Matrix<T> &operator*=(const Matrix<T> &rhs) {
+            auto ret = matmul(*this, rhs);
+            data_ = ret.data_;
+            cols_ = rhs.cols_;
             return *this;
         }
 
