@@ -771,7 +771,7 @@ TEST(MatrixTests, CompoundMultMatScalar) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTest, CompoundDivMatScalar) {
+TEST(MatrixTests, CompoundDivMatScalar) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
         1, 2,
         3, 4,
@@ -788,7 +788,7 @@ TEST(MatrixTest, CompoundDivMatScalar) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTest, CompoundDivMatScalarByZero) {
+TEST(MatrixTests, CompoundDivMatScalarByZero) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
         1, 2,
         3, 4,
@@ -797,7 +797,7 @@ TEST(MatrixTest, CompoundDivMatScalarByZero) {
     EXPECT_THROW(m1 /= 0, std::invalid_argument);
 }
 
-TEST(MatrixTest, DivMatScalarByZero) {
+TEST(MatrixTests, DivMatScalarByZero) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
         1, 2,
         3, 4,
@@ -805,3 +805,314 @@ TEST(MatrixTest, DivMatScalarByZero) {
 
     EXPECT_THROW(m1 / 0, std::invalid_argument);
 }
+
+TEST(MatrixTests, MatMulSameSize) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+    });
+
+    raytracer::maths::Matrix<double> m2(4, 4, {
+        -2, 1, 2, 3,
+        3, 2, 1, -1,
+        4, 3, 6, 5,
+        1, 2, 7, 8
+    });
+
+    auto result = m1 * m2;
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 4);
+
+    EXPECT_NEAR(result(0, 0), 20.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 22.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 50.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 48.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 44.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 54.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 114.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 108.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 68.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 86.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 178.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 168.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 92.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 118.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 242.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 228.0, 1e-6);
+
+    result = m2 * m1;
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 4);
+
+    EXPECT_NEAR(result(0, 0), 60.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 64.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 68.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 72.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 14.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 19.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 24.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 138.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 156.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 174.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 192.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 178.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 196.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 214.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 232.0, 1e-6);
+}
+
+TEST(MatrixTests, MatMulDifferentSizes) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+        -2, 1, 2, 3,
+        3, 2, 1, -1,
+        4, 3, 6, 5,
+        1, 2, 7, 8
+    });
+    raytracer::maths::Matrix<double> m2(4, 5, {
+        1, 2, 3, 4, 9,
+        5, 6, 7, 8, 19,
+        9, 10, 11, 12, 24,
+        13, 14, 15, 16, 26,
+    });
+
+    auto result = m1 * m2;
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 5);
+
+    EXPECT_NEAR(result(0, 0), 60.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 64.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 68.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 72.0, 1e-6);
+    EXPECT_NEAR(result(0, 4), 127.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 14.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 19.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 24.0, 1e-6);
+    EXPECT_NEAR(result(1, 4), 63.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 138.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 156.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 174.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 192.0, 1e-6);
+    EXPECT_NEAR(result(2, 4), 367.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 178.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 196.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 214.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 232.0, 1e-6);
+    EXPECT_NEAR(result(3, 4), 423.0, 1e-6);
+}
+
+TEST(MatrixTests, MatMulDifferentSizes2) {
+    raytracer::maths::Matrix<double> m1(4, 3, {
+        -2, 1, 2,
+        3, 2, 1,
+        4, 3, 6,
+        2, 9, 3
+    });
+    raytracer::maths::Matrix<double> m2(3, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+    });
+
+    auto result = m1 * m2;
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 4);
+
+    EXPECT_NEAR(result(0, 0), 21.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 22.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 23.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 24.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 22.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 28.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 34.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 40.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 73.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 86.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 99.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 112.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 74.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 88.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 102.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 116.0, 1e-6);
+
+    auto result2 = m2 * m1;
+
+    EXPECT_EQ(result2.rows(), 3);
+    EXPECT_EQ(result2.cols(), 3);
+
+    EXPECT_NEAR(result2(0, 0), 24.0, 1e-6);
+    EXPECT_NEAR(result2(0, 1), 50.0, 1e-6);
+    EXPECT_NEAR(result2(0, 2), 34.0, 1e-6);
+
+    EXPECT_NEAR(result2(1, 0), 52.0, 1e-6);
+    EXPECT_NEAR(result2(1, 1), 110.0, 1e-6);
+    EXPECT_NEAR(result2(1, 2), 82.0, 1e-6);
+
+    EXPECT_NEAR(result2(2, 0), 80.0, 1e-6);
+    EXPECT_NEAR(result2(2, 1), 170.0, 1e-6);
+    EXPECT_NEAR(result2(2, 2), 130.0, 1e-6);
+}
+
+TEST(MatrixTests, MatMulSizeMismatch) {
+    raytracer::maths::Matrix<double> m1(3, 3, {
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9,
+    });
+    raytracer::maths::Matrix<double> m2(4, 3, {
+        -2, 1, 2,
+        3, 2, 1,
+        4, 3, 6,
+        2, 9, 3
+    });
+
+    EXPECT_THROW(m1 * m2, raytracer::exceptions::ShapeMismatchException);
+}
+
+TEST(MatrixTests, CompoundMultMatSameSize) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+    1, 2, 3, 4,
+    5, 6, 7, 8,
+    9, 10, 11, 12,
+    13, 14, 15, 16
+});
+
+    raytracer::maths::Matrix<double> m2(4, 4, {
+        -2, 1, 2, 3,
+        3, 2, 1, -1,
+        4, 3, 6, 5,
+        1, 2, 7, 8
+    });
+
+    m1 *= m2;
+
+    EXPECT_EQ(m1.rows(), 4);
+    EXPECT_EQ(m1.cols(), 4);
+
+    EXPECT_NEAR(m1(0, 0), 20.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 22.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 50.0, 1e-6);
+    EXPECT_NEAR(m1(0, 3), 48.0, 1e-6);
+
+    EXPECT_NEAR(m1(1, 0), 44.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 54.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 114.0, 1e-6);
+    EXPECT_NEAR(m1(1, 3), 108.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 68.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 86.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 178.0, 1e-6);
+    EXPECT_NEAR(m1(2, 3), 168.0, 1e-6);
+
+    EXPECT_NEAR(m1(3, 0), 92.0, 1e-6);
+    EXPECT_NEAR(m1(3, 1), 118.0, 1e-6);
+    EXPECT_NEAR(m1(3, 2), 242.0, 1e-6);
+    EXPECT_NEAR(m1(3, 3), 228.0, 1e-6);
+}
+
+TEST(MatrixTests, CompoundMultMatSameSize2) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+    1, 2, 3, 4,
+    5, 6, 7, 8,
+    9, 10, 11, 12,
+    13, 14, 15, 16
+});
+
+    raytracer::maths::Matrix<double> m2(4, 4, {
+        -2, 1, 2, 3,
+        3, 2, 1, -1,
+        4, 3, 6, 5,
+        1, 2, 7, 8
+    });
+
+    m2 *= m1;
+
+    EXPECT_EQ(m2.rows(), 4);
+    EXPECT_EQ(m2.cols(), 4);
+
+    EXPECT_NEAR(m2(0, 0), 60.0, 1e-6);
+    EXPECT_NEAR(m2(0, 1), 64.0, 1e-6);
+    EXPECT_NEAR(m2(0, 2), 68.0, 1e-6);
+    EXPECT_NEAR(m2(0, 3), 72.0, 1e-6);
+
+    EXPECT_NEAR(m2(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(m2(1, 1), 14.0, 1e-6);
+    EXPECT_NEAR(m2(1, 2), 19.0, 1e-6);
+    EXPECT_NEAR(m2(1, 3), 24.0, 1e-6);
+
+    EXPECT_NEAR(m2(2, 0), 138.0, 1e-6);
+    EXPECT_NEAR(m2(2, 1), 156.0, 1e-6);
+    EXPECT_NEAR(m2(2, 2), 174.0, 1e-6);
+    EXPECT_NEAR(m2(2, 3), 192.0, 1e-6);
+
+    EXPECT_NEAR(m2(3, 0), 178.0, 1e-6);
+    EXPECT_NEAR(m2(3, 1), 196.0, 1e-6);
+    EXPECT_NEAR(m2(3, 2), 214.0, 1e-6);
+    EXPECT_NEAR(m2(3, 3), 232.0, 1e-6);
+
+
+}
+
+TEST(MatrixTests, CompoundMulDifferentSizes) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+        -2, 1, 2, 3,
+        3, 2, 1, -1,
+        4, 3, 6, 5,
+        1, 2, 7, 8
+    });
+    raytracer::maths::Matrix<double> m2(4, 5, {
+        1, 2, 3, 4, 9,
+        5, 6, 7, 8, 19,
+        9, 10, 11, 12, 24,
+        13, 14, 15, 16, 26,
+    });
+
+    m1 *= m2;
+
+    EXPECT_EQ(m1.rows(), 4);
+    EXPECT_EQ(m1.cols(), 5);
+
+    EXPECT_NEAR(m1(0, 0), 60.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 64.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 68.0, 1e-6);
+    EXPECT_NEAR(m1(0, 3), 72.0, 1e-6);
+    EXPECT_NEAR(m1(0, 4), 127.0, 1e-6);
+
+    EXPECT_NEAR(m1(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 14.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 19.0, 1e-6);
+    EXPECT_NEAR(m1(1, 3), 24.0, 1e-6);
+    EXPECT_NEAR(m1(1, 4), 63.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 138.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 156.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 174.0, 1e-6);
+    EXPECT_NEAR(m1(2, 3), 192.0, 1e-6);
+    EXPECT_NEAR(m1(2, 4), 367.0, 1e-6);
+
+    EXPECT_NEAR(m1(3, 0), 178.0, 1e-6);
+    EXPECT_NEAR(m1(3, 1), 196.0, 1e-6);
+    EXPECT_NEAR(m1(3, 2), 214.0, 1e-6);
+    EXPECT_NEAR(m1(3, 3), 232.0, 1e-6);
+    EXPECT_NEAR(m1(3, 4), 423.0, 1e-6);
+}
+
