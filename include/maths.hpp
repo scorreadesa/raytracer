@@ -163,8 +163,8 @@ namespace raytracer::maths {
 
 
     template<std::floating_point T>
-    bool AlmostEqualEpsilon(T a, T b,
-                            T tolerance = std::numeric_limits<T>::epsilon()) {
+    bool almost_equal_epsilon(T a, T b,
+                              T tolerance = std::numeric_limits<T>::epsilon()) {
         return std::abs(a - b) < tolerance;
     }
 
@@ -178,6 +178,7 @@ namespace raytracer::maths {
     private:
         std::vector<T> data_;
         std::size_t rows_, cols_;
+
         void handleShapeMismatch(const Matrix<T> &rhs) const noexcept(false) {
             if (this->rows_ != rhs.rows_ || this->cols_ != rhs.cols_) {
                 auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(this->rows_) + ","
@@ -214,7 +215,7 @@ namespace raytracer::maths {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
 
-            return data_[row * cols_ + col];
+            return data_.at(row * cols_ + col);
         }
 
         constexpr T &operator()(const std::size_t row, const std::size_t col) noexcept(false) {
@@ -230,16 +231,16 @@ namespace raytracer::maths {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
 
-            return data_[row * cols_ + col];
+            return data_.at(row * cols_ + col);
         }
 
         static Matrix<T> identity(std::size_t size) {
             Matrix<T> m(size, size, {
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            });
+                            1, 0, 0, 0,
+                            0, 1, 0, 0,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1
+                        });
             return m;
         }
 
@@ -380,6 +381,40 @@ namespace raytracer::maths {
         [[nodiscard]] std::size_t rows() const noexcept { return rows_; }
         [[nodiscard]] std::size_t cols() const noexcept { return cols_; }
     };
+
+    template<std::floating_point T>
+    Matrix<T> to_column_matrix(const Point3D<T> &point) {
+        return Matrix<T>(4, 1, {
+                             point.x(), point.y(), point.z(), point.w()
+                         });
+    }
+
+    template<std::floating_point T>
+    Point3D<T> from_column_matrix(const Matrix<T> &matrix) {
+        return Point3D<T>(
+            matrix(0, 0) / matrix(3, 0),
+            matrix(1, 0) / matrix(3, 0),
+            matrix(2, 0) / matrix(3, 0)
+        );
+    }
+
+    template<std::floating_point T>
+    Matrix<T> to_row_matrix(const Point3D<T> &point) {
+        return Matrix<T>(1, 4, {
+            point.x(), point.y(), point.z(), point.w()
+        });
+    }
+
+    template<std::floating_point T>
+    Point3D<T> from_row_matrix(const Matrix<T>& matrix) {
+        return Point3D<T>(
+            matrix(0, 0) / matrix(0, 3),
+            matrix(0, 1) / matrix(0, 3),
+            matrix(0, 2) / matrix(0, 3)
+        );
+    }
+
+
 }
 
 #endif //GEOMETRY_H
