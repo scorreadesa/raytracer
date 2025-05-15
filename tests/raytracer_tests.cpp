@@ -1178,38 +1178,38 @@ TEST(MatrixTests, CompoundMulDifferentSizes) {
 
 TEST(MatrixTests, PointToColumnMatrix) {
     raytracer::maths::Point3D<double> p(1.0, 2.0, 4.0);
-    auto mat = raytracer::maths::to_column_matrix(p);
+    auto mat = point_to_column_matrix(p);
 
     EXPECT_NEAR(mat(0, 0), 1.0, 1e-6);
     EXPECT_NEAR(mat(1, 0), 2.0, 1e-6);
     EXPECT_NEAR(mat(2, 0), 4.0, 1e-6);
     EXPECT_NEAR(mat(3, 0), 1.0, 1e-6);
 
-    raytracer::maths::Point3D<double> result = from_column_matrix(mat);
+    raytracer::maths::Point3D<double> result = point_from_column_matrix(mat);
     EXPECT_NEAR(result.x(), 1.0, 1e-6);
     EXPECT_NEAR(result.y(), 2.0, 1e-6);
     EXPECT_NEAR(result.z(), 4.0, 1e-6);
     EXPECT_NEAR(result.w(), 1.0, 1e-6);
 }
 
-TEST(MatrixTest, PointToRowMatrix) {
+TEST(MatrixTests, PointToRowMatrix) {
     raytracer::maths::Point3D<double> p(1.0, 2.0, 4.0);
-    auto mat = raytracer::maths::to_row_matrix(p);
+    auto mat = point_to_row_matrix(p);
 
     EXPECT_NEAR(mat(0, 0), 1.0, 1e-6);
     EXPECT_NEAR(mat(0, 1), 2.0, 1e-6);
     EXPECT_NEAR(mat(0, 2), 4.0, 1e-6);
     EXPECT_NEAR(mat(0, 3), 1.0, 1e-6);
 
-    auto result = from_row_matrix(mat);
+    auto result = point_from_row_matrix(mat);
     EXPECT_NEAR(result.x(), 1.0, 1e-6);
     EXPECT_NEAR(result.y(), 2.0, 1e-6);
     EXPECT_NEAR(result.z(), 4.0, 1e-6);
     EXPECT_NEAR(result.w(), 1.0, 1e-6);
 }
 
-TEST(MatrixTest, MatrixPointMultiplication) {
-    raytracer::maths::Matrix<double> m1(4, 4, {
+TEST(MatrixTests, MatrixPointMultiplication) {
+    const raytracer::maths::Matrix<double> m1(4, 4, {
         1, 2, 3, 4,
         2, 4, 4, 2,
         8, 6, 4, 1,
@@ -1217,13 +1217,47 @@ TEST(MatrixTest, MatrixPointMultiplication) {
     });
     raytracer::maths::Point3D<double> p(1.0, 2.0, 3.0);
 
-    const auto m2 = to_column_matrix(p);
+    const auto m2 = point_to_column_matrix(p);
     const auto result = m1 * m2;
 
-    auto point_transformed = from_column_matrix(result);
+    auto point_transformed = point_from_column_matrix(result);
 
     EXPECT_NEAR(point_transformed.x(), 18.0, 1e-6);
     EXPECT_NEAR(point_transformed.y(), 24.0, 1e-6);
     EXPECT_NEAR(point_transformed.z(), 33.0, 1e-6);
     EXPECT_NEAR(point_transformed.w(), 1.0, 1e-6);
+}
+
+TEST(MatrixTests, VectorToColumnMatrix) {
+    const raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
+    auto mat = vector_to_column_matrix(v);
+
+    EXPECT_NEAR(mat(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(mat(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(mat(2, 0), 3.0, 1e-6);
+    EXPECT_NEAR(mat(3, 0), 0.0, 1e-6);
+
+    auto result = vector_from_column_matrix(mat);
+
+    EXPECT_NEAR(result.x(), 1.0, 1e-6);
+    EXPECT_NEAR(result.y(), 2.0, 1e-6);
+    EXPECT_NEAR(result.z(), 3.0, 1e-6);
+    EXPECT_NEAR(result.w(), 0.0, 1e-6);
+}
+
+TEST(MatrixTests, VectorToRowMatrix) {
+    const raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
+    auto mat = vector_to_row_matrix(v);
+
+    EXPECT_NEAR(mat(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(mat(0, 1), 2.0, 1e-6);
+    EXPECT_NEAR(mat(0, 2), 3.0, 1e-6);
+    EXPECT_NEAR(mat(0, 3), 0.0, 1e-6);
+
+    auto result = vector_from_row_matrix(mat);
+
+    EXPECT_NEAR(result.x(), 1.0, 1e-6);
+    EXPECT_NEAR(result.y(), 2.0, 1e-6);
+    EXPECT_NEAR(result.z(), 3.0, 1e-6);
+    EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
