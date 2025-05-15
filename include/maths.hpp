@@ -392,8 +392,8 @@ namespace raytracer::maths {
     template<std::floating_point T>
     Matrix<T> vector_to_column_matrix(const Vector3D<T> &v) {
         return Matrix<T>(4, 1, {
-            v.x(), v.y(), v.z(), v.w()
-        });
+                             v.x(), v.y(), v.z(), v.w()
+                         });
     }
 
     template<std::floating_point T>
@@ -417,19 +417,19 @@ namespace raytracer::maths {
     template<std::floating_point T>
     Matrix<T> point_to_row_matrix(const Point3D<T> &point) {
         return Matrix<T>(1, 4, {
-            point.x(), point.y(), point.z(), point.w()
-        });
+                             point.x(), point.y(), point.z(), point.w()
+                         });
     }
 
     template<std::floating_point T>
     Matrix<T> vector_to_row_matrix(const Vector3D<T> &v) {
         return Matrix<T>(1, 4, {
-            v.x(), v.y(), v.z(), v.w()
-        });
+                             v.x(), v.y(), v.z(), v.w()
+                         });
     }
 
     template<std::floating_point T>
-    Point3D<T> point_from_row_matrix(const Matrix<T>& matrix) {
+    Point3D<T> point_from_row_matrix(const Matrix<T> &matrix) {
         return Point3D<T>(
             matrix(0, 0) / matrix(0, 3),
             matrix(0, 1) / matrix(0, 3),
@@ -438,15 +438,13 @@ namespace raytracer::maths {
     }
 
     template<std::floating_point T>
-    Vector3D<T> vector_from_row_matrix(const Matrix<T>& matrix) {
+    Vector3D<T> vector_from_row_matrix(const Matrix<T> &matrix) {
         return Vector3D<T>(
             matrix(0, 0),
             matrix(0, 1),
             matrix(0, 2)
         );
     }
-
-
 }
 
 #endif //GEOMETRY_H
