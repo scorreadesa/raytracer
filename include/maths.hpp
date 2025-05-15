@@ -179,7 +179,7 @@ namespace raytracer::maths {
         std::vector<T> data_;
         std::size_t rows_, cols_;
 
-        void handleShapeMismatch(const Matrix<T> &rhs) const noexcept(false) {
+        void handle_shape_mismatch(const Matrix<T> &rhs) const noexcept(false) {
             if (this->rows_ != rhs.rows_ || this->cols_ != rhs.cols_) {
                 auto err_msg_mismatch = "Shape mismatch: lhs has shape (" + std::to_string(this->rows_) + ","
                                         + std::to_string(this->cols_) + ") but rhs has shape (" + std::to_string(
@@ -204,13 +204,13 @@ namespace raytracer::maths {
 
         constexpr const T &operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-                                     + std::to_string(row) + "(valid range 0 <= row <" + std::to_string(rows_) + ")";
+                                     + std::to_string(row) + " (valid range 0 <= row <" + std::to_string(rows_) + ")";
             if (row >= rows_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-                                     + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+                                     + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(cols_) + ")";
             if (col >= cols_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
@@ -220,13 +220,13 @@ namespace raytracer::maths {
 
         constexpr T &operator()(const std::size_t row, const std::size_t col) noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-                                     + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(rows_) + ")";
+                                     + std::to_string(row) + " (valid range 0 <= row < " + std::to_string(rows_) + ")";
             if (row >= rows_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-                                     + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(cols_) + ")";
+                                     + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(cols_) + ")";
             if (col >= cols_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
@@ -272,7 +272,7 @@ namespace raytracer::maths {
         }
 
         friend Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-            lhs.handleShapeMismatch(rhs);
+            lhs.handle_shape_mismatch(rhs);
             Matrix<T> result(lhs.rows_, rhs.cols_);
             for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
                 result.data_.at(i) = lhs.data_.at(i) + rhs.data_.at(i);
@@ -281,7 +281,7 @@ namespace raytracer::maths {
         }
 
         friend Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-            lhs.handleShapeMismatch(rhs);
+            lhs.handle_shape_mismatch(rhs);
             Matrix<T> result(lhs.rows_, rhs.cols_);
             for (std::size_t i = 0; i < lhs.rows_ * lhs.cols_; i++) {
                 result.data_.at(i) = lhs.data_.at(i) - rhs.data_.at(i);
@@ -307,7 +307,7 @@ namespace raytracer::maths {
 
         friend Matrix<T> matmul(const Matrix<T> &lhs, const Matrix<T> &rhs) {
             if (lhs.cols_ != rhs.rows_) {
-                lhs.handleShapeMismatch(rhs);
+                lhs.handle_shape_mismatch(rhs);
             }
             Matrix<T> result(lhs.rows_, rhs.cols_);
 
@@ -339,7 +339,7 @@ namespace raytracer::maths {
         }
 
         Matrix<T> &operator+=(const Matrix<T> &rhs) {
-            handleShapeMismatch(rhs);
+            handle_shape_mismatch(rhs);
             for (std::size_t i = 0; i < rows_ * cols_; i++) {
                 data_.at(i) += rhs.data_.at(i);
             }
@@ -347,7 +347,7 @@ namespace raytracer::maths {
         }
 
         Matrix<T> &operator-=(const Matrix<T> &rhs) {
-            handleShapeMismatch(rhs);
+            handle_shape_mismatch(rhs);
             for (std::size_t i = 0; i < rows_ * cols_; i++) {
                 data_.at(i) -= rhs.data_.at(i);
             }
