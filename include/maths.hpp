@@ -338,6 +338,33 @@ namespace raytracer::maths {
             return result;
         }
 
+        friend Matrix<T> transpose(const Matrix<T> &m) {
+            auto result = Matrix<T>(m.cols_, m.rows_);
+
+            for (std::size_t i = 0; i < m.rows_; i++) {
+                for (std::size_t j = 0; j < m.cols_; j++) {
+                    result(j, i) = m(i, j);
+                }
+            }
+
+            return result;
+
+        }
+
+        void transpose() {
+            auto result = Matrix<T>(cols_, rows_);
+
+            for (std::size_t i = 0; i < rows_; i++) {
+                for (std::size_t j = 0; j < cols_; j++) {
+                    result(j, i) = data_.at(i * cols_ + j);
+                }
+            }
+
+            std::swap(rows_, cols_);
+
+            data_ = result.data_;
+        }
+
         Matrix<T> &operator+=(const Matrix<T> &rhs) {
             handle_shape_mismatch(rhs);
             for (std::size_t i = 0; i < rows_ * cols_; i++) {
