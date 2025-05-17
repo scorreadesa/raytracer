@@ -1261,3 +1261,200 @@ TEST(MatrixTests, VectorToRowMatrix) {
     EXPECT_NEAR(result.z(), 3.0, 1e-6);
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
+
+TEST(MatrixTests, TransposeMatrixDifferentSizes) {
+    raytracer::maths::Matrix<double> m1(3, 2, {
+        1, 2,
+        3, 4,
+        5, 6
+    });
+
+    auto result = transpose(m1);
+
+    EXPECT_EQ(result.rows(), 2);
+    EXPECT_EQ(result.cols(), 3);
+
+    EXPECT_NEAR(result(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 3.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 5.0, 1e-6);
+    EXPECT_NEAR(result(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 4.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 6.0, 1e-6);
+
+    m1.transpose();
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.cols(), 3);
+
+    EXPECT_NEAR(m1(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 3.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 5.0, 1e-6);
+    EXPECT_NEAR(m1(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 4.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 6.0, 1e-6);
+}
+
+TEST(MatrixTests, TransposeMatrixDifferentSizes2) {
+    raytracer::maths::Matrix<double> m1(3, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+    });
+
+    auto result = transpose(m1);
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 3);
+
+    EXPECT_NEAR(result(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 5.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 9.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 6.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 10.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 3.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 7.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 11.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 4.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 8.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 12.0, 1e-6);
+
+    m1.transpose();
+
+    EXPECT_EQ(m1.rows(), 4);
+    EXPECT_EQ(m1.cols(), 3);
+
+    EXPECT_NEAR(m1(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 5.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 9.0, 1e-6);
+
+    EXPECT_NEAR(m1(1, 0), 2.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 6.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 10.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 3.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 7.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 11.0, 1e-6);
+
+    EXPECT_NEAR(m1(3, 0), 4.0, 1e-6);
+    EXPECT_NEAR(m1(3, 1), 8.0, 1e-6);
+    EXPECT_NEAR(m1(3, 2), 12.0, 1e-6);
+}
+
+TEST(MatrixTests, TransposeSquaredMatrix) {
+    raytracer::maths::Matrix<double> m1(4, 4, {
+        0, 9, 3, 0,
+        9, 8, 0, 8,
+        1, 8, 5, 3,
+        0, 0, 5, 8
+    });
+
+    auto result = transpose(m1);
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 4);
+
+    EXPECT_NEAR(result(0, 0), 0.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 9.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 1.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 8.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 8.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 3.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 0.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 5.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 5.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 0.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 8.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 3.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 8.0, 1e-6);
+
+    m1.transpose();
+
+    EXPECT_EQ(m1.rows(), 4);
+    EXPECT_EQ(m1.cols(), 4);
+
+    EXPECT_NEAR(m1(0, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 9.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(m1(1, 0), 9.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 8.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 8.0, 1e-6);
+    EXPECT_NEAR(m1(1, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 3.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 0.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 5.0, 1e-6);
+    EXPECT_NEAR(m1(2, 3), 5.0, 1e-6);
+
+    EXPECT_NEAR(m1(3, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m1(3, 1), 8.0, 1e-6);
+    EXPECT_NEAR(m1(3, 2), 3.0, 1e-6);
+    EXPECT_NEAR(m1(3, 3), 8.0, 1e-6);
+
+
+}
+
+TEST(MatrixTests, TransposeIdentity) {
+    auto m = raytracer::maths::Matrix<double>::identity(4);
+
+    auto result = transpose(m);
+
+    EXPECT_EQ(result.rows(), 4);
+    EXPECT_EQ(result.cols(), 4);
+
+    EXPECT_NEAR(result(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(result(0, 1), 0.0, 1e-6);
+    EXPECT_NEAR(result(0, 2), 0.0, 1e-6);
+    EXPECT_NEAR(result(0, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(result(1, 0), 0.0, 1e-6);
+    EXPECT_NEAR(result(1, 1), 1.0, 1e-6);
+    EXPECT_NEAR(result(1, 2), 0.0, 1e-6);
+    EXPECT_NEAR(result(1, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(result(2, 0), 0.0, 1e-6);
+    EXPECT_NEAR(result(2, 1), 0.0, 1e-6);
+    EXPECT_NEAR(result(2, 2), 1.0, 1e-6);
+    EXPECT_NEAR(result(2, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(result(3, 0), 0.0, 1e-6);
+    EXPECT_NEAR(result(3, 1), 0.0, 1e-6);
+    EXPECT_NEAR(result(3, 2), 0.0, 1e-6);
+    EXPECT_NEAR(result(3, 3), 1.0, 1e-6);
+
+    m.transpose();
+
+    EXPECT_EQ(m.rows(), 4);
+    EXPECT_EQ(m.cols(), 4);
+
+    EXPECT_NEAR(m(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(m(0, 1), 0.0, 1e-6);
+    EXPECT_NEAR(m(0, 2), 0.0, 1e-6);
+    EXPECT_NEAR(m(0, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(m(1, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m(1, 1), 1.0, 1e-6);
+    EXPECT_NEAR(m(1, 2), 0.0, 1e-6);
+    EXPECT_NEAR(m(1, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(m(2, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m(2, 1), 0.0, 1e-6);
+    EXPECT_NEAR(m(2, 2), 1.0, 1e-6);
+    EXPECT_NEAR(m(2, 3), 0.0, 1e-6);
+
+    EXPECT_NEAR(m(3, 0), 0.0, 1e-6);
+    EXPECT_NEAR(m(3, 1), 0.0, 1e-6);
+    EXPECT_NEAR(m(3, 2), 0.0, 1e-6);
+    EXPECT_NEAR(m(3, 3), 1.0, 1e-6);
+}
