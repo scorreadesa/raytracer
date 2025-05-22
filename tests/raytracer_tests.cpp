@@ -1458,3 +1458,134 @@ TEST(MatrixTests, TransposeIdentity) {
     EXPECT_NEAR(m(3, 2), 0.0, 1e-6);
     EXPECT_NEAR(m(3, 3), 1.0, 1e-6);
 }
+
+TEST(MatrixTests, ConcatenateRowMatrix) {
+    auto m1 = raytracer::maths::Matrix<double>(4, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+    });
+    auto m2 = raytracer::maths::Matrix<double>(2, 4, {
+        17, 18, 19, 20,
+        21, 22, 23, 24,
+    });
+
+    m1.extend_row(m2);
+
+    EXPECT_EQ(m1.rows(), 6);
+    EXPECT_EQ(m1.cols(), 4);
+
+    double current = 1.0;
+
+    for (std::size_t i = 0; i < m1.rows(); ++i) {
+        for (std::size_t j = 0; j < m1.cols(); ++j) {
+            EXPECT_NEAR(m1(i, j), current, 1e-6);
+            current += 1.0;
+        }
+    }
+}
+
+TEST(MatrixTests, ConcatenateRowMatrixColMismatch) {
+    auto m1 = raytracer::maths::Matrix<double>(4, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+    });
+    auto m2 = raytracer::maths::Matrix<double>(4, 2, {
+        17, 18,
+        19, 20,
+        21, 22,
+        23, 24,
+    });
+
+    EXPECT_THROW(m1.extend_row(m2), raytracer::exceptions::ShapeMismatchException);
+}
+
+TEST(MatrixTests, ConcatenateColMatrix) {
+    auto m1 = raytracer::maths::Matrix<double>(4, 4, {
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+    });
+    auto m2 = raytracer::maths::Matrix<double>(4, 2, {
+        0, 0,
+        0, 1,
+        1, 0,
+        1, 1,
+    });
+
+    m1.extend_col(m2);
+
+    EXPECT_EQ(m1.rows(), 4);
+    EXPECT_EQ(m1.cols(), 6);
+
+    EXPECT_NEAR(m1(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 2.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 3.0, 1e-6);
+    EXPECT_NEAR(m1(0, 3), 4.0, 1e-6);
+    EXPECT_NEAR(m1(0, 4), 0.0, 1e-6);
+    EXPECT_NEAR(m1(0, 5), 0.0, 1e-6);
+
+    EXPECT_NEAR(m1(1, 0), 5.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 6.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 7.0, 1e-6);
+    EXPECT_NEAR(m1(1, 3), 8.0, 1e-6);
+    EXPECT_NEAR(m1(1, 4), 0.0, 1e-6);
+    EXPECT_NEAR(m1(1, 5), 1.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 9.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 10.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 11.0, 1e-6);
+    EXPECT_NEAR(m1(2, 3), 12.0, 1e-6);
+    EXPECT_NEAR(m1(2, 4), 1.0, 1e-6);
+    EXPECT_NEAR(m1(2, 5), 0.0, 1e-6);
+
+    EXPECT_NEAR(m1(3, 0), 13.0, 1e-6);
+    EXPECT_NEAR(m1(3, 1), 14.0, 1e-6);
+    EXPECT_NEAR(m1(3, 2), 15.0, 1e-6);
+    EXPECT_NEAR(m1(3, 3), 16.0, 1e-6);
+    EXPECT_NEAR(m1(3, 4), 1.0, 1e-6);
+    EXPECT_NEAR(m1(3, 5), 1.0, 1e-6);
+}
+
+TEST(MatrixTests, ConcatenateIdentityMatrix) {
+    auto m1 = raytracer::maths::Matrix<double>(3, 3, {
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9,
+    });
+    auto m2 = raytracer::maths::Matrix<double>::identity(3);
+
+    m1.extend_col(m2);
+
+    EXPECT_EQ(m1.rows(), 3);
+    EXPECT_EQ(m1.cols(), 6);
+
+    EXPECT_NEAR(m1(0, 0), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 1), 2.0, 1e-6);
+    EXPECT_NEAR(m1(0, 2), 3.0, 1e-6);
+    EXPECT_NEAR(m1(0, 3), 1.0, 1e-6);
+    EXPECT_NEAR(m1(0, 4), 0.0, 1e-6);
+    EXPECT_NEAR(m1(0, 5), 0.0, 1e-6);
+
+    EXPECT_THROW(m1(0, 6), raytracer::exceptions::ColumnOutOfRangeException);
+
+    EXPECT_NEAR(m1(1, 0), 4.0, 1e-6);
+    EXPECT_NEAR(m1(1, 1), 5.0, 1e-6);
+    EXPECT_NEAR(m1(1, 2), 6.0, 1e-6);
+    EXPECT_NEAR(m1(1, 3), 0.0, 1e-6);
+    EXPECT_NEAR(m1(1, 4), 1.0, 1e-6);
+    EXPECT_NEAR(m1(1, 5), 0.0, 1e-6);
+
+    EXPECT_NEAR(m1(2, 0), 7.0, 1e-6);
+    EXPECT_NEAR(m1(2, 1), 8.0, 1e-6);
+    EXPECT_NEAR(m1(2, 2), 9.0, 1e-6);
+    EXPECT_NEAR(m1(2, 3), 0.0, 1e-6);
+    EXPECT_NEAR(m1(2, 4), 0.0, 1e-6);
+    EXPECT_NEAR(m1(2, 5), 1.0, 1e-6);
+
+    EXPECT_THROW(m1(3, 0), raytracer::exceptions::RowOutOfRangeException);
+}
