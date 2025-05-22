@@ -235,12 +235,16 @@ namespace raytracer::maths {
         }
 
         static Matrix<T> identity(std::size_t size) {
-            Matrix<T> m(size, size, {
-                            1, 0, 0, 0,
-                            0, 1, 0, 0,
-                            0, 0, 1, 0,
-                            0, 0, 0, 1
-                        });
+            Matrix<T> m(size, size);
+            for (std::size_t i = 0; i < size; i++) {
+                for (std::size_t j = 0; j < size; j++) {
+                    if (i == j) {
+                        m(i, j) = 1;
+                    } else {
+                        m(i, j) = 0;
+                    }
+                }
+            }
             return m;
         }
 
@@ -403,6 +407,43 @@ namespace raytracer::maths {
                 data_.at(i) /= scalar;
             }
             return *this;
+        }
+
+        void extend_row(const Matrix<T>& m) {
+            if (cols_ != m.cols_) {
+                auto err_msg_col = "Shape mismatch: lhs has " + std::to_string(cols_) + " columns but rhs has "
+                + std::to_string(m.cols_) + " columns.";
+                throw exceptions::ShapeMismatchException(err_msg_col);
+            }
+
+            data_.insert(data_.end(), m.data_.begin(), m.data_.end());
+            rows_ += m.rows_;
+        }
+
+        void extend_col(const Matrix<T>& m) {
+            if (rows_ != m.rows_) {
+                auto err_msg_rows = "Shape mismatch: lhs has " + std::to_string(rows_) + " rows but rhs has "
+                + std::to_string(m.rows_) + " rows.";
+                throw exceptions::ShapeMismatchException(err_msg_rows);
+            }
+
+            auto new_data = std::vector<T>(rows_ * (cols_ + m.cols_));
+            const std::size_t new_col = cols_ + m.cols_;
+
+            for (std::size_t i = 0; i < rows_; i++) {
+                // std::size_t new_col_idx = 0;
+                for (std::size_t j = 0; j < new_col; j++) {
+                    if (j < cols_) {
+                        new_data.at(i * new_col + j) = data_.at(i * cols_ + j);
+                    } else {
+                        new_data.at(i * new_col + j) = m.data_.at(i * m.cols() + j - cols_);
+                        // ++new_col_idx;
+                    }
+                }
+            }
+
+            data_ = new_data;
+            cols_ = new_col;
         }
 
         [[nodiscard]] std::size_t rows() const noexcept { return rows_; }
