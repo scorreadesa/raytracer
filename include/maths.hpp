@@ -202,6 +202,14 @@ namespace raytracer::maths {
             }
         }
 
+        Matrix(const std::size_t rows, const std::size_t cols, const std::vector<T>& data) : data_(data), rows_(rows), cols_(cols) {
+            if ((rows_ * cols_) != data.size()) {
+                const auto err_msg_mismatch = "Shape mismatch: given storage size is " + std::to_string(rows_ * cols_)
+                              + ", but should be " + std::to_string(data_.size());
+                throw exceptions::ShapeMismatchException(err_msg_mismatch);
+            }
+        }
+
         constexpr const T &operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
                                      + std::to_string(row) + " (valid range 0 <= row <" + std::to_string(rows_) + ")";
@@ -234,16 +242,10 @@ namespace raytracer::maths {
             return data_.at(row * cols_ + col);
         }
 
-        static Matrix<T> identity(std::size_t size) {
+        static Matrix<T> identity(const std::size_t size) {
             Matrix<T> m(size, size);
             for (std::size_t i = 0; i < size; i++) {
-                for (std::size_t j = 0; j < size; j++) {
-                    if (i == j) {
-                        m(i, j) = 1;
-                    } else {
-                        m(i, j) = 0;
-                    }
-                }
+                m(i, i) = T{1};
             }
             return m;
         }
@@ -512,6 +514,40 @@ namespace raytracer::maths {
             matrix(0, 1),
             matrix(0, 2)
         );
+    }
+
+    template<std::floating_point T>
+    Matrix<T> submatrix(const Matrix<T> &matrix, const std::size_t row, const std::size_t col) {
+
+        const auto m_rows = matrix.rows();
+        const auto m_cols = matrix.cols();
+
+        if (row >= matrix.rows()) {
+            auto msg = "Cannot remove row " + std::to_string(row) + " from matrix with shape ("
+            + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
+            throw exceptions::RowOutOfRangeException(msg);
+        }
+
+        if (col >= matrix.cols()) {
+            auto msg = "Cannot remove col " + std::to_string(col) + " from matrix with shape ("
+            + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
+            throw exceptions::ColumnOutOfRangeException(msg);
+        }
+
+        std::vector<T> data;
+        for (std::size_t i = 0; i < m_rows; i++) {
+            if (i != row) {
+                for (std::size_t j = 0; j < m_cols; j++) {
+                    if (j != col) {
+                        data.push_back(matrix(i, j));
+                    }
+                }
+            }
+        }
+
+        auto m = Matrix<T>(m_rows - 1, m_cols - 1, data);
+
+        return m;
     }
 }
 
