@@ -1589,3 +1589,88 @@ TEST(MatrixTests, ConcatenateIdentityMatrix) {
 
     EXPECT_THROW(m1(3, 0), raytracer::exceptions::RowOutOfRangeException);
 }
+
+TEST(MatrixTests, TestGerSubMatrix2x2) {
+
+    const auto m = raytracer::maths::Matrix<double>(2, 2, {
+        1, 5,
+        -3, 2
+    });
+
+    const auto sub_matrix = submatrix(m, 1, 1);
+
+    ASSERT_EQ(sub_matrix.rows(), 1);
+    ASSERT_EQ(sub_matrix.cols(), 1);
+
+    EXPECT_NEAR(sub_matrix(0, 0), 1.0, 1e-6);
+
+
+}
+
+TEST(MatrixTests, TestGetSubmatrix3x3) {
+
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+    1, 5, 0,
+    -3, 2, 7,
+    0, 6, -3,
+    });
+
+    auto sub_matrix = submatrix(m, 0, 2);
+
+    ASSERT_EQ(sub_matrix.rows(), 2);
+    ASSERT_EQ(sub_matrix.cols(), 2);
+
+    EXPECT_NEAR(sub_matrix(0, 0), -3.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(0, 1), 2.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(1, 0), 0.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(1, 1), 6.0, 1e-6);
+}
+
+TEST(MatrixTests, TestGetSubmatrix4x4) {
+
+    const auto m = raytracer::maths::Matrix<double>(4, 4, {
+    -6, 1, 1, 6,
+    -8, 5, 8, 6,
+    -1, 0, 8, 2,
+    -7, 1, -1, 1}
+    );
+
+    auto sub_matrix = submatrix(m, 2, 1);
+
+    ASSERT_EQ(sub_matrix.rows(), 3);
+    ASSERT_EQ(sub_matrix.cols(), 3);
+
+    EXPECT_NEAR(sub_matrix(0, 0), -6.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(0, 1), 1.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(0, 2), 6.0, 1e-6);
+
+    EXPECT_NEAR(sub_matrix(1, 0), -8.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(1, 1), 8.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(1, 2), 6.0, 1e-6);
+
+    EXPECT_NEAR(sub_matrix(2, 0), -7.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(2, 1), -1.0, 1e-6);
+    EXPECT_NEAR(sub_matrix(2, 2), 1.0, 1e-6);
+}
+
+TEST(MatrixTests, TestGetSubmatrixRowOutOfRange) {
+
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+        1, 5, 0,
+        -3, 2, 7,
+        0, 6, -3,
+    });
+
+    EXPECT_THROW(submatrix(m, 3, 0), raytracer::exceptions::RowOutOfRangeException);
+}
+
+TEST(MatrixTests, TestGetSubmatrixColOutOfRange) {
+
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+        1, 5, 0,
+        -3, 2, 7,
+        0, 6, -3,
+    });
+
+    EXPECT_THROW(submatrix(m, 0, 3), raytracer::exceptions::ColumnOutOfRangeException);
+}
