@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <boost/math/special_functions/next.hpp>
 
+#include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
 
@@ -598,8 +599,6 @@ TEST(MatrixTests, CreateMatrixWithValues) {
     EXPECT_NEAR(m(2, 1), 9.0, 1e-6);
     EXPECT_NEAR(m(2, 2), 10.0, 1e-6);
     EXPECT_NEAR(m(2, 3), 11.0, 1e-6);
-
-    std::cout << m << std::endl;
 }
 
 TEST(MatrixTests, AddMatrices) {
@@ -1673,4 +1672,122 @@ TEST(MatrixTests, TestGetSubmatrixColOutOfRange) {
     });
 
     EXPECT_THROW(submatrix(m, 0, 3), raytracer::exceptions::ColumnOutOfRangeException);
+}
+
+TEST(CofactorExpansionTests, TestDeterminant2x2) {
+    const auto m = raytracer::maths::Matrix<double>(2, 2, {
+        1, 5,
+        -3, 2
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto determinant = solver.determinant(m);
+
+    EXPECT_NEAR(determinant, 17.0, 1e-6);
+}
+
+TEST(CofactorExpansionTests, TestMinor3x3) {
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+    3, 5, 0,
+    2, -1, -7,
+    6, -1, 5
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto minor = solver.minor(m, 1, 0);
+
+    EXPECT_NEAR(minor, 25.0, 1e-6);
+}
+
+TEST(CofactorExpansionTests, TestCofactor3x3SameSignAsMinor) {
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+    3, 5, 0,
+    2, -1, -7,
+    6, -1, 5});
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    const auto minor = solver.minor(m, 0, 0);
+    const auto cofactor = solver.cofactor(m, 0, 0);
+
+    EXPECT_DOUBLE_EQ(minor, cofactor);
+    EXPECT_NEAR(minor, -12, 1e-6);
+    EXPECT_NEAR(cofactor, -12, 1e-6);
+}
+
+TEST(CofactorExpansionTests, TestCofactor3x3DifferentSignThanMinor) {
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+    3, 5, 0,
+    2, -1, -7,
+    6, -1, 5});
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    const auto minor = solver.minor(m, 1, 0);
+    const auto cofactor = solver.cofactor(m, 1, 0);
+
+    EXPECT_NEAR(minor, 25, 1e-6);
+    EXPECT_NEAR(cofactor, -25, 1e-6);
+}
+
+TEST(CofactorExpansionTests, TestDeterminant3x3) {
+    const auto m = raytracer::maths::Matrix<double>(3, 3, {
+    1, 2, 6,
+    -5, 8, -4,
+    2, 6, 4});
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    const auto cf_00 = solver.cofactor(m, 0, 0);
+    ASSERT_DOUBLE_EQ(cf_00, 56);
+
+    const auto cf_01 = solver.cofactor(m, 0, 1);
+    ASSERT_DOUBLE_EQ(cf_01, 12);
+
+    const auto cf_02 = solver.cofactor(m, 0, 2);
+    ASSERT_DOUBLE_EQ(cf_02, -46);
+
+    const auto determinant = solver.determinant(m);
+    EXPECT_DOUBLE_EQ(determinant, -196);
+}
+
+TEST(CofactorExpansionTests, TestDeterminant4x4) {
+    const auto m = raytracer::maths::Matrix<double>(4, 4, {
+        -2, -8, 3, 5,
+        -3, 1, 7, 3,
+        1, 2, -9, 6,
+        -6, 7, 7, -9
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    const auto cf_00 = solver.cofactor(m, 0, 0);
+    ASSERT_DOUBLE_EQ(cf_00, 690);
+
+    const auto cf_01 = solver.cofactor(m, 0, 1);
+    ASSERT_DOUBLE_EQ(cf_01, 447);
+
+    const auto cf_02 = solver.cofactor(m, 0, 2);
+    ASSERT_DOUBLE_EQ(cf_02, 210);
+
+    const auto cf_03 = solver.cofactor(m, 0, 3);
+    ASSERT_DOUBLE_EQ(cf_03, 51);
+
+    const auto determinant = solver.determinant(m);
+    EXPECT_DOUBLE_EQ(determinant, -4071);
+}
+
+TEST(CofactorExpansionTests, TestDeterminant5x5) {
+    const auto m = raytracer::maths::Matrix<double>(5, 5, {
+        1, 7, 6, 3, 1,
+        12, 19, 11, 15, 18,
+        4, 1, 8, 6, 6,
+        21, 23, 25, 22, 23,
+        15, 14, 11, 13, 11
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    const auto determinant = solver.determinant(m);
+    EXPECT_DOUBLE_EQ(determinant, -16274);
 }
