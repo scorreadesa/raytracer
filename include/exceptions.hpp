@@ -26,6 +26,13 @@ namespace raytracer::exceptions {
 
         }
     };
+
+    class NotInvertibleMatrixException final : public std::invalid_argument {
+    public:
+        explicit NotInvertibleMatrixException(const std::string &message) : std::invalid_argument(message) {
+
+        }
+    };
 }
 
 #endif //EXCEPTIONS_H
