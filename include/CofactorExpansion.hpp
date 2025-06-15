@@ -12,6 +12,11 @@ namespace raytracer::maths {
     class CofactorExpansion final : public Solver<T> {
     public:
         T determinant(const Matrix<T> &m) const override {
+
+            if (m.rows() == 1 and m.cols() == 1) {
+                return m(0, 0);
+            }
+
             if (m.rows() == 2 and m.cols() == 2) {
                 return m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
             }
@@ -36,7 +41,21 @@ namespace raytracer::maths {
         }
 
         Matrix<T> inverse(const Matrix<T> &m) const override {
-            return Matrix<T>(1, 1, {0, 0});
+            auto det = determinant(m);
+            if (det == 0) {
+                const auto msg = "det(m) is zero, m is not invertible.";
+                throw exceptions::NotInvertibleMatrixException(msg);
+            }
+
+            auto inverse = Matrix<T>(m.rows(), m.cols());
+
+            for (std::size_t row = 0; row < m.rows(); ++row) {
+                for (std::size_t col = 0; col < m.cols(); ++col) {
+                    auto cf = cofactor(m, row, col);
+                    inverse(col, row) = cf / det;
+                }
+            }
+            return inverse;
         }
     };
 }
