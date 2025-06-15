@@ -1791,3 +1791,101 @@ TEST(CofactorExpansionTests, TestDeterminant5x5) {
     const auto determinant = solver.determinant(m);
     EXPECT_DOUBLE_EQ(determinant, -16274);
 }
+
+TEST(CofactorExpansionTests, TestInverse4x4) {
+
+    const auto m = raytracer::maths::Matrix<double>(4, 4, {
+        8, -5, 9, 2,
+        7, 5, 6, 1,
+        -6, 0, 9, 6,
+        -3, 0, -9, -4
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(m);
+
+    EXPECT_NEAR(inverse(0, 0), -0.15385, 1e-5);
+    EXPECT_NEAR(inverse(0, 1), -0.15385, 1e-5);
+    EXPECT_NEAR(inverse(0, 2), -0.28205, 1e-5);
+    EXPECT_NEAR(inverse(0, 3), -0.53846, 1e-5);
+
+    EXPECT_NEAR(inverse(1, 0), -0.07692, 1e-5);
+    EXPECT_NEAR(inverse(1, 1), 0.12308, 1e-5);
+    EXPECT_NEAR(inverse(1, 2), 0.02564, 1e-5);
+    EXPECT_NEAR(inverse(1, 3), 0.03077, 1e-5);
+
+    EXPECT_NEAR(inverse(2, 0), 0.35897, 1e-5);
+    EXPECT_NEAR(inverse(2, 1), 0.35897, 1e-5);
+    EXPECT_NEAR(inverse(2, 2), 0.43590, 1e-5);
+    EXPECT_NEAR(inverse(2, 3), 0.92308, 1e-5);
+
+    EXPECT_NEAR(inverse(3, 0), -0.69231, 1e-5);
+    EXPECT_NEAR(inverse(3, 1), -0.69231, 1e-5);
+    EXPECT_NEAR(inverse(3, 2), -0.76923, 1e-5);
+    EXPECT_NEAR(inverse(3, 3), -1.92308, 1e-5);
+}
+
+TEST(CofactorExpansionTests, TestInverse4x4_2) {
+    const auto m = raytracer::maths::Matrix<double>(4, 4, {
+        9, 3, 0, 9,
+        -5, -2, -6, -3,
+        -4, 9, 6, 4,
+        -7, 6, 6, 2
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(m);
+
+    EXPECT_NEAR(inverse(0, 0), -0.04074, 1e-5);
+    EXPECT_NEAR(inverse(0, 1), -0.07778, 1e-5);
+    EXPECT_NEAR(inverse(0, 2), 0.14444, 1e-5);
+    EXPECT_NEAR(inverse(0, 3), -0.22222, 1e-5);
+
+    EXPECT_NEAR(inverse(1, 0), -0.07778, 1e-5);
+    EXPECT_NEAR(inverse(1, 1), 0.03333, 1e-5);
+    EXPECT_NEAR(inverse(1, 2), 0.36667, 1e-5);
+    EXPECT_NEAR(inverse(1, 3), -0.33333, 1e-5);
+
+    EXPECT_NEAR(inverse(2, 0), -0.02901, 1e-5);
+    EXPECT_NEAR(inverse(2, 1), -0.14630, 1e-5);
+    EXPECT_NEAR(inverse(2, 2), -0.10926, 1e-5);
+    EXPECT_NEAR(inverse(2, 3), 0.12963, 1e-5);
+
+    EXPECT_NEAR(inverse(3, 0), 0.17778, 1e-5);
+    EXPECT_NEAR(inverse(3, 1), 0.06667, 1e-5);
+    EXPECT_NEAR(inverse(3, 2), -0.26667, 1e-5);
+    EXPECT_NEAR(inverse(3, 3), 0.33333, 1e-5);
+}
+
+TEST(CofactorExpansionTests, TestInverseRecoverOriginalMatrix) {
+    const auto m1 = raytracer::maths::Matrix<double>(4, 4, {
+        3, -9, 7, 3,
+        3, -8, 2, -9,
+        -4, 4, 4, 1,
+        -6, 5, -1, 1,
+    });
+
+    const auto m2 = raytracer::maths::Matrix<double>(4, 4, {
+        8, 2, 2, 2,
+        3, -1, 7, 0,
+        7, 0, 5, 4,
+        6, -2, 0, 5
+    });
+
+    const auto m_12 = m1 * m2;
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(m2);
+
+    const auto original = m_12 * inverse;
+
+    for (std::size_t row = 0; row < original.rows(); ++row) {
+        for (std::size_t col = 0; col < original.cols(); ++col) {
+            EXPECT_NEAR(original(row, col), m1(row, col), 1e-5);
+        }
+    }
+
+
+
+
+}
