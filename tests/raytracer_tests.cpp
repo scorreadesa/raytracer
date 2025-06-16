@@ -1884,8 +1884,72 @@ TEST(CofactorExpansionTests, TestInverseRecoverOriginalMatrix) {
             EXPECT_NEAR(original(row, col), m1(row, col), 1e-5);
         }
     }
+}
 
+TEST(CofactorExpansionTests, TestInverseIdentityMatrix) {
+    /**
+     * The inverse of the identity matrix is, again, the identity matrix
+     */
 
+    const auto identity = raytracer::maths::Matrix<double>::identity(4);
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(identity);
 
+    EXPECT_DOUBLE_EQ(inverse(0, 0), 1);
+    EXPECT_DOUBLE_EQ(inverse(0, 1), 0);
+    EXPECT_DOUBLE_EQ(inverse(0, 2), 0);
+    EXPECT_DOUBLE_EQ(inverse(0, 3), 0);
 
+    EXPECT_DOUBLE_EQ(inverse(1, 0), 0);
+    EXPECT_DOUBLE_EQ(inverse(1, 1), 1);
+    EXPECT_DOUBLE_EQ(inverse(1, 2), 0);
+    EXPECT_DOUBLE_EQ(inverse(1, 3), 0);
+
+    EXPECT_DOUBLE_EQ(inverse(2, 0), 0);
+    EXPECT_DOUBLE_EQ(inverse(2, 1), 0);
+    EXPECT_DOUBLE_EQ(inverse(2, 2), 1);
+    EXPECT_DOUBLE_EQ(inverse(2, 3), 0);
+
+    EXPECT_DOUBLE_EQ(inverse(3, 0), 0);
+    EXPECT_DOUBLE_EQ(inverse(3, 1), 0);
+    EXPECT_DOUBLE_EQ(inverse(3, 2), 0);
+    EXPECT_DOUBLE_EQ(inverse(3, 3), 1);
+}
+
+TEST(CofactorExpensionTests, TestNonInvertibleMatrix) {
+    const auto m1 = raytracer::maths::Matrix<double>(3, 3, {
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9,
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+
+    EXPECT_THROW(solver.inverse(m1), raytracer::exceptions::NotInvertibleMatrixException);
+}
+
+TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
+
+    /**
+     * Multiplying a matrix by its inverse yields the identity matrix
+     */
+    const auto m1 = raytracer::maths::Matrix<double>(3, 3, {
+        2, 3, 5,
+        7, 11, 13,
+        17, 19, 23,
+    });
+
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(m1);
+    const auto res = m1 * inverse;
+
+    for (std::size_t row = 0; row < res.rows(); ++row) {
+        for (std::size_t col = 0; col < res.cols(); ++col) {
+            if (row == col) {
+                EXPECT_NEAR(res(row, col), 1.0, 1e-6);
+            } else {
+                EXPECT_NEAR(res(row, col), 0.0, 1e-6);
+            }
+        }
+    }
 }
