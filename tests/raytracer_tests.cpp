@@ -4,6 +4,7 @@
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
+#include "../include/Transform.hpp"
 
 TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
     float a = 0.0;
@@ -1952,4 +1953,17 @@ TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
             }
         }
     }
+}
+
+TEST(TransformationsTests, TestTranslate) {
+
+    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto point = raytracer::maths::Point3D<double>(-3, 4, 5);
+
+    const auto new_point = translation * point;
+
+    EXPECT_DOUBLE_EQ(new_point.x(), 2);
+    EXPECT_DOUBLE_EQ(new_point.y(), 1);
+    EXPECT_DOUBLE_EQ(new_point.z(), 7);
+    EXPECT_DOUBLE_EQ(new_point.w(), 1);
 }
