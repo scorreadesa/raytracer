@@ -121,48 +121,6 @@ namespace raytracer::maths {
     };
 
     template<std::floating_point T>
-    class Point3D {
-    private:
-        T x_, y_, z_, w_;
-
-    public:
-        Point3D(T x, T y, T z) : x_(x), y_(y), z_(z), w_(1) {
-        }
-
-        T x() const { return x_; }
-        T y() const { return y_; }
-        T z() const { return z_; }
-        T w() const { return w_; }
-
-        T &x() { return x_; }
-        T &y() { return y_; }
-        T &z() { return z_; }
-        T &w() { return w_; }
-
-        friend std::ostream &operator<<(std::ostream &os, const Point3D<T> &p) {
-            os << "(" << p.x_ << ", " << p.y_ << ", " << p.z_ << ")";
-            return os;
-        }
-
-        friend Point3D<T> operator+(const Point3D<T> &lhs, Vector3D<T> &rhs) {
-            return Point3D<T>(lhs.x_ + rhs.x(), lhs.y_ + rhs.y(), lhs.z_ + rhs.z());
-        }
-
-        friend Point3D<T> operator+(const Vector3D<T> &lhs, Point3D<T> &rhs) {
-            return Point3D(rhs.x_ + lhs.x(), rhs.y_ + lhs.y(), rhs.z_ + lhs.z());
-        }
-
-        friend Vector3D<T> operator-(const Point3D<T> &lhs, Point3D<T> &rhs) {
-            return Vector3D<T>(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_, lhs.z_ - rhs.z_);
-        }
-
-        friend Point3D<T> operator-(const Point3D<T> &lhs, Vector3D<T> &rhs) {
-            return Point3D<T>(lhs.x_ - rhs.x(), lhs.y_ - rhs.y(), lhs.z_ - rhs.z());
-        }
-    };
-
-
-    template<std::floating_point T>
     bool almost_equal_epsilon(T a, T b,
                               T tolerance = std::numeric_limits<T>::epsilon()) {
         return std::abs(a - b) < tolerance;
@@ -202,10 +160,11 @@ namespace raytracer::maths {
             }
         }
 
-        Matrix(const std::size_t rows, const std::size_t cols, const std::vector<T>& data) : data_(data), rows_(rows), cols_(cols) {
+        Matrix(const std::size_t rows, const std::size_t cols, const std::vector<T> &data) : data_(data), rows_(rows),
+            cols_(cols) {
             if ((rows_ * cols_) != data.size()) {
                 const auto err_msg_mismatch = "Shape mismatch: given storage size is " + std::to_string(rows_ * cols_)
-                              + ", but should be " + std::to_string(data_.size());
+                                              + ", but should be " + std::to_string(data_.size());
                 throw exceptions::ShapeMismatchException(err_msg_mismatch);
             }
         }
@@ -354,7 +313,6 @@ namespace raytracer::maths {
             }
 
             return result;
-
         }
 
         void transpose() {
@@ -411,10 +369,10 @@ namespace raytracer::maths {
             return *this;
         }
 
-        void extend_row(const Matrix<T>& m) {
+        void extend_row(const Matrix<T> &m) {
             if (cols_ != m.cols_) {
                 auto err_msg_col = "Shape mismatch: lhs has " + std::to_string(cols_) + " columns but rhs has "
-                + std::to_string(m.cols_) + " columns.";
+                                   + std::to_string(m.cols_) + " columns.";
                 throw exceptions::ShapeMismatchException(err_msg_col);
             }
 
@@ -422,10 +380,10 @@ namespace raytracer::maths {
             rows_ += m.rows_;
         }
 
-        void extend_col(const Matrix<T>& m) {
+        void extend_col(const Matrix<T> &m) {
             if (rows_ != m.rows_) {
                 auto err_msg_rows = "Shape mismatch: lhs has " + std::to_string(rows_) + " rows but rhs has "
-                + std::to_string(m.rows_) + " rows.";
+                                    + std::to_string(m.rows_) + " rows.";
                 throw exceptions::ShapeMismatchException(err_msg_rows);
             }
 
@@ -450,6 +408,55 @@ namespace raytracer::maths {
 
         [[nodiscard]] std::size_t rows() const noexcept { return rows_; }
         [[nodiscard]] std::size_t cols() const noexcept { return cols_; }
+    };
+
+    template<std::floating_point T>
+    class Point3D {
+    private:
+        T x_, y_, z_, w_;
+
+    public:
+        Point3D(T x, T y, T z) : x_(x), y_(y), z_(z), w_(1) {
+        }
+
+        T x() const { return x_; }
+        T y() const { return y_; }
+        T z() const { return z_; }
+        T w() const { return w_; }
+
+        T &x() { return x_; }
+        T &y() { return y_; }
+        T &z() { return z_; }
+        T &w() { return w_; }
+
+        friend std::ostream &operator<<(std::ostream &os, const Point3D<T> &p) {
+            os << "(" << p.x_ << ", " << p.y_ << ", " << p.z_ << ")";
+            return os;
+        }
+
+        friend Point3D<T> operator+(const Point3D<T> &lhs, Vector3D<T> &rhs) {
+            return Point3D<T>(lhs.x_ + rhs.x(), lhs.y_ + rhs.y(), lhs.z_ + rhs.z());
+        }
+
+        friend Point3D<T> operator+(const Vector3D<T> &lhs, Point3D<T> &rhs) {
+            return Point3D(rhs.x_ + lhs.x(), rhs.y_ + lhs.y(), rhs.z_ + lhs.z());
+        }
+
+        friend Vector3D<T> operator-(const Point3D<T> &lhs, Point3D<T> &rhs) {
+            return Vector3D<T>(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_, lhs.z_ - rhs.z_);
+        }
+
+        friend Point3D<T> operator-(const Point3D<T> &lhs, Vector3D<T> &rhs) {
+            return Point3D<T>(lhs.x_ - rhs.x(), lhs.y_ - rhs.y(), lhs.z_ - rhs.z());
+        }
+
+        friend Point3D<T> operator*(const Matrix<T> &m, const Point3D<T> &rhs) {
+            T nx = m(0, 0) * rhs.x() + m(0, 1) * rhs.y() + m(0, 2) * rhs.z() + m(0, 3);
+            T ny = m(1, 0) * rhs.x() + m(1, 1) * rhs.y() + m(1, 2) * rhs.z() + m(1, 3);
+            T nz = m(2, 0) * rhs.x() + m(2, 1) * rhs.y() + m(2, 2) * rhs.z() + m(2, 3);
+            T nw = m(3, 0) * rhs.x() + m(3, 1) * rhs.y() + m(3, 2) * rhs.z() + m(3, 3);
+            return Point3D<T>(nx, ny, nz);
+        }
     };
 
     template<std::floating_point T>
@@ -518,19 +525,18 @@ namespace raytracer::maths {
 
     template<std::floating_point T>
     Matrix<T> submatrix(const Matrix<T> &matrix, const std::size_t row, const std::size_t col) {
-
         const auto m_rows = matrix.rows();
         const auto m_cols = matrix.cols();
 
         if (row >= matrix.rows()) {
             auto msg = "Cannot remove row " + std::to_string(row) + " from matrix with shape ("
-            + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
+                       + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
             throw exceptions::RowOutOfRangeException(msg);
         }
 
         if (col >= matrix.cols()) {
             auto msg = "Cannot remove col " + std::to_string(col) + " from matrix with shape ("
-            + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
+                       + std::to_string(m_rows) + ", " + std::to_string(m_cols) + ").";
             throw exceptions::ColumnOutOfRangeException(msg);
         }
 
