@@ -42,6 +42,7 @@ namespace raytracer::maths {
 
         Matrix<T> inverse(const Matrix<T> &m) const override {
             auto det = determinant(m);
+            // TODO: avoid equality comparisons when using floating point numbers
             if (det == 0) {
                 const auto msg = "det(m) is zero, m is not invertible.";
                 throw exceptions::NotInvertibleMatrixException(msg);
