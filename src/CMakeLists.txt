@@ -4,4 +4,5 @@ add_executable(raytracer main.cpp
         ../include/IFileWriter.hpp
         ../include/PPMFileWriter.hpp
         ../include/FileWriter.hpp
+        ../include/Transform.hpp
 )
