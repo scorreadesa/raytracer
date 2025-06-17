@@ -1957,7 +1957,7 @@ TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
 
 TEST(TransformationsTests, TestTranslate) {
 
-    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto point = raytracer::maths::Point3D<double>(-3, 4, 5);
 
     const auto new_point = translation * point;
@@ -1970,7 +1970,7 @@ TEST(TransformationsTests, TestTranslate) {
 
 TEST(TransformationsTests, TestInverseTranslate) {
 
-    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(translation);
     const auto p = raytracer::maths::Point3D<double>(-3, 4, 5);
@@ -1988,9 +1988,9 @@ TEST(TransformationsTests, TestInverseTranslate) {
     EXPECT_DOUBLE_EQ(old_p.w(), 1);
 }
 
-TEST(TransformationsTests, TestInverseTranslate2) {
+TEST(TransformationsTests, TestTranslateAndRevert) {
 
-    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(translation);
     const auto p = raytracer::maths::Vector3D<double>(-3, 4, 5);
@@ -2000,4 +2000,64 @@ TEST(TransformationsTests, TestInverseTranslate2) {
     EXPECT_DOUBLE_EQ(new_p.y(), 7);
     EXPECT_DOUBLE_EQ(new_p.z(), 3);
     EXPECT_DOUBLE_EQ(new_p.w(), 0);
+}
+
+TEST(TransformationsTests, TestScalingPoint) {
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
+    const auto point = raytracer::maths::Point3D<double>(-4, 6, 8);
+    const auto new_p = scaling * point;
+
+    EXPECT_DOUBLE_EQ(new_p.x(), -8);
+    EXPECT_DOUBLE_EQ(new_p.y(), 18);
+    EXPECT_DOUBLE_EQ(new_p.z(), 32);
+    EXPECT_DOUBLE_EQ(new_p.w(), 1);
+}
+
+TEST(TransformationsTests, TestScalingVector) {
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
+    const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
+    const auto new_p = scaling * vector;
+
+    EXPECT_DOUBLE_EQ(new_p.x(), -8);
+    EXPECT_DOUBLE_EQ(new_p.y(), 18);
+    EXPECT_DOUBLE_EQ(new_p.z(), 32);
+    EXPECT_DOUBLE_EQ(new_p.w(), 0);
+}
+
+TEST(TransformationsTests, TestInverseScaling) {
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
+    const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(scaling);
+    const auto new_vector = inverse * vector;
+
+    EXPECT_DOUBLE_EQ(new_vector.x(), -2);
+    EXPECT_DOUBLE_EQ(new_vector.y(), 2);
+    EXPECT_DOUBLE_EQ(new_vector.z(), 2);
+    EXPECT_DOUBLE_EQ(new_vector.w(), 0);
+}
+
+TEST(TransformationsTests, TestScaleAndRevert) {
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
+    const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(scaling);
+
+    const auto new_vector = scaling * vector;
+
+    EXPECT_DOUBLE_EQ(new_vector.x(), -8);
+    EXPECT_DOUBLE_EQ(new_vector.y(), 18);
+    EXPECT_DOUBLE_EQ(new_vector.z(), 32);
+    EXPECT_DOUBLE_EQ(new_vector.w(), 0);
+
+    const auto old_vector = inverse * new_vector;
+
+    EXPECT_DOUBLE_EQ(old_vector.x(), -4);
+    EXPECT_DOUBLE_EQ(old_vector.y(), 6);
+    EXPECT_DOUBLE_EQ(old_vector.z(), 8);
+    EXPECT_DOUBLE_EQ(old_vector.w(), 0);
 }
