@@ -1967,3 +1967,35 @@ TEST(TransformationsTests, TestTranslate) {
     EXPECT_DOUBLE_EQ(new_point.z(), 7);
     EXPECT_DOUBLE_EQ(new_point.w(), 1);
 }
+
+TEST(TransformationsTests, TestInverseTranslate) {
+
+    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(translation);
+    const auto p = raytracer::maths::Point3D<double>(-3, 4, 5);
+
+    auto new_p = translation * p;
+    EXPECT_DOUBLE_EQ(new_p.x(), 2);
+    EXPECT_DOUBLE_EQ(new_p.y(), 1);
+    EXPECT_DOUBLE_EQ(new_p.z(), 7);
+    EXPECT_DOUBLE_EQ(new_p.w(), 1);
+
+    auto old_p = inverse * new_p;
+    EXPECT_DOUBLE_EQ(old_p.x(), -3);
+    EXPECT_DOUBLE_EQ(old_p.y(), 4);
+    EXPECT_DOUBLE_EQ(old_p.z(), 5);
+}
+
+TEST(TransformationsTests, TestInverseTranslate2) {
+
+    const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(translation);
+    const auto p = raytracer::maths::Point3D<double>(-3, 4, 5);
+    auto new_p = inverse * p;
+
+    EXPECT_DOUBLE_EQ(new_p.x(), -8);
+    EXPECT_DOUBLE_EQ(new_p.y(), 7);
+    EXPECT_DOUBLE_EQ(new_p.z(), 3);
+}
