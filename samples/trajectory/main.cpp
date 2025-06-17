@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     }
 
     auto projectile = Projectile(raytracer::maths::Point3D<double>(0.0, 1.0, 0.0),
-                                 normalize<double>(raytracer::maths::Vector3D<double>(1.0, 1.8, 0.0)) * 11.25);
+                                 normalize(raytracer::maths::Vector3D<double>(1.0, 1.8, 0.0)) * 11.25);
 
     auto environment = Environment(raytracer::maths::Vector3D<double>(0.0, -0.1, 0.0),
                                    raytracer::maths::Vector3D<double>(-0.01, 0.0, 0.0));
