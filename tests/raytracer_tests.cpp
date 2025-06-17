@@ -1985,6 +1985,7 @@ TEST(TransformationsTests, TestInverseTranslate) {
     EXPECT_DOUBLE_EQ(old_p.x(), -3);
     EXPECT_DOUBLE_EQ(old_p.y(), 4);
     EXPECT_DOUBLE_EQ(old_p.z(), 5);
+    EXPECT_DOUBLE_EQ(old_p.w(), 1);
 }
 
 TEST(TransformationsTests, TestInverseTranslate2) {
@@ -1992,10 +1993,11 @@ TEST(TransformationsTests, TestInverseTranslate2) {
     const auto translation = raytracer::maths::Transform4x4<double>::make_translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(translation);
-    const auto p = raytracer::maths::Point3D<double>(-3, 4, 5);
+    const auto p = raytracer::maths::Vector3D<double>(-3, 4, 5);
     auto new_p = inverse * p;
 
     EXPECT_DOUBLE_EQ(new_p.x(), -8);
     EXPECT_DOUBLE_EQ(new_p.y(), 7);
     EXPECT_DOUBLE_EQ(new_p.z(), 3);
+    EXPECT_DOUBLE_EQ(new_p.w(), 0);
 }
