@@ -2114,3 +2114,40 @@ TEST(TransformationsTests, TestScaleAndRevert) {
     EXPECT_DOUBLE_EQ(old_vector.z(), 8);
     EXPECT_DOUBLE_EQ(old_vector.w(), 0);
 }
+
+TEST(TransformationsTests, TestRotateXHalfQuarter) {
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 4.);
+
+    const auto res = half_quarter * point;
+    EXPECT_NEAR(res.x(), 0, 1e-6);
+    EXPECT_NEAR(res.y(), std::sqrt(2) / 2., 1e-6);
+    EXPECT_NEAR(res.z(), std::sqrt(2) / 2., 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationsTests, TestRotateXFullQuarter) {
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto full_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 2.);
+
+    const auto res = full_quarter * point;
+
+    EXPECT_NEAR(res.x(), 0., 1e-6);
+    EXPECT_NEAR(res.y(), 0., 1e-6);
+    EXPECT_NEAR(res.z(), 1., 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationsTests, TestInverseRotateX) {
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 4.);
+    std::cout << half_quarter << std::endl;
+    const auto solver = raytracer::maths::CofactorExpansion<double>();
+    const auto inverse = solver.inverse(half_quarter);
+    const auto reverse_rot = inverse * point;
+
+    EXPECT_NEAR(reverse_rot.x(), 0, 1e-6);
+    EXPECT_NEAR(reverse_rot.y(), std::sqrt(2) / 2., 1e-6);
+    EXPECT_NEAR(reverse_rot.z(), -std::sqrt(2) / 2., 1e-6);
+    EXPECT_DOUBLE_EQ(reverse_rot.w(), 1);
+}
