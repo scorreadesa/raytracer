@@ -1,7 +1,3 @@
-//
-// Created by antares on 11.06.25.
-//
-
 #ifndef COFACTORSOLVER_HPP
 #define COFACTORSOLVER_HPP
 
