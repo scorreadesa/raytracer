@@ -17,6 +17,16 @@ namespace raytracer::maths {
         return (1 - t) * v0 + t * v1;
     }
 
+    template <std::floating_point T>
+    T deg2rad(T degrees) {
+        return degrees * std::numbers::pi / 180.;
+    }
+
+    template <std::floating_point T>
+    T rad2deg(T radians) {
+        return radians * 180. / std::numbers::pi;
+    }
+
     template<std::floating_point T>
     class Matrix {
     private:
