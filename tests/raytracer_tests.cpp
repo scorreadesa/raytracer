@@ -30,6 +30,59 @@ TEST(FPTests, ApproximatelyEqualEpsilonMultiplySmall) {
     }
 }
 
+TEST(MathsTests, TestDeg2Rad0) {
+
+    const auto res = raytracer::maths::deg2rad<double>(0);
+    EXPECT_DOUBLE_EQ(res, 0.0f);
+}
+
+TEST(MathsTests, TestDeg2Rad90) {
+
+    const auto res = raytracer::maths::deg2rad<double>(90);
+    EXPECT_DOUBLE_EQ(res, std::numbers::pi / 2.);
+}
+
+TEST(MathsTests, TestDeg2Rad180) {
+    const auto res = raytracer::maths::deg2rad<double>(180);
+    EXPECT_DOUBLE_EQ(res, std::numbers::pi);
+}
+
+TEST(MathsTests, TestDeg2Rad270) {
+    const auto res = raytracer::maths::deg2rad<double>(270);
+    EXPECT_DOUBLE_EQ(res, 3. * std::numbers::pi / 2.);
+}
+
+TEST(MathsTests, TestDeg2Rad360) {
+    const auto res = raytracer::maths::deg2rad<double>(360);
+    EXPECT_DOUBLE_EQ(res, std::numbers::pi * 2.);
+}
+
+TEST(MathsTests, TestRad2Deg0) {
+    const auto res = raytracer::maths::rad2deg<double>(0);
+    EXPECT_DOUBLE_EQ(res, 0.0f);
+}
+
+TEST(MathsTests, TestRad2DegPI2) {
+    const auto res = raytracer::maths::rad2deg<double>(std::numbers::pi / 2.);
+    EXPECT_DOUBLE_EQ(res, 90.);
+}
+
+
+TEST(MathsTests, TestRad2DegPI) {
+    const auto res = raytracer::maths::rad2deg<double>(std::numbers::pi);
+    EXPECT_DOUBLE_EQ(res, 180.);
+}
+
+TEST(MathsTests, TestRad2Deg3PI2) {
+    const auto res = raytracer::maths::rad2deg<double>(3. * std::numbers::pi / 2.);
+    EXPECT_DOUBLE_EQ(res, 270.);
+}
+
+TEST(MathsTests, TestRad2Deg2PI) {
+    const auto res = raytracer::maths::rad2deg<double>(2 * std::numbers::pi);
+    EXPECT_DOUBLE_EQ(res, 360.);
+}
+
 TEST(PointTests, CreatePoint) {
     raytracer::maths::Point3D point(0.0, 0.0, 0.0);
     EXPECT_NEAR(point.x(), 0.0, 1e-6);
