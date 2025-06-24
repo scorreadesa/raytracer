@@ -32,6 +32,14 @@ namespace raytracer::maths {
                 0, 0, 0, 1,
             });
         }
+        static Matrix<T> rotation_y(T radians) {
+            return Matrix<T>(4, 4, {
+                std::cos(radians), 0, std::sin(radians), 0,
+                0, 1, 0, 0,
+                -std::sin(radians), 0, std::cos(radians), 0,
+                0, 0, 0, 1,
+            });
+        }
 
     };
 }
