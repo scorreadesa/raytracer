@@ -2175,3 +2175,27 @@ TEST(TransformationTests, TestRotateYFullQuarter) {
     EXPECT_NEAR(res.z(), 0, 1e-6);
     EXPECT_DOUBLE_EQ(res.w(), 1);
 }
+
+TEST(TransformationTests, TestRotateZHalfQuarter) {
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_z(std::numbers::pi / 4.);
+
+    const auto res = half_quarter * point;
+
+    EXPECT_NEAR(res.x(), -std::sqrt(2) / 2, 1e-6);
+    EXPECT_NEAR(res.y(), std::sqrt(2) / 2, 1e-6);
+    EXPECT_NEAR(res.z(), 0, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestRotateZFullQuarter) {
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto full_quarter = raytracer::maths::Transform4x4<double>::rotation_z(std::numbers::pi / 2.);
+
+    const auto res = full_quarter * point;
+
+    EXPECT_NEAR(res.x(), -1, 1e-6);
+    EXPECT_NEAR(res.y(), 0, 1e-6);
+    EXPECT_NEAR(res.z(), 0, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
