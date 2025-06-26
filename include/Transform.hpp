@@ -50,6 +50,14 @@ namespace raytracer::maths {
             });
         }
 
+        static Matrix<T> shearing(T xy, T xz, T yx, T yz, T zx, T zy) {
+            return Matrix<T>(4, 4, {
+                1, xy, xz, 0,
+                yx, 1, yz, 0,
+                zx, zy, 1, 0,
+                0, 0, 0, 1
+            });
+        }
     };
 }
 
