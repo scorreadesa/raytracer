@@ -2253,3 +2253,17 @@ TEST(TransformationTests, TestMoveZInProportionToY) {
     EXPECT_NEAR(res.y(), 3, 1e-6);
     EXPECT_NEAR(res.z(), 7, 1e-6);
 }
+
+TEST(TransformationTests, TestChaining) {
+    const auto point = raytracer::maths::Point3D<double>(1, 0, 1);
+    const auto Rx = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 2);
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(5, 5, 5);
+    const auto T = raytracer::maths::Transform4x4<double>::translation(10, 5, 7);
+    const auto transform = T * scaling * Rx;
+    const auto res = transform * point;
+
+    EXPECT_NEAR(res.x(), 15, 1e-6);
+    EXPECT_NEAR(res.y(), 0, 1e-6);
+    EXPECT_NEAR(res.z(), 7, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
