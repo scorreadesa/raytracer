@@ -2008,7 +2008,7 @@ TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
     }
 }
 
-TEST(TransformationsTests, TestTranslate) {
+TEST(TransformationTests, TestTranslate) {
 
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto point = raytracer::maths::Point3D<double>(-3, 4, 5);
@@ -2021,7 +2021,7 @@ TEST(TransformationsTests, TestTranslate) {
     EXPECT_DOUBLE_EQ(new_point.w(), 1);
 }
 
-TEST(TransformationsTests, TestInverseTranslate) {
+TEST(TransformationTests, TestInverseTranslate) {
 
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
@@ -2041,7 +2041,7 @@ TEST(TransformationsTests, TestInverseTranslate) {
     EXPECT_DOUBLE_EQ(old_p.w(), 1);
 }
 
-TEST(TransformationsTests, TestTranslateAndRevert) {
+TEST(TransformationTests, TestTranslateAndRevert) {
 
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
@@ -2055,7 +2055,7 @@ TEST(TransformationsTests, TestTranslateAndRevert) {
     EXPECT_DOUBLE_EQ(new_p.w(), 0);
 }
 
-TEST(TransformationsTests, TestScalingPoint) {
+TEST(TransformationTests, TestScalingPoint) {
 
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto point = raytracer::maths::Point3D<double>(-4, 6, 8);
@@ -2067,7 +2067,7 @@ TEST(TransformationsTests, TestScalingPoint) {
     EXPECT_DOUBLE_EQ(new_p.w(), 1);
 }
 
-TEST(TransformationsTests, TestScalingVector) {
+TEST(TransformationTests, TestScalingVector) {
 
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
@@ -2079,7 +2079,7 @@ TEST(TransformationsTests, TestScalingVector) {
     EXPECT_DOUBLE_EQ(new_p.w(), 0);
 }
 
-TEST(TransformationsTests, TestInverseScaling) {
+TEST(TransformationTests, TestInverseScaling) {
 
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
@@ -2093,7 +2093,7 @@ TEST(TransformationsTests, TestInverseScaling) {
     EXPECT_DOUBLE_EQ(new_vector.w(), 0);
 }
 
-TEST(TransformationsTests, TestScaleAndRevert) {
+TEST(TransformationTests, TestScaleAndRevert) {
 
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
@@ -2115,7 +2115,7 @@ TEST(TransformationsTests, TestScaleAndRevert) {
     EXPECT_DOUBLE_EQ(old_vector.w(), 0);
 }
 
-TEST(TransformationsTests, TestRotateXHalfQuarter) {
+TEST(TransformationTests, TestRotateXHalfQuarter) {
     const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
     const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 4.);
 
@@ -2126,7 +2126,7 @@ TEST(TransformationsTests, TestRotateXHalfQuarter) {
     EXPECT_DOUBLE_EQ(res.w(), 1);
 }
 
-TEST(TransformationsTests, TestRotateXFullQuarter) {
+TEST(TransformationTests, TestRotateXFullQuarter) {
     const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
     const auto full_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 2.);
 
@@ -2138,7 +2138,7 @@ TEST(TransformationsTests, TestRotateXFullQuarter) {
     EXPECT_DOUBLE_EQ(res.w(), 1);
 }
 
-TEST(TransformationsTests, TestInverseRotateX) {
+TEST(TransformationTests, TestInverseRotateX) {
     const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
     const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_x(std::numbers::pi / 4.);
 
@@ -2152,7 +2152,7 @@ TEST(TransformationsTests, TestInverseRotateX) {
     EXPECT_DOUBLE_EQ(reverse_rot.w(), 1);
 }
 
-TEST(TransformationsTests, TestRotateYHalfQuarter) {
+TEST(TransformationTests, TestRotateYHalfQuarter) {
     const auto point = raytracer::maths::Point3D<double>(0, 0, 1);
     const auto half_quarter = raytracer::maths::Transform4x4<double>::rotation_y(std::numbers::pi / 4.);
 
@@ -2198,4 +2198,58 @@ TEST(TransformationTests, TestRotateZFullQuarter) {
     EXPECT_NEAR(res.y(), 0, 1e-6);
     EXPECT_NEAR(res.z(), 0, 1e-6);
     EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestMoveXInProportionToY) {
+    const auto point = raytracer::maths::Point3D<double>(2, 3, 4);
+    const auto shearing = raytracer::maths::Transform4x4<double>::shearing(0, 1, 0, 0, 0, 0);
+    const auto res = shearing * point;
+
+    EXPECT_NEAR(res.x(), 6, 1e-6);
+    EXPECT_NEAR(res.y(), 3, 1e-6);
+    EXPECT_NEAR(res.z(), 4, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestMoveYInProportionToX) {
+    const auto point = raytracer::maths::Point3D<double>(2, 3, 4);
+    const auto shearing = raytracer::maths::Transform4x4<double>::shearing(0, 0, 1, 0, 0, 0);
+    const auto res = shearing * point;
+
+    EXPECT_NEAR(res.x(), 2, 1e-6);
+    EXPECT_NEAR(res.y(), 5, 1e-6);
+    EXPECT_NEAR(res.z(), 4, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestMoveYInProportionToZ) {
+    const auto point = raytracer::maths::Point3D<double>(2, 3, 4);
+    const auto shearing = raytracer::maths::Transform4x4<double>::shearing(0, 0, 0, 1, 0, 0);
+    const auto res = shearing * point;
+
+    EXPECT_NEAR(res.x(), 2, 1e-6);
+    EXPECT_NEAR(res.y(), 7, 1e-6);
+    EXPECT_NEAR(res.z(), 4, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestMoveZInProportionToX) {
+    const auto point = raytracer::maths::Point3D<double>(2, 3, 4);
+    const auto shearing = raytracer::maths::Transform4x4<double>::shearing(0, 0, 0, 0, 1, 0);
+    const auto res = shearing * point;
+
+    EXPECT_NEAR(res.x(), 2, 1e-6);
+    EXPECT_NEAR(res.y(), 3, 1e-6);
+    EXPECT_NEAR(res.z(), 6, 1e-6);
+    EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(TransformationTests, TestMoveZInProportionToY) {
+    const auto point = raytracer::maths::Point3D<double>(2, 3, 4);
+    const auto shearing = raytracer::maths::Transform4x4<double>::shearing(0, 0, 0, 0, 0, 1);
+    const auto res = shearing * point;
+
+    EXPECT_NEAR(res.x(), 2, 1e-6);
+    EXPECT_NEAR(res.y(), 3, 1e-6);
+    EXPECT_NEAR(res.z(), 7, 1e-6);
 }
