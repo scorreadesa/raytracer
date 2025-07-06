@@ -398,7 +398,7 @@ namespace raytracer::maths {
         }
 
 
-        friend Vector3D normalize(const Vector3D<T> &v) {
+        friend Vector3D<T> normalize(const Vector3D<T> &v) {
             auto l = v.length();
             return Vector3D(v.x_ / l, v.y_ / l, v.z_ / l);
         }
@@ -474,6 +474,14 @@ namespace raytracer::maths {
             T nz = m(2, 0) * rhs.x() + m(2, 1) * rhs.y() + m(2, 2) * rhs.z() + m(2, 3);
             T nw = m(3, 0) * rhs.x() + m(3, 1) * rhs.y() + m(3, 2) * rhs.z() + m(3, 3);
             return Point3D<T>(nx, ny, nz);
+        }
+
+        friend Point3D<T> operator*(T scalar, const Point3D<T>& rhs) {
+            return Point3D<T>(scalar * rhs.x_, scalar * rhs.y_, scalar * rhs.y_);
+        }
+
+        friend Point3D<T> operator*(const Point3D<T>& lhs, T scalar) {
+            return Point3D<T>(lhs.x_ * scalar, lhs.y_ * scalar, lhs.z_ * scalar);
         }
     };
 
