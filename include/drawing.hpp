@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "exceptions.hpp"
+#include "Exceptions.hpp"
 
 namespace raytracer::drawing {
 

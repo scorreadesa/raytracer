@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "exceptions.hpp"
+#include "Exceptions.hpp"
 
 namespace raytracer::maths {
     template<std::floating_point T>

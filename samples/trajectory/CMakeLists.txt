@@ -4,7 +4,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 
 add_executable(trajectory main.cpp
         ../../include/drawing.hpp
-        ../../include/exceptions.hpp
+        ../../include/Exceptions.hpp
         ../../include/IFileWriter.hpp
         ../../include/PPMFileWriter.hpp
         ../../include/FileWriter.hpp
