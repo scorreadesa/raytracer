@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../../include/maths.hpp"
+#include "../../include/Point3D.hpp"
+#include "../../include/Vector3D.hpp"
 
 struct Projectile {
     raytracer::maths::Point3D<double> position_;

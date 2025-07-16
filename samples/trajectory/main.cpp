@@ -2,8 +2,9 @@
 #include <boost/program_options.hpp>
 #include "../../include/drawing.hpp"
 #include "../../include/FileWriter.hpp"
-#include "../../include/maths.hpp"
 #include "../../include/PPMFileWriter.hpp"
+#include "../../include/Point3D.hpp"
+#include "../../include/Vector3D.hpp"
 
 struct Projectile {
     raytracer::maths::Point3D<double> position_;
