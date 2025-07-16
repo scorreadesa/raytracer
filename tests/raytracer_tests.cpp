@@ -4,6 +4,8 @@
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
+#include "../include/Ray.hpp"
+#include "../include/Sphere.hpp"
 #include "../include/Transform.hpp"
 
 TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
@@ -31,13 +33,11 @@ TEST(FPTests, ApproximatelyEqualEpsilonMultiplySmall) {
 }
 
 TEST(MathsTests, TestDeg2Rad0) {
-
     const auto res = raytracer::maths::deg2rad<double>(0);
     EXPECT_DOUBLE_EQ(res, 0.0f);
 }
 
 TEST(MathsTests, TestDeg2Rad90) {
-
     const auto res = raytracer::maths::deg2rad<double>(90);
     EXPECT_DOUBLE_EQ(res, std::numbers::pi / 2.);
 }
@@ -520,9 +520,7 @@ TEST(CanvasTests, CreateBlackCanvas) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
-
         for (size_t col = 0; col < canvas.width(); ++col) {
-
             auto color = canvas(row, col);
             EXPECT_NEAR(color.red(), 0.0, 1e-6);
             EXPECT_NEAR(color.green(), 0.0, 1e-6);
@@ -535,17 +533,13 @@ TEST(CanvasTests, MakeRedCanvas) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
-
         for (size_t col = 0; col < canvas.width(); ++col) {
-
             canvas(row, col) = raytracer::drawing::Color(1.0, 0.0, 0.0);
         }
     }
 
     for (size_t row = 0; row < canvas.height(); ++row) {
-
         for (size_t col = 0; col < canvas.width(); ++col) {
-
             EXPECT_NEAR(canvas(row, col).red(), 1.0, 1e-6);
             EXPECT_NEAR(canvas(row, col).green(), 0.0, 1e-6);
             EXPECT_NEAR(canvas(row, col).blue(), 0.0, 1e-6);
@@ -619,8 +613,7 @@ TEST(MatrixTests, CreateMatrix) {
     EXPECT_NEAR(matrix(3, 3), 16.5, 1e-6);
 }
 
-TEST(MatrixTests, CreateIdentityMatrix)
-{
+TEST(MatrixTests, CreateIdentityMatrix) {
     auto identity = raytracer::maths::Matrix<double>::identity(4);
 
     for (size_t row = 0; row < 4; ++row) {
@@ -636,10 +629,10 @@ TEST(MatrixTests, CreateIdentityMatrix)
 
 TEST(MatrixTests, CreateMatrixWithValues) {
     auto m = raytracer::maths::Matrix<double>(3, 4, {
-        0, 1, 2, 3,
-        4, 5, 6, 7,
-        8, 9, 10, 11,
-    });
+                                                  0, 1, 2, 3,
+                                                  4, 5, 6, 7,
+                                                  8, 9, 10, 11,
+                                              });
 
     EXPECT_NEAR(m(0, 0), 0.0, 1e-6);
     EXPECT_NEAR(m(0, 1), 1.0, 1e-6);
@@ -657,13 +650,13 @@ TEST(MatrixTests, CreateMatrixWithValues) {
 
 TEST(MatrixTests, AddMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
     auto m2 = raytracer::maths::Matrix<double>(2, 2, {
-        5, 6,
-        7, 8.
-    });
+                                                   5, 6,
+                                                   7, 8.
+                                               });
 
     auto res1 = m1 + m2;
 
@@ -688,13 +681,13 @@ TEST(MatrixTests, AddMatrices) {
 
 TEST(MatrixTests, SubtractMatrices) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                         1, 2,
+                                                         3, 4,
+                                                     });
     const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
-        5, 6,
-        7, 8,
-    });
+                                                         5, 6,
+                                                         7, 8,
+                                                     });
 
     auto res1 = m1 - m2;
 
@@ -719,9 +712,9 @@ TEST(MatrixTests, SubtractMatrices) {
 
 TEST(MatrixTests, LeftMultByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        4, 5,
-    });
+                                                         1, 2,
+                                                         4, 5,
+                                                     });
     auto res1 = 2 * m1;
 
     EXPECT_NEAR(res1(0, 0), 2.0, 1e-6);
@@ -735,9 +728,9 @@ TEST(MatrixTests, LeftMultByScalar) {
 
 TEST(MatrixTests, RightMultByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        4, 5,
-    });
+                                                         1, 2,
+                                                         4, 5,
+                                                     });
     auto res1 = m1 * 2;
 
     EXPECT_NEAR(res1(0, 0), 2.0, 1e-6);
@@ -751,9 +744,9 @@ TEST(MatrixTests, RightMultByScalar) {
 
 TEST(MatrixTests, DivByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        4, 5,
-    });
+                                                         1, 2,
+                                                         4, 5,
+                                                     });
     auto res1 = m1 / 2;
 
     EXPECT_NEAR(res1(0, 0), 0.5, 1e-6);
@@ -767,13 +760,13 @@ TEST(MatrixTests, DivByScalar) {
 
 TEST(MatrixTests, CompoundAddTwoMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
     const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
-        5, 6,
-        7, 8,
-    });
+                                                         5, 6,
+                                                         7, 8,
+                                                     });
 
     m1 += m2;
 
@@ -788,13 +781,13 @@ TEST(MatrixTests, CompoundAddTwoMatrices) {
 
 TEST(MatrixTests, CompoundSubTwoMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
     const auto m2 = raytracer::maths::Matrix<double>(2, 2, {
-        5, 6,
-        7, 8,
-    });
+                                                         5, 6,
+                                                         7, 8,
+                                                     });
 
     m1 -= m2;
 
@@ -809,9 +802,9 @@ TEST(MatrixTests, CompoundSubTwoMatrices) {
 
 TEST(MatrixTests, CompoundMultMatScalar) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
 
     m1 *= 2.0;
 
@@ -826,9 +819,9 @@ TEST(MatrixTests, CompoundMultMatScalar) {
 
 TEST(MatrixTests, CompoundDivMatScalar) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
 
     m1 /= 2.0;
 
@@ -843,36 +836,36 @@ TEST(MatrixTests, CompoundDivMatScalar) {
 
 TEST(MatrixTests, CompoundDivMatScalarByZero) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                   1, 2,
+                                                   3, 4,
+                                               });
 
     EXPECT_THROW(m1 /= 0, std::invalid_argument);
 }
 
 TEST(MatrixTests, DivMatScalarByZero) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
-        1, 2,
-        3, 4,
-    });
+                                                         1, 2,
+                                                         3, 4,
+                                                     });
 
     EXPECT_THROW(m1 / 0, std::invalid_argument);
 }
 
 TEST(MatrixTests, MatMulSameSize) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    });
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                            13, 14, 15, 16
+                                        });
 
     raytracer::maths::Matrix<double> m2(4, 4, {
-        -2, 1, 2, 3,
-        3, 2, 1, -1,
-        4, 3, 6, 5,
-        1, 2, 7, 8
-    });
+                                            -2, 1, 2, 3,
+                                            3, 2, 1, -1,
+                                            4, 3, 6, 5,
+                                            1, 2, 7, 8
+                                        });
 
     auto result = m1 * m2;
 
@@ -927,17 +920,17 @@ TEST(MatrixTests, MatMulSameSize) {
 
 TEST(MatrixTests, MatMulDifferentSizes) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-        -2, 1, 2, 3,
-        3, 2, 1, -1,
-        4, 3, 6, 5,
-        1, 2, 7, 8
-    });
+                                            -2, 1, 2, 3,
+                                            3, 2, 1, -1,
+                                            4, 3, 6, 5,
+                                            1, 2, 7, 8
+                                        });
     raytracer::maths::Matrix<double> m2(4, 5, {
-        1, 2, 3, 4, 9,
-        5, 6, 7, 8, 19,
-        9, 10, 11, 12, 24,
-        13, 14, 15, 16, 26,
-    });
+                                            1, 2, 3, 4, 9,
+                                            5, 6, 7, 8, 19,
+                                            9, 10, 11, 12, 24,
+                                            13, 14, 15, 16, 26,
+                                        });
 
     auto result = m1 * m2;
 
@@ -971,16 +964,16 @@ TEST(MatrixTests, MatMulDifferentSizes) {
 
 TEST(MatrixTests, MatMulDifferentSizes2) {
     raytracer::maths::Matrix<double> m1(4, 3, {
-        -2, 1, 2,
-        3, 2, 1,
-        4, 3, 6,
-        2, 9, 3
-    });
+                                            -2, 1, 2,
+                                            3, 2, 1,
+                                            4, 3, 6,
+                                            2, 9, 3
+                                        });
     raytracer::maths::Matrix<double> m2(3, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-    });
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                        });
 
     auto result = m1 * m2;
 
@@ -1027,27 +1020,27 @@ TEST(MatrixTests, MatMulDifferentSizes2) {
 
 TEST(MatrixTests, MatMulSizeMismatch) {
     raytracer::maths::Matrix<double> m1(3, 3, {
-        1, 2, 3,
-        4, 5, 6,
-        7, 8, 9,
-    });
+                                            1, 2, 3,
+                                            4, 5, 6,
+                                            7, 8, 9,
+                                        });
     raytracer::maths::Matrix<double> m2(4, 3, {
-        -2, 1, 2,
-        3, 2, 1,
-        4, 3, 6,
-        2, 9, 3
-    });
+                                            -2, 1, 2,
+                                            3, 2, 1,
+                                            4, 3, 6,
+                                            2, 9, 3
+                                        });
 
     EXPECT_THROW(m1 * m2, raytracer::exceptions::ShapeMismatchException);
 }
 
 TEST(MatrixTests, MatMulIdentity) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16,
-    });
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                            13, 14, 15, 16,
+                                        });
     auto identity = raytracer::maths::Matrix<double>::identity(4);
 
     auto result = identity * m1;
@@ -1103,18 +1096,18 @@ TEST(MatrixTests, MatMulIdentity) {
 
 TEST(MatrixTests, CompoundMultMatSameSize) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-    1, 2, 3, 4,
-    5, 6, 7, 8,
-    9, 10, 11, 12,
-    13, 14, 15, 16
-});
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                            13, 14, 15, 16
+                                        });
 
     raytracer::maths::Matrix<double> m2(4, 4, {
-        -2, 1, 2, 3,
-        3, 2, 1, -1,
-        4, 3, 6, 5,
-        1, 2, 7, 8
-    });
+                                            -2, 1, 2, 3,
+                                            3, 2, 1, -1,
+                                            4, 3, 6, 5,
+                                            1, 2, 7, 8
+                                        });
 
     m1 *= m2;
 
@@ -1144,18 +1137,18 @@ TEST(MatrixTests, CompoundMultMatSameSize) {
 
 TEST(MatrixTests, CompoundMultMatSameSize2) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-    1, 2, 3, 4,
-    5, 6, 7, 8,
-    9, 10, 11, 12,
-    13, 14, 15, 16
-});
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                            13, 14, 15, 16
+                                        });
 
     raytracer::maths::Matrix<double> m2(4, 4, {
-        -2, 1, 2, 3,
-        3, 2, 1, -1,
-        4, 3, 6, 5,
-        1, 2, 7, 8
-    });
+                                            -2, 1, 2, 3,
+                                            3, 2, 1, -1,
+                                            4, 3, 6, 5,
+                                            1, 2, 7, 8
+                                        });
 
     m2 *= m1;
 
@@ -1181,23 +1174,21 @@ TEST(MatrixTests, CompoundMultMatSameSize2) {
     EXPECT_NEAR(m2(3, 1), 196.0, 1e-6);
     EXPECT_NEAR(m2(3, 2), 214.0, 1e-6);
     EXPECT_NEAR(m2(3, 3), 232.0, 1e-6);
-
-
 }
 
 TEST(MatrixTests, CompoundMulDifferentSizes) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-        -2, 1, 2, 3,
-        3, 2, 1, -1,
-        4, 3, 6, 5,
-        1, 2, 7, 8
-    });
+                                            -2, 1, 2, 3,
+                                            3, 2, 1, -1,
+                                            4, 3, 6, 5,
+                                            1, 2, 7, 8
+                                        });
     raytracer::maths::Matrix<double> m2(4, 5, {
-        1, 2, 3, 4, 9,
-        5, 6, 7, 8, 19,
-        9, 10, 11, 12, 24,
-        13, 14, 15, 16, 26,
-    });
+                                            1, 2, 3, 4, 9,
+                                            5, 6, 7, 8, 19,
+                                            9, 10, 11, 12, 24,
+                                            13, 14, 15, 16, 26,
+                                        });
 
     m1 *= m2;
 
@@ -1263,11 +1254,11 @@ TEST(MatrixTests, PointToRowMatrix) {
 
 TEST(MatrixTests, MatrixPointMultiplication) {
     const raytracer::maths::Matrix<double> m1(4, 4, {
-        1, 2, 3, 4,
-        2, 4, 4, 2,
-        8, 6, 4, 1,
-        0, 0, 0, 1
-    });
+                                                  1, 2, 3, 4,
+                                                  2, 4, 4, 2,
+                                                  8, 6, 4, 1,
+                                                  0, 0, 0, 1
+                                              });
     raytracer::maths::Point3D<double> p(1.0, 2.0, 3.0);
 
     const auto m2 = point_to_column_matrix(p);
@@ -1317,10 +1308,10 @@ TEST(MatrixTests, VectorToRowMatrix) {
 
 TEST(MatrixTests, TransposeMatrixDifferentSizes) {
     raytracer::maths::Matrix<double> m1(3, 2, {
-        1, 2,
-        3, 4,
-        5, 6
-    });
+                                            1, 2,
+                                            3, 4,
+                                            5, 6
+                                        });
 
     auto result = transpose(m1);
 
@@ -1349,10 +1340,10 @@ TEST(MatrixTests, TransposeMatrixDifferentSizes) {
 
 TEST(MatrixTests, TransposeMatrixDifferentSizes2) {
     raytracer::maths::Matrix<double> m1(3, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-    });
+                                            1, 2, 3, 4,
+                                            5, 6, 7, 8,
+                                            9, 10, 11, 12,
+                                        });
 
     auto result = transpose(m1);
 
@@ -1399,11 +1390,11 @@ TEST(MatrixTests, TransposeMatrixDifferentSizes2) {
 
 TEST(MatrixTests, TransposeSquaredMatrix) {
     raytracer::maths::Matrix<double> m1(4, 4, {
-        0, 9, 3, 0,
-        9, 8, 0, 8,
-        1, 8, 5, 3,
-        0, 0, 5, 8
-    });
+                                            0, 9, 3, 0,
+                                            9, 8, 0, 8,
+                                            1, 8, 5, 3,
+                                            0, 0, 5, 8
+                                        });
 
     auto result = transpose(m1);
 
@@ -1454,8 +1445,6 @@ TEST(MatrixTests, TransposeSquaredMatrix) {
     EXPECT_NEAR(m1(3, 1), 8.0, 1e-6);
     EXPECT_NEAR(m1(3, 2), 3.0, 1e-6);
     EXPECT_NEAR(m1(3, 3), 8.0, 1e-6);
-
-
 }
 
 TEST(MatrixTests, TransposeIdentity) {
@@ -1514,15 +1503,15 @@ TEST(MatrixTests, TransposeIdentity) {
 
 TEST(MatrixTests, ConcatenateRowMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    });
+                                                   1, 2, 3, 4,
+                                                   5, 6, 7, 8,
+                                                   9, 10, 11, 12,
+                                                   13, 14, 15, 16
+                                               });
     auto m2 = raytracer::maths::Matrix<double>(2, 4, {
-        17, 18, 19, 20,
-        21, 22, 23, 24,
-    });
+                                                   17, 18, 19, 20,
+                                                   21, 22, 23, 24,
+                                               });
 
     m1.extend_row(m2);
 
@@ -1541,34 +1530,34 @@ TEST(MatrixTests, ConcatenateRowMatrix) {
 
 TEST(MatrixTests, ConcatenateRowMatrixColMismatch) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    });
+                                                   1, 2, 3, 4,
+                                                   5, 6, 7, 8,
+                                                   9, 10, 11, 12,
+                                                   13, 14, 15, 16
+                                               });
     auto m2 = raytracer::maths::Matrix<double>(4, 2, {
-        17, 18,
-        19, 20,
-        21, 22,
-        23, 24,
-    });
+                                                   17, 18,
+                                                   19, 20,
+                                                   21, 22,
+                                                   23, 24,
+                                               });
 
     EXPECT_THROW(m1.extend_row(m2), raytracer::exceptions::ShapeMismatchException);
 }
 
 TEST(MatrixTests, ConcatenateColMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    });
+                                                   1, 2, 3, 4,
+                                                   5, 6, 7, 8,
+                                                   9, 10, 11, 12,
+                                                   13, 14, 15, 16
+                                               });
     auto m2 = raytracer::maths::Matrix<double>(4, 2, {
-        0, 0,
-        0, 1,
-        1, 0,
-        1, 1,
-    });
+                                                   0, 0,
+                                                   0, 1,
+                                                   1, 0,
+                                                   1, 1,
+                                               });
 
     m1.extend_col(m2);
 
@@ -1606,10 +1595,10 @@ TEST(MatrixTests, ConcatenateColMatrix) {
 
 TEST(MatrixTests, ConcatenateIdentityMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(3, 3, {
-        1, 2, 3,
-        4, 5, 6,
-        7, 8, 9,
-    });
+                                                   1, 2, 3,
+                                                   4, 5, 6,
+                                                   7, 8, 9,
+                                               });
     auto m2 = raytracer::maths::Matrix<double>::identity(3);
 
     m1.extend_col(m2);
@@ -1644,11 +1633,10 @@ TEST(MatrixTests, ConcatenateIdentityMatrix) {
 }
 
 TEST(MatrixTests, TestGerSubMatrix2x2) {
-
     const auto m = raytracer::maths::Matrix<double>(2, 2, {
-        1, 5,
-        -3, 2
-    });
+                                                        1, 5,
+                                                        -3, 2
+                                                    });
 
     const auto sub_matrix = submatrix(m, 1, 1);
 
@@ -1656,17 +1644,14 @@ TEST(MatrixTests, TestGerSubMatrix2x2) {
     ASSERT_EQ(sub_matrix.cols(), 1);
 
     EXPECT_NEAR(sub_matrix(0, 0), 1.0, 1e-6);
-
-
 }
 
 TEST(MatrixTests, TestGetSubmatrix3x3) {
-
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-    1, 5, 0,
-    -3, 2, 7,
-    0, 6, -3,
-    });
+                                                        1, 5, 0,
+                                                        -3, 2, 7,
+                                                        0, 6, -3,
+                                                    });
 
     auto sub_matrix = submatrix(m, 0, 2);
 
@@ -1680,12 +1665,12 @@ TEST(MatrixTests, TestGetSubmatrix3x3) {
 }
 
 TEST(MatrixTests, TestGetSubmatrix4x4) {
-
     const auto m = raytracer::maths::Matrix<double>(4, 4, {
-    -6, 1, 1, 6,
-    -8, 5, 8, 6,
-    -1, 0, 8, 2,
-    -7, 1, -1, 1}
+                                                        -6, 1, 1, 6,
+                                                        -8, 5, 8, 6,
+                                                        -1, 0, 8, 2,
+                                                        -7, 1, -1, 1
+                                                    }
     );
 
     auto sub_matrix = submatrix(m, 2, 1);
@@ -1707,32 +1692,30 @@ TEST(MatrixTests, TestGetSubmatrix4x4) {
 }
 
 TEST(MatrixTests, TestGetSubmatrixRowOutOfRange) {
-
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-        1, 5, 0,
-        -3, 2, 7,
-        0, 6, -3,
-    });
+                                                        1, 5, 0,
+                                                        -3, 2, 7,
+                                                        0, 6, -3,
+                                                    });
 
     EXPECT_THROW(submatrix(m, 3, 0), raytracer::exceptions::RowOutOfRangeException);
 }
 
 TEST(MatrixTests, TestGetSubmatrixColOutOfRange) {
-
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-        1, 5, 0,
-        -3, 2, 7,
-        0, 6, -3,
-    });
+                                                        1, 5, 0,
+                                                        -3, 2, 7,
+                                                        0, 6, -3,
+                                                    });
 
     EXPECT_THROW(submatrix(m, 0, 3), raytracer::exceptions::ColumnOutOfRangeException);
 }
 
 TEST(CofactorExpansionTests, TestDeterminant2x2) {
     const auto m = raytracer::maths::Matrix<double>(2, 2, {
-        1, 5,
-        -3, 2
-    });
+                                                        1, 5,
+                                                        -3, 2
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto determinant = solver.determinant(m);
@@ -1742,10 +1725,10 @@ TEST(CofactorExpansionTests, TestDeterminant2x2) {
 
 TEST(CofactorExpansionTests, TestMinor3x3) {
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-    3, 5, 0,
-    2, -1, -7,
-    6, -1, 5
-    });
+                                                        3, 5, 0,
+                                                        2, -1, -7,
+                                                        6, -1, 5
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto minor = solver.minor(m, 1, 0);
@@ -1755,9 +1738,10 @@ TEST(CofactorExpansionTests, TestMinor3x3) {
 
 TEST(CofactorExpansionTests, TestCofactor3x3SameSignAsMinor) {
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-    3, 5, 0,
-    2, -1, -7,
-    6, -1, 5});
+                                                        3, 5, 0,
+                                                        2, -1, -7,
+                                                        6, -1, 5
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1771,9 +1755,10 @@ TEST(CofactorExpansionTests, TestCofactor3x3SameSignAsMinor) {
 
 TEST(CofactorExpansionTests, TestCofactor3x3DifferentSignThanMinor) {
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-    3, 5, 0,
-    2, -1, -7,
-    6, -1, 5});
+                                                        3, 5, 0,
+                                                        2, -1, -7,
+                                                        6, -1, 5
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1786,9 +1771,10 @@ TEST(CofactorExpansionTests, TestCofactor3x3DifferentSignThanMinor) {
 
 TEST(CofactorExpansionTests, TestDeterminant3x3) {
     const auto m = raytracer::maths::Matrix<double>(3, 3, {
-    1, 2, 6,
-    -5, 8, -4,
-    2, 6, 4});
+                                                        1, 2, 6,
+                                                        -5, 8, -4,
+                                                        2, 6, 4
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1807,11 +1793,11 @@ TEST(CofactorExpansionTests, TestDeterminant3x3) {
 
 TEST(CofactorExpansionTests, TestDeterminant4x4) {
     const auto m = raytracer::maths::Matrix<double>(4, 4, {
-        -2, -8, 3, 5,
-        -3, 1, 7, 3,
-        1, 2, -9, 6,
-        -6, 7, 7, -9
-    });
+                                                        -2, -8, 3, 5,
+                                                        -3, 1, 7, 3,
+                                                        1, 2, -9, 6,
+                                                        -6, 7, 7, -9
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1833,12 +1819,12 @@ TEST(CofactorExpansionTests, TestDeterminant4x4) {
 
 TEST(CofactorExpansionTests, TestDeterminant5x5) {
     const auto m = raytracer::maths::Matrix<double>(5, 5, {
-        1, 7, 6, 3, 1,
-        12, 19, 11, 15, 18,
-        4, 1, 8, 6, 6,
-        21, 23, 25, 22, 23,
-        15, 14, 11, 13, 11
-    });
+                                                        1, 7, 6, 3, 1,
+                                                        12, 19, 11, 15, 18,
+                                                        4, 1, 8, 6, 6,
+                                                        21, 23, 25, 22, 23,
+                                                        15, 14, 11, 13, 11
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1847,13 +1833,12 @@ TEST(CofactorExpansionTests, TestDeterminant5x5) {
 }
 
 TEST(CofactorExpansionTests, TestInverse4x4) {
-
     const auto m = raytracer::maths::Matrix<double>(4, 4, {
-        8, -5, 9, 2,
-        7, 5, 6, 1,
-        -6, 0, 9, 6,
-        -3, 0, -9, -4
-    });
+                                                        8, -5, 9, 2,
+                                                        7, 5, 6, 1,
+                                                        -6, 0, 9, 6,
+                                                        -3, 0, -9, -4
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(m);
@@ -1881,11 +1866,11 @@ TEST(CofactorExpansionTests, TestInverse4x4) {
 
 TEST(CofactorExpansionTests, TestInverse4x4_2) {
     const auto m = raytracer::maths::Matrix<double>(4, 4, {
-        9, 3, 0, 9,
-        -5, -2, -6, -3,
-        -4, 9, 6, 4,
-        -7, 6, 6, 2
-    });
+                                                        9, 3, 0, 9,
+                                                        -5, -2, -6, -3,
+                                                        -4, 9, 6, 4,
+                                                        -7, 6, 6, 2
+                                                    });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(m);
@@ -1913,18 +1898,18 @@ TEST(CofactorExpansionTests, TestInverse4x4_2) {
 
 TEST(CofactorExpansionTests, TestInverseRecoverOriginalMatrix) {
     const auto m1 = raytracer::maths::Matrix<double>(4, 4, {
-        3, -9, 7, 3,
-        3, -8, 2, -9,
-        -4, 4, 4, 1,
-        -6, 5, -1, 1,
-    });
+                                                         3, -9, 7, 3,
+                                                         3, -8, 2, -9,
+                                                         -4, 4, 4, 1,
+                                                         -6, 5, -1, 1,
+                                                     });
 
     const auto m2 = raytracer::maths::Matrix<double>(4, 4, {
-        8, 2, 2, 2,
-        3, -1, 7, 0,
-        7, 0, 5, 4,
-        6, -2, 0, 5
-    });
+                                                         8, 2, 2, 2,
+                                                         3, -1, 7, 0,
+                                                         7, 0, 5, 4,
+                                                         6, -2, 0, 5
+                                                     });
 
     const auto m_12 = m1 * m2;
 
@@ -1972,10 +1957,10 @@ TEST(CofactorExpansionTests, TestInverseIdentityMatrix) {
 
 TEST(CofactorExpensionTests, TestNonInvertibleMatrix) {
     const auto m1 = raytracer::maths::Matrix<double>(3, 3, {
-        1, 2, 3,
-        4, 5, 6,
-        7, 8, 9,
-    });
+                                                         1, 2, 3,
+                                                         4, 5, 6,
+                                                         7, 8, 9,
+                                                     });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
 
@@ -1983,15 +1968,14 @@ TEST(CofactorExpensionTests, TestNonInvertibleMatrix) {
 }
 
 TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
-
     /**
      * Multiplying a matrix by its inverse yields the identity matrix
      */
     const auto m1 = raytracer::maths::Matrix<double>(3, 3, {
-        2, 3, 5,
-        7, 11, 13,
-        17, 19, 23,
-    });
+                                                         2, 3, 5,
+                                                         7, 11, 13,
+                                                         17, 19, 23,
+                                                     });
 
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(m1);
@@ -2009,7 +1993,6 @@ TEST(CofactorExpansionTests, TestMultiplyMatrixByInverse) {
 }
 
 TEST(TransformationTests, TestTranslate) {
-
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto point = raytracer::maths::Point3D<double>(-3, 4, 5);
 
@@ -2022,7 +2005,6 @@ TEST(TransformationTests, TestTranslate) {
 }
 
 TEST(TransformationTests, TestInverseTranslate) {
-
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(translation);
@@ -2042,7 +2024,6 @@ TEST(TransformationTests, TestInverseTranslate) {
 }
 
 TEST(TransformationTests, TestTranslateAndRevert) {
-
     const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
     const auto inverse = solver.inverse(translation);
@@ -2056,7 +2037,6 @@ TEST(TransformationTests, TestTranslateAndRevert) {
 }
 
 TEST(TransformationTests, TestScalingPoint) {
-
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto point = raytracer::maths::Point3D<double>(-4, 6, 8);
     const auto new_p = scaling * point;
@@ -2068,7 +2048,6 @@ TEST(TransformationTests, TestScalingPoint) {
 }
 
 TEST(TransformationTests, TestScalingVector) {
-
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
     const auto new_p = scaling * vector;
@@ -2080,7 +2059,6 @@ TEST(TransformationTests, TestScalingVector) {
 }
 
 TEST(TransformationTests, TestInverseScaling) {
-
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
@@ -2094,7 +2072,6 @@ TEST(TransformationTests, TestInverseScaling) {
 }
 
 TEST(TransformationTests, TestScaleAndRevert) {
-
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto vector = raytracer::maths::Vector3D<double>(-4, 6, 8);
     const auto solver = raytracer::maths::CofactorExpansion<double>();
@@ -2266,4 +2243,63 @@ TEST(TransformationTests, TestChaining) {
     EXPECT_NEAR(res.y(), 0, 1e-6);
     EXPECT_NEAR(res.z(), 7, 1e-6);
     EXPECT_DOUBLE_EQ(res.w(), 1);
+}
+
+TEST(RayTests, TestCreateRay) {
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(1, 2, 3),
+        raytracer::maths::Vector3D<double>(4, 5, 6)
+    );
+
+    const auto origin = ray.origin();
+    const auto direction = ray.direction();
+
+    EXPECT_DOUBLE_EQ(origin.x(), 1.0);
+    EXPECT_DOUBLE_EQ(origin.y(), 2.0);
+    EXPECT_DOUBLE_EQ(origin.z(), 3.0);
+    EXPECT_DOUBLE_EQ(origin.w(), 1.0);
+
+    EXPECT_DOUBLE_EQ(direction.x(), 4.0);
+    EXPECT_DOUBLE_EQ(direction.y(), 5.0);
+    EXPECT_DOUBLE_EQ(direction.z(), 6.0);
+}
+
+TEST(RayTests, TestGetCurrentPosition) {
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(2, 3, 4),
+        raytracer::maths::Vector3D<double>(1, 0, 0)
+    );
+
+    auto pos1 = ray.position(0);
+    EXPECT_DOUBLE_EQ(pos1.x(), 2.0);
+    EXPECT_DOUBLE_EQ(pos1.y(), 3.0);
+    EXPECT_DOUBLE_EQ(pos1.z(), 4.0);
+    EXPECT_DOUBLE_EQ(pos1.w(), 1.0);
+
+    auto pos2 = ray.position(1);
+    EXPECT_DOUBLE_EQ(pos2.x(), 3.0);
+    EXPECT_DOUBLE_EQ(pos2.y(), 3.0);
+    EXPECT_DOUBLE_EQ(pos2.z(), 4.0);
+    EXPECT_DOUBLE_EQ(pos2.w(), 1.0);
+
+    auto pos3 = ray.position(-1);
+    EXPECT_DOUBLE_EQ(pos3.x(), 1.0);
+    EXPECT_DOUBLE_EQ(pos3.y(), 3.0);
+    EXPECT_DOUBLE_EQ(pos3.z(), 4.0);
+    EXPECT_DOUBLE_EQ(pos3.w(), 1.0);
+
+    auto pos4 = ray.position(2.5);
+    EXPECT_DOUBLE_EQ(pos4.x(), 4.5);
+    EXPECT_DOUBLE_EQ(pos4.y(), 3.0);
+    EXPECT_DOUBLE_EQ(pos4.z(), 4.0);
+    EXPECT_DOUBLE_EQ(pos4.w(), 1.0);
+}
+
+TEST(ShapeTests, SphereIntersectionMissed) {
+
+    auto unit_sphere = raytracer::scene::Sphere<double>();
+    auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    auto intersections = unit_sphere.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 0);
 }
