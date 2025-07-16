@@ -2,8 +2,8 @@
 #define TRANSFORM_HPP
 
 #include <cmath>
+#include "Matrix.hpp"
 
-#include "maths.hpp"
 namespace raytracer::maths {
     template <std::floating_point T>
     class Transform4x4 {

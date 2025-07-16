@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "maths.hpp"
+#include "Matrix.hpp"
 
 namespace raytracer::maths {
 
