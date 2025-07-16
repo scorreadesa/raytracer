@@ -2295,11 +2295,55 @@ TEST(RayTests, TestGetCurrentPosition) {
     EXPECT_DOUBLE_EQ(pos4.w(), 1.0);
 }
 
-TEST(ShapeTests, SphereIntersectionMissed) {
+TEST(SphereTests, SphereBehindRay) {
 
-    auto unit_sphere = raytracer::scene::Sphere<double>();
-    auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
-    auto intersections = unit_sphere.intersect(ray);
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto intersections = sphere.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_DOUBLE_EQ(intersections.at(0).t_, -6.0);
+    EXPECT_DOUBLE_EQ(intersections.at(1).t_, -4.0);
+}
+
+TEST(SphereTests, RayOriginInsideSphere) {
+
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 0), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto xs = sphere.intersect(ray);
+
+    EXPECT_EQ(xs.size(), 2);
+    EXPECT_DOUBLE_EQ(xs.at(0).t_, -1.0);
+    EXPECT_DOUBLE_EQ(xs.at(1).t_, 1.0);
+}
+
+TEST(SphereTests, SphereIntersectionMissed) {
+
+    const auto unit_sphere = raytracer::scene::Sphere<double>();
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto intersections = unit_sphere.intersect(ray);
 
     EXPECT_EQ(intersections.size(), 0);
+}
+
+TEST(SphereTests, SphereIntersectionTangent) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 1, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto intersections = sphere.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_DOUBLE_EQ(intersections.at(0).t_, 5.0);
+    EXPECT_DOUBLE_EQ(intersections.at(1).t_, 5.0);
+}
+
+TEST(SphereTests, SphereInterections) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto intersections = sphere.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_DOUBLE_EQ(intersections.at(0).t_, 4.0);
+    EXPECT_DOUBLE_EQ(intersections.at(1).t_, 6.0);
 }
