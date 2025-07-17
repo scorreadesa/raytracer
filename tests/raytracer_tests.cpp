@@ -5,6 +5,7 @@
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
 #include "../include/Ray.hpp"
+#include "../include/Scene.hpp"
 #include "../include/Sphere.hpp"
 #include "../include/Transform.hpp"
 
@@ -2304,6 +2305,9 @@ TEST(SphereTests, SphereBehindRay) {
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_DOUBLE_EQ(intersections.at(0).t_, -6.0);
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, -4.0);
+
+    const auto hit = raytracer::scene::hit(intersections);
+    EXPECT_FALSE(hit.has_value());
 }
 
 TEST(SphereTests, RayOriginInsideSphere) {
@@ -2317,6 +2321,9 @@ TEST(SphereTests, RayOriginInsideSphere) {
     EXPECT_DOUBLE_EQ(xs.at(1).t_, 1.0);
 
     EXPECT_TRUE(xs.at(0).t_ < xs.at(1).t_);
+
+    const auto hit = raytracer::scene::hit(xs);
+    EXPECT_DOUBLE_EQ(hit.value().t_, 1.0);
 }
 
 TEST(SphereTests, SphereIntersectionMissed) {
@@ -2337,9 +2344,12 @@ TEST(SphereTests, SphereIntersectionTangent) {
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_DOUBLE_EQ(intersections.at(0).t_, 5.0);
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, 5.0);
+
+    const auto hit = raytracer::scene::hit(intersections);
+    EXPECT_DOUBLE_EQ(hit.value().t_, 5.0);
 }
 
-TEST(SphereTests, SphereInterections) {
+TEST(SphereTests, SphereIntersections) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2350,4 +2360,7 @@ TEST(SphereTests, SphereInterections) {
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, 6.0);
 
     EXPECT_TRUE(intersections.at(0).t_ < intersections.at(1).t_);
+
+    const auto hit = raytracer::scene::hit(intersections);
+    EXPECT_DOUBLE_EQ(hit.value().t_, 4.0);
 }
