@@ -31,8 +31,8 @@ namespace raytracer::scene {
 
             T t1 = (-b - std::sqrt(d)) / (static_cast<T>(2) * a);
             T t2 = (-b + std::sqrt(d)) / (static_cast<T>(2) * a);
-            xs.emplace_back(Intersection<T>(t1));
-            xs.emplace_back(Intersection<T>(t2));
+            xs.emplace_back(t1, *this);
+            xs.emplace_back(t2, *this);
 
             return xs;
         }
