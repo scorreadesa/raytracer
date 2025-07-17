@@ -16,6 +16,11 @@ namespace raytracer::scene {
     };
 
     template <std::floating_point T>
+    bool operator<(const Intersection<T>& lhs, const Intersection<T>& rhs) {
+        return lhs.t_ < rhs.t_;
+    }
+
+    template <std::floating_point T>
     class Shape {
     public:
         virtual ~Shape() = default;
