@@ -2296,8 +2296,8 @@ TEST(RayTests, TestGetCurrentPosition) {
 }
 
 TEST(SphereTests, SphereBehindRay) {
-
-    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 5),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto intersections = sphere.intersect(ray);
 
@@ -2307,8 +2307,8 @@ TEST(SphereTests, SphereBehindRay) {
 }
 
 TEST(SphereTests, RayOriginInsideSphere) {
-
-    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 0), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 0),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto xs = sphere.intersect(ray);
 
@@ -2318,18 +2318,18 @@ TEST(SphereTests, RayOriginInsideSphere) {
 }
 
 TEST(SphereTests, SphereIntersectionMissed) {
-
     const auto unit_sphere = raytracer::scene::Sphere<double>();
-    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto intersections = unit_sphere.intersect(ray);
 
     EXPECT_EQ(intersections.size(), 0);
 }
 
 TEST(SphereTests, SphereIntersectionTangent) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
-    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 1, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 1, -5),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto intersections = sphere.intersect(ray);
 
     EXPECT_EQ(intersections.size(), 2);
@@ -2338,9 +2338,9 @@ TEST(SphereTests, SphereIntersectionTangent) {
 }
 
 TEST(SphereTests, SphereInterections) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
-    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5), raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto intersections = sphere.intersect(ray);
 
     EXPECT_EQ(intersections.size(), 2);
