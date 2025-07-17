@@ -2315,6 +2315,8 @@ TEST(SphereTests, RayOriginInsideSphere) {
     EXPECT_EQ(xs.size(), 2);
     EXPECT_DOUBLE_EQ(xs.at(0).t_, -1.0);
     EXPECT_DOUBLE_EQ(xs.at(1).t_, 1.0);
+
+    EXPECT_TRUE(xs.at(0).t_ < xs.at(1).t_);
 }
 
 TEST(SphereTests, SphereIntersectionMissed) {
@@ -2346,4 +2348,6 @@ TEST(SphereTests, SphereInterections) {
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_DOUBLE_EQ(intersections.at(0).t_, 4.0);
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, 6.0);
+
+    EXPECT_TRUE(intersections.at(0).t_ < intersections.at(1).t_);
 }
