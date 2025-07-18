@@ -1,10 +1,6 @@
 #ifndef RAY_HPP
 #define RAY_HPP
 
-#include <cmath>
-
-#include "maths.hpp"
-
 namespace raytracer::maths {
     template <std::floating_point T>
     class Ray {
@@ -24,7 +20,24 @@ namespace raytracer::maths {
             auto new_pos = origin_ + dt;
             return new_pos;
         }
+
+        friend std::ostream& operator<<(std::ostream& os, const Ray<T>& r) {
+            os << "origin: " << r.origin() << "\n" << "direction: " << r.direction();
+            return os;
+        }
     };
+
+    template <std::floating_point T>
+    Ray<T> transform(const Ray<T>& ray, const Matrix<T>& matrix) {
+
+        auto origin = ray.origin();
+        auto direction = ray.direction();
+
+        auto transformed_origin = matrix * origin;
+        auto transformed_direction = matrix * direction;
+
+        return Ray<T>(transformed_origin, transformed_direction);
+    }
 }
 
 #endif //RAY_HPP
