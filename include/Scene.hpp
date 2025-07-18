@@ -1,18 +1,25 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <algorithm>
+#include <ranges>
+
 #include "Shape.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
     std::optional<Intersection<T> > hit(const std::vector<Intersection<T> > &intersections) {
-        auto visible_object_hit = std::find_if(intersections.begin(), intersections.end(),
-                                               [](const Intersection<T> &intersection) {
-                                                   return intersection.t_ >= 0;
-                                               });
+        auto hits_in_front_of_rays = intersections | std::views::filter([](const Intersection<T> &intersection) {
+            return intersection.t_ >= 0;
+        });
 
-        return visible_object_hit != intersections.end() ? std::optional<Intersection<T>>(*visible_object_hit) : std::nullopt;
+        auto it = std::ranges::min_element(hits_in_front_of_rays,
+                                           [](const Intersection<T> &lhs, const Intersection<T> &rhs) {
+                                               return lhs < rhs;
+                                           });
+
+        if (it != hits_in_front_of_rays.end())
+            return *it;
+        return std::nullopt;
     }
 }
 
