@@ -2359,7 +2359,7 @@ TEST(RayTransformationTests, TranslateRay) {
     );
     const auto translation_matrix = raytracer::maths::Transform4x4<double>::translation(3, 4, 5);
     const auto translated_ray = raytracer::maths::transform(ray, translation_matrix);
-    
+
 
     EXPECT_DOUBLE_EQ(translated_ray.origin().x(), 4.0);
     EXPECT_DOUBLE_EQ(translated_ray.origin().y(), 6.0);
@@ -2370,4 +2370,23 @@ TEST(RayTransformationTests, TranslateRay) {
     EXPECT_DOUBLE_EQ(translated_ray.direction().y(), 1.0);
     EXPECT_DOUBLE_EQ(translated_ray.direction().z(), 0.0);
     EXPECT_DOUBLE_EQ(translated_ray.direction().w(), 0.0);
+}
+
+TEST(RayTransformationTests, ScaleRay) {
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(1, 2, 3),
+        raytracer::maths::Vector3D<double>(0, 1, 0)
+    );
+    const auto scaling_matrix = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
+    const auto scaled_ray = raytracer::maths::transform(ray, scaling_matrix);
+
+    EXPECT_DOUBLE_EQ(scaled_ray.origin().x(), 2.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.origin().y(), 6.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.origin().z(), 12.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.origin().w(), 1.0);
+
+    EXPECT_DOUBLE_EQ(scaled_ray.direction().x(), 0.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.direction().y(), 3.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.direction().z(), 0.0);
+    EXPECT_DOUBLE_EQ(scaled_ray.direction().w(), 0.0);
 }
