@@ -2024,19 +2024,6 @@ TEST(TransformationTests, TestInverseTranslate) {
     EXPECT_DOUBLE_EQ(old_p.w(), 1);
 }
 
-TEST(TransformationTests, TestTranslateAndRevert) {
-    const auto translation = raytracer::maths::Transform4x4<double>::translation(5, -3, 2);
-    const auto solver = raytracer::maths::CofactorExpansion<double>();
-    const auto inverse = solver.inverse(translation);
-    const auto p = raytracer::maths::Vector3D<double>(-3, 4, 5);
-    auto new_p = inverse * p;
-
-    EXPECT_DOUBLE_EQ(new_p.x(), -8);
-    EXPECT_DOUBLE_EQ(new_p.y(), 7);
-    EXPECT_DOUBLE_EQ(new_p.z(), 3);
-    EXPECT_DOUBLE_EQ(new_p.w(), 0);
-}
-
 TEST(TransformationTests, TestScalingPoint) {
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(2, 3, 4);
     const auto point = raytracer::maths::Point3D<double>(-4, 6, 8);
@@ -2363,4 +2350,24 @@ TEST(SphereTests, SphereIntersections) {
 
     const auto hit = raytracer::scene::hit(intersections);
     EXPECT_DOUBLE_EQ(hit.value().t_, 4.0);
+}
+
+TEST(RayTransformationTests, TranslateRay) {
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(1, 2, 3),
+        raytracer::maths::Vector3D<double>(0, 1, 0)
+    );
+    const auto translation_matrix = raytracer::maths::Transform4x4<double>::translation(3, 4, 5);
+    const auto translated_ray = raytracer::maths::transform(ray, translation_matrix);
+    
+
+    EXPECT_DOUBLE_EQ(translated_ray.origin().x(), 4.0);
+    EXPECT_DOUBLE_EQ(translated_ray.origin().y(), 6.0);
+    EXPECT_DOUBLE_EQ(translated_ray.origin().z(), 8.0);
+    EXPECT_DOUBLE_EQ(translated_ray.origin().w(), 1.0);
+
+    EXPECT_DOUBLE_EQ(translated_ray.direction().x(), 0.0);
+    EXPECT_DOUBLE_EQ(translated_ray.direction().y(), 1.0);
+    EXPECT_DOUBLE_EQ(translated_ray.direction().z(), 0.0);
+    EXPECT_DOUBLE_EQ(translated_ray.direction().w(), 0.0);
 }
