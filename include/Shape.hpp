@@ -13,6 +13,10 @@ namespace raytracer::scene {
         T t_;
         const Shape<T>& shape_;
         Intersection(T t, const Shape<T>& shape) : t_(t), shape_(shape) {}
+
+        bool operator<(const Intersection<T>& intersection) const {
+            return t_ < intersection.t_;
+        }
     };
 
     template <std::floating_point T>
