@@ -33,7 +33,7 @@ namespace raytracer::scene {
         virtual std::vector<Intersection<T>> intersect(const maths::Ray<T>& ray) const = 0;
 
         maths::Matrix<T> transform() const { return transform_;}
-        void set_transform(const maths::Matrix<T> transform) {transform_ = transform;}
+        void set_transform(const maths::Matrix<T>& transform) {transform_ = transform;}
     private:
         maths::Matrix<T> transform_;
     };
