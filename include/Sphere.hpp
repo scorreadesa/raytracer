@@ -5,17 +5,27 @@
 #include "maths.hpp"
 
 namespace raytracer::scene {
-
-    template <std::floating_point T>
+    template<std::floating_point T>
     class Sphere final : public Shape<T> {
     public:
         using origin = maths::Point3D<T>;
-        using intersections = std::vector<Intersection<T>>;
-        Sphere() : origin_(origin(0, 0, 0)), radius_(1.0) {}
-        Sphere(const origin& origin, T radius) : origin_(origin), radius_(radius) {}
+        using intersections = std::vector<Intersection<T> >;
 
-        intersections intersect(const maths::Ray<T>& ray) const override {
+        Sphere() : origin_(origin(0, 0, 0)), radius_(1.0) {
+        }
 
+        Sphere(const origin &origin, T radius) : origin_(origin), radius_(radius) {
+        }
+
+        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform), origin_(origin(0, 0, 0)),
+                                                             radius_(1.0) {
+        }
+
+        Sphere(const origin &origin, T radius, const maths::Matrix<T> &transform) : Shape<T>(transform),
+            origin_(origin), radius_(radius) {
+        }
+
+        intersections intersect(const maths::Ray<T> &ray) const override {
             auto sphere_to_ray = ray.origin() - origin_;
             auto a = dot(ray.direction(), ray.direction());
             auto b = static_cast<T>(2) * dot(ray.direction(), sphere_to_ray);
