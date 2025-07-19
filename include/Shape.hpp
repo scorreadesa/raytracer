@@ -27,8 +27,15 @@ namespace raytracer::scene {
     template <std::floating_point T>
     class Shape {
     public:
+        Shape() : transform_(maths::Matrix<T>::identity(4)) {}
+        explicit Shape(const maths::Matrix<T>& transform) : transform_(transform) {}
         virtual ~Shape() = default;
         virtual std::vector<Intersection<T>> intersect(const maths::Ray<T>& ray) const = 0;
+
+        maths::Matrix<T> transform() const { return transform_;}
+        void set_transform(const maths::Matrix<T> transform) {transform_ = transform;}
+    private:
+        maths::Matrix<T> transform_;
     };
 }
 
