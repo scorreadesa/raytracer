@@ -2,7 +2,7 @@
 #define SPHERE_HPP
 
 #include "Shape.hpp"
-#include "maths.hpp"
+#include "CofactorExpansion.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
@@ -26,18 +26,21 @@ namespace raytracer::scene {
         }
 
         intersections intersect(const maths::Ray<T> &ray) const override {
-            auto sphere_to_ray = ray.origin() - origin_;
-            auto a = dot(ray.direction(), ray.direction());
-            auto b = static_cast<T>(2) * dot(ray.direction(), sphere_to_ray);
+
+            auto inverse_transform = maths::CofactorExpansion<T>().inverse(this->transform());
+            auto transformed_ray = maths::transform(ray, inverse_transform);
+
+            auto sphere_to_ray = transformed_ray.origin() - origin_;
+            auto a = dot(transformed_ray.direction(), transformed_ray.direction());
+            auto b = static_cast<T>(2) * dot(transformed_ray.direction(), sphere_to_ray);
             auto c = dot(sphere_to_ray, sphere_to_ray) - static_cast<T>(1);
             auto d = maths::discriminant(a, b, c);
 
+            intersections xs;
+            
             if (d < 0) {
-                intersections xs;
                 return xs;
             }
-
-            intersections xs;
 
             T t1 = (-b - std::sqrt(d)) / (static_cast<T>(2) * a);
             T t2 = (-b + std::sqrt(d)) / (static_cast<T>(2) * a);
