@@ -2,7 +2,7 @@
 #define SCENE_HPP
 
 #include <ranges>
-
+#include <algorithm>
 #include "Shape.hpp"
 
 namespace raytracer::scene {
