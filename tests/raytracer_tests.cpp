@@ -2352,6 +2352,62 @@ TEST(SphereTests, SphereIntersections) {
     EXPECT_DOUBLE_EQ(hit.value().t_, 4.0);
 }
 
+TEST(SphereTests, CheckDefaultTransformation) {
+    const auto sphere = raytracer::scene::Sphere<double>();
+    auto sphere_transform = sphere.transform();
+
+    for (size_t row = 0; row < sphere_transform.rows(); row++) {
+        for (size_t col = 0; col < sphere_transform.cols(); col++) {
+            if (row == col) {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 1.0);
+            } else {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 0.0);
+            }
+        }
+    }
+}
+
+TEST(SphereTests, CheckTransformation) {
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(2, 3, 4);
+    const auto sphere = raytracer::scene::Sphere<double>(translation);
+    const auto sphere_transform = sphere.transform();
+
+    for (size_t row = 0; row < sphere_transform.rows(); row++) {
+        for (size_t col = 0; col < sphere_transform.cols(); col++) {
+            if (row == col) {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 1.0);
+            } else if (col < 3) {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 0.0);
+            }
+        }
+    }
+
+    EXPECT_DOUBLE_EQ(sphere_transform(0, 3), 2.0);
+    EXPECT_DOUBLE_EQ(sphere_transform(1, 3), 3.0);
+    EXPECT_DOUBLE_EQ(sphere_transform(2, 3), 4.0);
+}
+
+TEST(SphereTests, CheckTransformationSetter) {
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(2, 3, 4);
+    auto sphere = raytracer::scene::Sphere<double>();
+    sphere.set_transform(translation);
+    const auto sphere_transform = sphere.transform();
+
+    for (size_t row = 0; row < sphere_transform.rows(); row++) {
+        for (size_t col = 0; col < sphere_transform.cols(); col++) {
+            if (row == col) {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 1.0);
+            } else if (col < 3) {
+                EXPECT_DOUBLE_EQ(sphere_transform(row, col), 0.0);
+            }
+        }
+    }
+
+    EXPECT_DOUBLE_EQ(sphere_transform(0, 3), 2.0);
+    EXPECT_DOUBLE_EQ(sphere_transform(1, 3), 3.0);
+    EXPECT_DOUBLE_EQ(sphere_transform(2, 3), 4.0);
+}
+
 TEST(RayTransformationTests, TranslateRay) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(1, 2, 3),
@@ -2389,4 +2445,16 @@ TEST(RayTransformationTests, ScaleRay) {
     EXPECT_DOUBLE_EQ(scaled_ray.direction().y(), 3.0);
     EXPECT_DOUBLE_EQ(scaled_ray.direction().z(), 0.0);
     EXPECT_DOUBLE_EQ(scaled_ray.direction().w(), 0.0);
+}
+
+TEST(RayTransformationTests, IntersectScaledSphere) {
+    const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5),
+                                                   raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto transform = raytracer::maths::Transform4x4<double>::scaling(2, 2, 2);
+    const auto sphere = raytracer::scene::Sphere<double>(transform);
+    const auto intersections = sphere.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_DOUBLE_EQ(intersections.at(0).t_, 3.0);
+    EXPECT_DOUBLE_EQ(intersections.at(1).t_, 7.0);
 }
