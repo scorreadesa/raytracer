@@ -15,8 +15,7 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    FileWriter<decltype(canvas)>
-    ppmfw(std::make_unique<PPMFileWriter<decltype(canvas)>>());
+    FileWriter<decltype(canvas)> ppmfw(std::make_unique<PPMFileWriter<decltype(canvas)>>());
     ppmfw.write(canvas, "", "violet.ppm");
 
     return 0;
