@@ -2,11 +2,10 @@
 #define POINT3D_HPP
 
 namespace raytracer::maths {
-
-    template <std::floating_point T>
+    template<std::floating_point T>
     class Vector3D;
 
-    template <std::floating_point T>
+    template<std::floating_point T>
     class Matrix;
 
     template<std::floating_point T>
@@ -57,14 +56,46 @@ namespace raytracer::maths {
             return Point3D<T>(nx, ny, nz);
         }
 
-        friend Point3D<T> operator*(T scalar, const Point3D<T>& rhs) {
+        friend Point3D<T> operator*(T scalar, const Point3D<T> &rhs) {
             return Point3D<T>(scalar * rhs.x_, scalar * rhs.y_, scalar * rhs.y_);
         }
 
-        friend Point3D<T> operator*(const Point3D<T>& lhs, T scalar) {
+        friend Point3D<T> operator*(const Point3D<T> &lhs, T scalar) {
             return Point3D<T>(lhs.x_ * scalar, lhs.y_ * scalar, lhs.z_ * scalar);
         }
     };
+
+    template<std::floating_point T>
+    Matrix<T> point_to_column_matrix(const Point3D<T> &point) {
+        return Matrix<T>(4, 1, {
+                             point.x(), point.y(), point.z(), point.w()
+                         });
+    }
+
+    template<std::floating_point T>
+    Point3D<T> point_from_column_matrix(const Matrix<T> &matrix) {
+        return Point3D<T>(
+            matrix(0, 0) / matrix(3, 0),
+            matrix(1, 0) / matrix(3, 0),
+            matrix(2, 0) / matrix(3, 0)
+        );
+    }
+
+    template<std::floating_point T>
+    Matrix<T> point_to_row_matrix(const Point3D<T> &point) {
+        return Matrix<T>(1, 4, {
+                             point.x(), point.y(), point.z(), point.w()
+                         });
+    }
+
+    template<std::floating_point T>
+    Point3D<T> point_from_row_matrix(const Matrix<T> &matrix) {
+        return Point3D<T>(
+            matrix(0, 0) / matrix(0, 3),
+            matrix(0, 1) / matrix(0, 3),
+            matrix(0, 2) / matrix(0, 3)
+        );
+    }
 }
 
 #endif //POINT3D_HPP
