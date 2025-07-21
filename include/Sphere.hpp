@@ -3,6 +3,8 @@
 
 #include "Shape.hpp"
 #include "CofactorExpansion.hpp"
+#include "Vector3D.hpp"
+#include "Matrix.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
@@ -48,6 +50,17 @@ namespace raytracer::scene {
             xs.emplace_back(t2, *this);
 
             return xs;
+        }
+
+        maths::Vector3D<T> normal_at(const maths::Point3D<T>& world_point) const override {
+            const auto solver = maths::CofactorExpansion<T>();
+            const auto inverse_transform = solver.inverse(this->transform());
+
+            const auto object_point = inverse_transform * world_point;
+            const auto object_normal = object_point - origin_;
+            auto world_normal = transpose(inverse_transform) * object_normal;
+            world_normal.w() = static_cast<T>(0);
+            return normalize(world_normal);
         }
 
     private:
