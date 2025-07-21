@@ -131,6 +131,11 @@ namespace raytracer::maths {
     };
 
     template<std::floating_point T>
+    Vector3D<T> reflect(const Vector3D<T>& in, const Vector3D<T>& normal) {
+        return in - normal * 2 * dot(in, normal);
+    }
+
+    template<std::floating_point T>
     Matrix<T> vector_to_column_matrix(const Vector3D<T> &v) {
         return Matrix<T>(4, 1, {
                              v.x(), v.y(), v.z(), v.w()
