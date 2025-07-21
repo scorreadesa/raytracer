@@ -2550,3 +2550,26 @@ TEST(ShapeNormalComputationTests, TrnasformedSphereNormal) {
     EXPECT_NEAR(normal.z(), -0.24254, 1e-5);
     EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
+
+TEST(ShadingTests, TestReflectionAt45Degrees) {
+    const auto v = raytracer::maths::Vector3D<double>(1, -1, 0);
+    const auto n = raytracer::maths::Vector3D<double>(0, 1, 0);
+    const auto reflected = raytracer::maths::reflect(v, n);
+
+    EXPECT_DOUBLE_EQ(reflected.x(), 1.0);
+    EXPECT_DOUBLE_EQ(reflected.y(), 1.0);
+    EXPECT_DOUBLE_EQ(reflected.z(), 0.0);
+    EXPECT_DOUBLE_EQ(reflected.w(), 0.0);
+}
+
+TEST(ShadingTests, TestReflectionOffSlantedSurface) {
+
+    const auto v = raytracer::maths::Vector3D<double>(0, -1, 0);
+    const auto n = raytracer::maths::Vector3D<double>(0.70711, 0.70711, 0);
+    const auto reflected = raytracer::maths::reflect(v, n);
+
+    EXPECT_NEAR(reflected.x(), 1.0, 1e-5);
+    EXPECT_NEAR(reflected.y(), 0.0, 1e-5);
+    EXPECT_NEAR(reflected.z(), 0.0, 1e-5);
+    EXPECT_DOUBLE_EQ(reflected.w(), 0.0);
+}
