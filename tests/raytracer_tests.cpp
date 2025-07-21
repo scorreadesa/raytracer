@@ -1,6 +1,4 @@
 #include <gtest/gtest.h>
-#include <boost/math/special_functions/next.hpp>
-
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
@@ -2457,4 +2455,98 @@ TEST(RayTransformationTests, IntersectScaledSphere) {
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_DOUBLE_EQ(intersections.at(0).t_, 3.0);
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, 7.0);
+}
+
+TEST(ShapeNormalComputationTests, SphereNormalXAxis) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto point = raytracer::maths::Point3D<double>(1, 0, 0);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_DOUBLE_EQ(normal.x(), 1.0);
+    EXPECT_DOUBLE_EQ(normal.y(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.z(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
+}
+
+TEST(ShapeNormalComputationTests, SphereNormalYAxis) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_DOUBLE_EQ(normal.x(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.y(), 1.0);
+    EXPECT_DOUBLE_EQ(normal.z(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
+}
+
+TEST(ShapeNormalComputationTests, SphereNormalZAxis) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto point = raytracer::maths::Point3D<double>(0, 0, 1);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_DOUBLE_EQ(normal.x(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.y(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.z(), 1.0);
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
+}
+
+TEST(ShapeNormalComputationTests, SphereNormalNonAxialPoint) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto value = std::sqrt(3) / 3;
+    const auto point = raytracer::maths::Point3D<double>(value, value, value);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_DOUBLE_EQ(normal.x(), value);
+    EXPECT_DOUBLE_EQ(normal.y(), value);
+    EXPECT_DOUBLE_EQ(normal.z(), value);
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
+}
+
+TEST(ShapeNormalComputationTests, NormalIsNormalized) {
+
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto value = std::sqrt(3) / 3;
+    const auto point = raytracer::maths::Point3D<double>(value, value, value);
+    const auto normal = sphere.normal_at(point);
+    const auto normal_vector = normalize(normal);
+
+    EXPECT_DOUBLE_EQ(normal.x(), normal_vector.x());
+    EXPECT_DOUBLE_EQ(normal.y(), normal_vector.y());
+    EXPECT_DOUBLE_EQ(normal.z(), normal_vector.y());
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
+    EXPECT_DOUBLE_EQ(normal.w(), normal_vector.w());
+}
+
+TEST(ShapeNormalComputationTests, TranslatedSphereNormal) {
+
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(0, 1, 0);
+    const auto sphere = raytracer::scene::Sphere<double>(translation);
+    const auto point = raytracer::maths::Point3D<double>(0, 1.70711, -0.70711);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_NEAR(normal.x(), 0.0, 1e-5);
+    EXPECT_NEAR(normal.y(), 0.70711, 1e-5);
+    EXPECT_NEAR(normal.z(), -0.70711, 1e-5);
+    EXPECT_NEAR(normal.w(), 0.0, 1e-5);
+}
+
+TEST(ShapeNormalComputationTests, TrnasformedSphereNormal) {
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(1, 0.5, 1);
+    const auto rotation = raytracer::maths::Transform4x4<double>::rotation_z(std::numbers::pi / 5);
+    const auto transform = scaling * rotation;
+
+    const auto sphere = raytracer::scene::Sphere<double>(transform);
+    const auto value = std::sqrt(2) / 2;
+    const auto point = raytracer::maths::Point3D<double>(0, value, -value);
+    const auto normal = sphere.normal_at(point);
+
+    EXPECT_DOUBLE_EQ(normal.x(), 0.0);
+    EXPECT_NEAR(normal.y(), 0.97014, 1e-5);
+    EXPECT_NEAR(normal.z(), -0.24254, 1e-5);
+    EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
