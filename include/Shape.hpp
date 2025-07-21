@@ -31,6 +31,7 @@ namespace raytracer::scene {
         explicit Shape(const maths::Matrix<T>& transform) : transform_(transform) {}
         virtual ~Shape() = default;
         virtual std::vector<Intersection<T>> intersect(const maths::Ray<T>& ray) const = 0;
+        virtual maths::Vector3D<T> normal_at(const maths::Point3D<T>& world_point) const = 0;
 
         maths::Matrix<T> transform() const { return transform_;}
         void set_transform(const maths::Matrix<T>& transform) {transform_ = transform;}
