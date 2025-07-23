@@ -2,6 +2,7 @@
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
+#include "../include/PhongShading.hpp"
 #include "../include/Ray.hpp"
 #include "../include/Scene.hpp"
 #include "../include/Sphere.hpp"
@@ -2458,7 +2459,6 @@ TEST(RayTransformationTests, IntersectScaledSphere) {
 }
 
 TEST(ShapeNormalComputationTests, SphereNormalXAxis) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(1, 0, 0);
     const auto normal = sphere.normal_at(point);
@@ -2470,7 +2470,6 @@ TEST(ShapeNormalComputationTests, SphereNormalXAxis) {
 }
 
 TEST(ShapeNormalComputationTests, SphereNormalYAxis) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
     const auto normal = sphere.normal_at(point);
@@ -2482,7 +2481,6 @@ TEST(ShapeNormalComputationTests, SphereNormalYAxis) {
 }
 
 TEST(ShapeNormalComputationTests, SphereNormalZAxis) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(0, 0, 1);
     const auto normal = sphere.normal_at(point);
@@ -2494,7 +2492,6 @@ TEST(ShapeNormalComputationTests, SphereNormalZAxis) {
 }
 
 TEST(ShapeNormalComputationTests, SphereNormalNonAxialPoint) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto value = std::sqrt(3) / 3;
     const auto point = raytracer::maths::Point3D<double>(value, value, value);
@@ -2507,7 +2504,6 @@ TEST(ShapeNormalComputationTests, SphereNormalNonAxialPoint) {
 }
 
 TEST(ShapeNormalComputationTests, NormalIsNormalized) {
-
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto value = std::sqrt(3) / 3;
     const auto point = raytracer::maths::Point3D<double>(value, value, value);
@@ -2522,7 +2518,6 @@ TEST(ShapeNormalComputationTests, NormalIsNormalized) {
 }
 
 TEST(ShapeNormalComputationTests, TranslatedSphereNormal) {
-
     const auto translation = raytracer::maths::Transform4x4<double>::translation(0, 1, 0);
     const auto sphere = raytracer::scene::Sphere<double>(translation);
     const auto point = raytracer::maths::Point3D<double>(0, 1.70711, -0.70711);
@@ -2535,7 +2530,6 @@ TEST(ShapeNormalComputationTests, TranslatedSphereNormal) {
 }
 
 TEST(ShapeNormalComputationTests, TrnasformedSphereNormal) {
-
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(1, 0.5, 1);
     const auto rotation = raytracer::maths::Transform4x4<double>::rotation_z(std::numbers::pi / 5);
     const auto transform = scaling * rotation;
@@ -2563,7 +2557,6 @@ TEST(ShadingTests, TestReflectionAt45Degrees) {
 }
 
 TEST(ShadingTests, TestReflectionOffSlantedSurface) {
-
     const auto v = raytracer::maths::Vector3D<double>(0, -1, 0);
     const auto n = raytracer::maths::Vector3D<double>(0.70711, 0.70711, 0);
     const auto reflected = raytracer::maths::reflect(v, n);
@@ -2572,4 +2565,185 @@ TEST(ShadingTests, TestReflectionOffSlantedSurface) {
     EXPECT_NEAR(reflected.y(), 0.0, 1e-5);
     EXPECT_NEAR(reflected.z(), 0.0, 1e-5);
     EXPECT_DOUBLE_EQ(reflected.w(), 0.0);
+}
+
+
+TEST(PhongShadingTests, InitPointLight) {
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 0, 0),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    EXPECT_DOUBLE_EQ(light.position_.x(), 0.0);
+    EXPECT_DOUBLE_EQ(light.position_.y(), 0.0);
+    EXPECT_DOUBLE_EQ(light.position_.z(), 0.0);
+
+    EXPECT_DOUBLE_EQ(light.intensity_.red(), 1.0);
+    EXPECT_DOUBLE_EQ(light.intensity_.green(), 1.0);
+    EXPECT_DOUBLE_EQ(light.intensity_.blue(), 1.0);
+}
+
+TEST(PhongShadingTests, InitMaterial) {
+    const auto material = raytracer::shading::Material<double>(
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
+
+    EXPECT_DOUBLE_EQ(material.color_.red(), 1.0);
+    EXPECT_DOUBLE_EQ(material.color_.green(), 1.0);
+    EXPECT_DOUBLE_EQ(material.color_.blue(), 1.0);
+    EXPECT_DOUBLE_EQ(material.ambient_, 0.1);
+    EXPECT_DOUBLE_EQ(material.diffuse_, 0.9);
+    EXPECT_DOUBLE_EQ(material.specular_, 0.9);
+    EXPECT_DOUBLE_EQ(material.shininess_, 200.0);
+}
+
+TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
+    const auto material = raytracer::shading::Material<double>(
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
+
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 0, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
+    const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        material,
+        light, raytracer::maths::Point3D<double>(0, 0, 0),
+        eye,
+        normal
+    );
+
+    EXPECT_DOUBLE_EQ(result.red(), 1.9);
+    EXPECT_DOUBLE_EQ(result.green(), 1.9);
+    EXPECT_DOUBLE_EQ(result.blue(), 1.9);
+}
+
+TEST(PhongShadingTests, EyeAt45Degrees) {
+    const auto material = raytracer::shading::Material<double>(
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
+
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 0, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto value = std::sqrt(2) / 2;
+    const auto eye = raytracer::maths::Vector3D<double>(0, value, -value);
+    const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        material,
+        light, raytracer::maths::Point3D<double>(0, 0, 0),
+        eye,
+        normal
+    );
+
+    EXPECT_DOUBLE_EQ(result.red(), 1.0);
+    EXPECT_DOUBLE_EQ(result.green(), 1.0);
+    EXPECT_DOUBLE_EQ(result.blue(), 1.0);
+}
+
+TEST(PhongShadingTests, LightAt45Degrees) {
+    const auto material = raytracer::shading::Material<double>(
+    raytracer::drawing::Color<double>(1, 1, 1),
+    0.1,
+    0.9,
+    0.9,
+    200.0
+);
+
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
+    const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        material,
+        light, raytracer::maths::Point3D<double>(0, 0, 0),
+        eye,
+        normal
+    );
+
+    EXPECT_NEAR(result.red(), 0.7364, 1e-4);
+    EXPECT_NEAR(result.green(), 0.7364, 1e-4);
+    EXPECT_NEAR(result.blue(), 0.7364, 1e-4);
+}
+
+TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
+    const auto material = raytracer::shading::Material<double>(
+    raytracer::drawing::Color<double>(1, 1, 1),
+    0.1,
+    0.9,
+    0.9,
+    200.0
+);
+
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto value = std::sqrt(2) / 2;
+    const auto eye = raytracer::maths::Vector3D<double>(0, -value, -value);
+    const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        material,
+        light, raytracer::maths::Point3D<double>(0, 0, 0),
+        eye,
+        normal
+    );
+
+    EXPECT_NEAR(result.red(), 1.6364, 1e-4);
+    EXPECT_NEAR(result.green(), 1.6364, 1e-4);
+    EXPECT_NEAR(result.blue(), 1.6364, 1e-4);
+}
+
+TEST(PhongShadingTests, LightBehindSurface) {
+    const auto material = raytracer::shading::Material<double>(
+    raytracer::drawing::Color<double>(1, 1, 1),
+    0.1,
+    0.9,
+    0.9,
+    200.0
+);
+
+    const auto light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(0, 10, 10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
+    const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        material,
+        light, raytracer::maths::Point3D<double>(0, 0, 0),
+        eye,
+        normal
+    );
+
+    EXPECT_NEAR(result.red(), 0.1, 1e-4);
+    EXPECT_NEAR(result.green(), 0.1, 1e-4);
+    EXPECT_NEAR(result.blue(), 0.1, 1e-4);
 }
