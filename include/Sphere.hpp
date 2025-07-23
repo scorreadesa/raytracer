@@ -13,14 +13,21 @@ namespace raytracer::scene {
         using origin = maths::Point3D<T>;
         using intersections = std::vector<Intersection<T> >;
 
-        Sphere() : origin_(origin(0, 0, 0)), radius_(1.0) {
+        Sphere() : Shape<T>(maths::Matrix<T>::identity(4), shading::Material<T>()), origin_(origin(0, 0, 0)),
+                   radius_(1.0) {
         }
 
-        Sphere(const origin &origin, T radius) : origin_(origin), radius_(radius) {
+        Sphere(const origin &origin, T radius) : Shape<T>(maths::Matrix<T>::identity(4)), origin_(origin),
+                                                 radius_(radius) {
         }
 
-        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform), origin_(origin(0, 0, 0)),
+        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform, shading::Material<T>()),
+                                                             origin_(origin(0, 0, 0)),
                                                              radius_(1.0) {
+        }
+
+        explicit Sphere(const shading::Material<T> &material) : Shape<T>(maths::Matrix<T>::identity(4), material),
+                                                                origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
         Sphere(const origin &origin, T radius, const maths::Matrix<T> &transform) : Shape<T>(transform),
@@ -28,7 +35,6 @@ namespace raytracer::scene {
         }
 
         intersections intersect(const maths::Ray<T> &ray) const override {
-
             auto inverse_transform = maths::CofactorExpansion<T>().inverse(this->transform());
             auto transformed_ray = maths::transform(ray, inverse_transform);
 
@@ -39,7 +45,7 @@ namespace raytracer::scene {
             auto d = maths::discriminant(a, b, c);
 
             intersections xs;
-            
+
             if (d < 0) {
                 return xs;
             }
@@ -52,7 +58,7 @@ namespace raytracer::scene {
             return xs;
         }
 
-        maths::Vector3D<T> normal_at(const maths::Point3D<T>& world_point) const override {
+        maths::Vector3D<T> normal_at(const maths::Point3D<T> &world_point) const override {
             const auto solver = maths::CofactorExpansion<T>();
             const auto inverse_transform = solver.inverse(this->transform());
 
