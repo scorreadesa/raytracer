@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Exceptions.hpp"
 
 namespace raytracer::drawing {
@@ -95,6 +96,13 @@ namespace raytracer::drawing {
             blue_ /= scalar;
             return *this;
         }
+
+        friend Color<T> clamp(const Color<T>& color) {
+            const auto red = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.red()));
+            const auto green = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.green()));
+            const auto blue = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.blue()));
+            return Color(red, green, blue);
+        }
     };
 
     template<std::floating_point T>
@@ -104,16 +112,16 @@ namespace raytracer::drawing {
         std::size_t height_;
         std::size_t width_;
     public:
-        Canvas(std::size_t height, std::size_t width) : height_(height), width_(width), colors_(width * height) {};
+        Canvas(const std::size_t height, const std::size_t width) : colors_(width * height), height_(height), width_(width) {};
 
         constexpr const Color<T>& operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
-            auto err_msg_row = "Row index out of range: "
+            const auto err_msg_row = "Row index out of range: "
             + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(height_) + ")";
             if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
-            auto err_msg_col = "Col index out of range: "
+            const auto err_msg_col = "Col index out of range: "
             + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(width_) + ")";
             if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
@@ -123,13 +131,13 @@ namespace raytracer::drawing {
         }
 
         constexpr Color<T>& operator()(const std::size_t row, const std::size_t col) noexcept(false) {
-            auto err_msg_row = "Row index out of range: "
+            const auto err_msg_row = "Row index out of range: "
             + std::to_string(row) + " (valid range 0 <= row < " + std::to_string(height_) + ")";
             if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
-            auto err_msg_col = "Col index out of range: "
+            const auto err_msg_col = "Col index out of range: "
             + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(width_) + ")";
             if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
