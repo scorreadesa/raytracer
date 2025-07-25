@@ -16,8 +16,8 @@ namespace raytracer::shading {
             const maths::Vector3D<T> &normal
         ) const override {
 
-            const auto effective_color = material.color_ * point_light.intensity_;
-            auto lightv = normalize(point_light.position_ - position);
+            const auto effective_color = material.color_ * point_light.intensity();
+            auto lightv = normalize(point_light.position() - position);
             const auto ambient = effective_color * material.ambient_;
             const auto light_dot_normal = dot(lightv, normal);
 
@@ -36,7 +36,7 @@ namespace raytracer::shading {
                     specular = drawing::Color<T>(0.0, 0.0, 0.0);
                 } else {
                     const auto factor = std::pow(reflect_dot_eye, material.shininess_);
-                    specular = point_light.intensity_ * material.specular_ * factor;
+                    specular = point_light.intensity() * material.specular_ * factor;
                 }
             }
 
