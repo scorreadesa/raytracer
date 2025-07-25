@@ -12,34 +12,6 @@
 
 #include "../../include/Transform.hpp"
 
-struct Image {
-    size_t height_;
-    size_t width_;
-    raytracer::drawing::Color<double> background_color_;
-};
-
-struct Camera {
-    raytracer::maths::Point3D<double> position_;
-};
-
-struct Object {
-    std::unique_ptr<raytracer::scene::Shape<double>> shape_;
-    raytracer::maths::Matrix<double> transform_;
-    raytracer::shading::Material<double> material_;
-};
-
-struct Scene {
-    Camera camera_;
-    raytracer::shading::PointLight<double> light_;
-    Object object_;
-};
-
-struct Config {
-    Image image_;
-    Scene scene_;
-    std::string output_filename_;
-};
-
 int main(int argc, char *argv[]) {
     std::string config_file;
 
@@ -74,18 +46,8 @@ int main(int argc, char *argv[]) {
     // Initialize canvas
     const auto canvas_width = config["canvas"]["resolution"]["width"].as<size_t>();
     const auto canvas_height = config["canvas"]["resolution"]["height"].as<size_t>();
-    auto bg_r = config["canvas"]["resolution"]["background_color"][0].as<double>();
-    auto bg_g = config["canvas"]["resolution"]["background_color"][1].as<double>();
-    auto bg_b = config["canvas"]["resolution"]["background_color"][2].as<double>();
 
-    const auto background = raytracer::drawing::Color<double>(bg_r, bg_g, bg_b);
     auto canvas = raytracer::drawing::Canvas<double>(canvas_height, canvas_width);
-
-    // Initialize camera
-    auto cam_x = config["scene"]["camera"]["position"][0].as<double>();
-    auto cam_y = config["scene"]["camera"]["position"][1].as<double>();
-    auto cam_z = config["scene"]["camera"]["position"][2].as<double>();
-    Camera camera(raytracer::maths::Point3D<double>(cam_x, cam_y, cam_z));
 
     // Initialize lighting
     auto light_pos_x = config["scene"]["lighting"]["position"][0].as<double>();
