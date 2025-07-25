@@ -30,6 +30,10 @@ namespace raytracer::scene {
                                                                 origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
+        Sphere(const maths::Matrix<T>& transform, const shading::Material<T>& material) : Shape<T>(transform, material),
+        origin_(origin(0, 0, 0)), radius_(1.0) {}
+
+
         Sphere(const origin &origin, T radius, const maths::Matrix<T> &transform) : Shape<T>(transform),
             origin_(origin), radius_(radius) {
         }
