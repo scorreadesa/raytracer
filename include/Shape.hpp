@@ -49,11 +49,15 @@ namespace raytracer::scene {
 
         virtual maths::Vector3D<T> normal_at(const maths::Point3D<T> &world_point) const = 0;
 
+        virtual std::unique_ptr<Shape<T>> clone() const = 0;
+
         maths::Matrix<T> transform() const { return transform_; }
         shading::Material<T> material() const { return material_; }
 
         void set_transform(const maths::Matrix<T> &transform) { transform_ = transform; }
         void set_material(const shading::Material<T> &material) { material_ = material; }
+
+
 
     private:
         maths::Matrix<T> transform_;
