@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
         raytracer::drawing::Color<double>(light_r, light_g, light_b)
     );
     std::clog << "Point Light:\n"
-    << "\tPosition: " << point_light.position_ << "\n"
-    << "\tIntensity: " << point_light.intensity_ << std::endl;
+    << "\tPosition: " << point_light.position() << "\n"
+    << "\tIntensity: " << point_light.intensity() << std::endl;
 
     // Object
     auto transform = raytracer::maths::Matrix<double>::identity(4);
