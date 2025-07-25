@@ -30,9 +30,9 @@ namespace raytracer::scene {
                                                                 origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
-        Sphere(const maths::Matrix<T>& transform, const shading::Material<T>& material) : Shape<T>(transform, material),
-        origin_(origin(0, 0, 0)), radius_(1.0) {}
-
+        Sphere(const maths::Matrix<T> &transform, const shading::Material<T> &material) : Shape<T>(transform, material),
+            origin_(origin(0, 0, 0)), radius_(1.0) {
+        }
 
         Sphere(const origin &origin, T radius, const maths::Matrix<T> &transform) : Shape<T>(transform),
             origin_(origin), radius_(radius) {
@@ -71,6 +71,10 @@ namespace raytracer::scene {
             auto world_normal = transpose(inverse_transform) * object_normal;
             world_normal.w() = static_cast<T>(0);
             return normalize(world_normal);
+        }
+
+        std::unique_ptr<Shape<T>> clone() const override {
+            return std::make_unique<Sphere<T>>(*this);
         }
 
     private:
