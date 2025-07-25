@@ -3,6 +3,7 @@
 
 #include "drawing.hpp"
 #include "Point3D.hpp"
+#include "PointLight.hpp"
 
 namespace raytracer::shading {
     template<std::floating_point T>
@@ -17,18 +18,6 @@ namespace raytracer::shading {
 
         Material(const drawing::Color<T> &color, T ambient, T diffuse, T specular, T shininess)
             : color_(color), ambient_(ambient), diffuse_(diffuse), specular_(specular), shininess_(shininess) {
-        }
-    };
-
-    template<std::floating_point T>
-    struct PointLight {
-        maths::Point3D<T> position_;
-        drawing::Color<T> intensity_;
-
-        PointLight() = default;
-
-        PointLight(const maths::Point3D<T> &position, const drawing::Color<T> &color)
-            : position_(position), intensity_(color) {
         }
     };
 
