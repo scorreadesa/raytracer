@@ -2574,13 +2574,13 @@ TEST(PhongShadingTests, InitPointLight) {
         raytracer::drawing::Color<double>(1, 1, 1)
     );
 
-    EXPECT_DOUBLE_EQ(light.position_.x(), 0.0);
-    EXPECT_DOUBLE_EQ(light.position_.y(), 0.0);
-    EXPECT_DOUBLE_EQ(light.position_.z(), 0.0);
+    EXPECT_DOUBLE_EQ(light.position().x(), 0.0);
+    EXPECT_DOUBLE_EQ(light.position().y(), 0.0);
+    EXPECT_DOUBLE_EQ(light.position().z(), 0.0);
 
-    EXPECT_DOUBLE_EQ(light.intensity_.red(), 1.0);
-    EXPECT_DOUBLE_EQ(light.intensity_.green(), 1.0);
-    EXPECT_DOUBLE_EQ(light.intensity_.blue(), 1.0);
+    EXPECT_DOUBLE_EQ(light.intensity().red(), 1.0);
+    EXPECT_DOUBLE_EQ(light.intensity().green(), 1.0);
+    EXPECT_DOUBLE_EQ(light.intensity().blue(), 1.0);
 }
 
 TEST(PhongShadingTests, InitMaterial) {
