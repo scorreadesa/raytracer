@@ -11,10 +11,15 @@ namespace raytracer::scene {
     template<std::floating_point T>
     struct Intersection {
         T t_;
-        const Shape<T> &shape_;
+        const Shape<T>* shape_;
 
-        Intersection(T t, const Shape<T> &shape) : t_(t), shape_(shape) {
+        Intersection(T t, const Shape<T>* shape) : t_(t), shape_(shape) {
         }
+
+        Intersection(const Intersection&) = default;
+        Intersection(Intersection&&) = default;
+        Intersection& operator=(const Intersection&) = default;
+        Intersection& operator=(Intersection&&) = default;
 
         bool operator<(const Intersection<T> &intersection) const {
             return t_ < intersection.t_;
