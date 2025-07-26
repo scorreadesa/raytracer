@@ -2662,12 +2662,12 @@ TEST(PhongShadingTests, EyeAt45Degrees) {
 
 TEST(PhongShadingTests, LightAt45Degrees) {
     const auto material = raytracer::shading::Material<double>(
-    raytracer::drawing::Color<double>(1, 1, 1),
-    0.1,
-    0.9,
-    0.9,
-    200.0
-);
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
 
     const auto light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(0, 10, -10),
@@ -2691,12 +2691,12 @@ TEST(PhongShadingTests, LightAt45Degrees) {
 
 TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
     const auto material = raytracer::shading::Material<double>(
-    raytracer::drawing::Color<double>(1, 1, 1),
-    0.1,
-    0.9,
-    0.9,
-    200.0
-);
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
 
     const auto light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(0, 10, -10),
@@ -2721,12 +2721,12 @@ TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
 
 TEST(PhongShadingTests, LightBehindSurface) {
     const auto material = raytracer::shading::Material<double>(
-    raytracer::drawing::Color<double>(1, 1, 1),
-    0.1,
-    0.9,
-    0.9,
-    200.0
-);
+        raytracer::drawing::Color<double>(1, 1, 1),
+        0.1,
+        0.9,
+        0.9,
+        200.0
+    );
 
     const auto light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(0, 10, 10),
@@ -2746,4 +2746,80 @@ TEST(PhongShadingTests, LightBehindSurface) {
     EXPECT_NEAR(result.red(), 0.1, 1e-4);
     EXPECT_NEAR(result.green(), 0.1, 1e-4);
     EXPECT_NEAR(result.blue(), 0.1, 1e-4);
+}
+
+TEST(SceneTests, TestEmptyWorld) {
+    const auto scene = raytracer::scene::Scene<double>();
+
+    EXPECT_FALSE(scene.has_lights());
+    EXPECT_FALSE(scene.has_objects());
+    EXPECT_EQ(scene.light_count(), 0);
+    EXPECT_EQ(scene.object_count(), 0);
+}
+
+TEST(SceneTests, TestDefaultWorld) {
+    auto scene = raytracer::scene::Scene<double>();
+
+    const auto point_light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(-10, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto material = raytracer::shading::Material<double>(
+        raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
+        0.1,
+        0.7,
+        0.2,
+        200.0
+    );
+    const auto s1 = raytracer::scene::Sphere<double>(material);
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
+    const auto s2 = raytracer::scene::Sphere<double>(scaling);
+
+    scene.add_light(point_light);
+    scene.add_object(s1);
+    scene.add_object(s2);
+
+    EXPECT_EQ(scene.light_count(), 1);
+    EXPECT_EQ(scene.object_count(), 2);
+}
+
+TEST(SceneTests, TestWorldRayIntersections) {
+    auto scene = raytracer::scene::Scene<double>();
+
+    const auto point_light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(-10, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto material = raytracer::shading::Material<double>(
+        raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
+        0.1,
+        0.7,
+        0.2,
+        200.0
+    );
+    const auto s1 = raytracer::scene::Sphere<double>(material);
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
+    const auto s2 = raytracer::scene::Sphere<double>(scaling);
+
+    scene.add_light(point_light);
+    scene.add_object(s1);
+    scene.add_object(s2);
+
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1)
+    );
+
+    const auto intersections = scene.intersect(ray);
+
+    EXPECT_EQ(intersections.size(), 4);
+
+    EXPECT_DOUBLE_EQ(intersections.at(0).t_, 4.0);
+    EXPECT_DOUBLE_EQ(intersections.at(1).t_, 4.5);
+    EXPECT_DOUBLE_EQ(intersections.at(2).t_, 5.5);
+    EXPECT_DOUBLE_EQ(intersections.at(3).t_, 6.0);
 }
