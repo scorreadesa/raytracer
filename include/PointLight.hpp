@@ -4,7 +4,7 @@
 
 namespace raytracer::shading {
     template<std::floating_point T>
-    class PointLight final : public raytracing::shading::Light<T> {
+    class PointLight final : public Light<T> {
     private:
         maths::Point3D<T> position_;
         drawing::Color<T> intensity_;
@@ -23,7 +23,7 @@ namespace raytracer::shading {
             return intensity_;
         };
 
-        std::unique_ptr<raytracing::shading::Light<T>> clone() const override {
+        std::unique_ptr<Light<T>> clone() const override {
             return std::make_unique<PointLight<T>>(*this);
         }
     };
