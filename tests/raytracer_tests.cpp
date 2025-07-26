@@ -5,6 +5,7 @@
 #include "../include/PhongShading.hpp"
 #include "../include/Ray.hpp"
 #include "../include/Scene.hpp"
+#include "../include/SceneBuilder.hpp"
 #include "../include/Sphere.hpp"
 #include "../include/Transform.hpp"
 
@@ -2786,8 +2787,6 @@ TEST(SceneTests, TestDefaultWorld) {
 }
 
 TEST(SceneTests, TestWorldRayIntersections) {
-    auto scene = raytracer::scene::Scene<double>();
-
     const auto point_light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(-10, 10, -10),
         raytracer::drawing::Color<double>(1, 1, 1)
@@ -2805,9 +2804,11 @@ TEST(SceneTests, TestWorldRayIntersections) {
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
     const auto s2 = raytracer::scene::Sphere<double>(scaling);
 
-    scene.add_light(point_light);
-    scene.add_object(s1);
-    scene.add_object(s2);
+    const auto scene = raytracer::scene::SceneBuilder<double>()
+            .with_light(point_light)
+            .with_object(s1)
+            .with_object(s2)
+            .build();
 
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, -5),
