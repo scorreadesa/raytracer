@@ -2824,3 +2824,71 @@ TEST(SceneTests, TestWorldRayIntersections) {
     EXPECT_DOUBLE_EQ(intersections.at(2).t_, 5.5);
     EXPECT_DOUBLE_EQ(intersections.at(3).t_, 6.0);
 }
+
+
+TEST(SceneTests, TestIntersectionInfoInitialization) {
+
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1)
+        );
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto intersection = raytracer::scene::Intersection<double>(4, &sphere);
+    const auto computations = raytracer::scene::prepare_computations(intersection, ray);
+
+    EXPECT_DOUBLE_EQ(computations.point_.x(), 0);
+    EXPECT_DOUBLE_EQ(computations.point_.y(), 0);
+    EXPECT_DOUBLE_EQ(computations.point_.z(), -1);
+    EXPECT_DOUBLE_EQ(computations.point_.w(), 1);
+
+    EXPECT_DOUBLE_EQ(computations.eye_.x(), 0);
+    EXPECT_DOUBLE_EQ(computations.eye_.y(), 0);
+    EXPECT_DOUBLE_EQ(computations.eye_.z(), -1);
+    EXPECT_DOUBLE_EQ(computations.eye_.w(), 0);
+
+    EXPECT_DOUBLE_EQ(computations.normal_.x(), 0);
+    EXPECT_DOUBLE_EQ(computations.normal_.y(), 0);
+    EXPECT_DOUBLE_EQ(computations.normal_.z(), -1);
+    EXPECT_DOUBLE_EQ(computations.normal_.w(), 0);
+
+    EXPECT_EQ(computations.shape_, &sphere);
+}
+
+TEST(SceneTests, IntersectionOutsideObject) {
+
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto intersection = raytracer::scene::Intersection<double>(4, &sphere);
+    const auto comps = raytracer::scene::prepare_computations(intersection, ray);
+
+    EXPECT_FALSE(comps.inside_);
+}
+
+TEST(SceneTests, IntersectionInsideObject) {
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, 0),
+        raytracer::maths::Vector3D<double>(0, 0, 1)
+        );
+    const auto sphere = raytracer::scene::Sphere<double>();
+    const auto intersection = raytracer::scene::Intersection<double>(1, &sphere);
+    const auto comps = raytracer::scene::prepare_computations(intersection, ray);
+
+    EXPECT_DOUBLE_EQ(comps.point_.x(), 0);
+    EXPECT_DOUBLE_EQ(comps.point_.y(), 0);
+    EXPECT_DOUBLE_EQ(comps.point_.z(), 1);
+    EXPECT_DOUBLE_EQ(comps.point_.w(), 1);
+
+    EXPECT_DOUBLE_EQ(comps.eye_.x(), 0);
+    EXPECT_DOUBLE_EQ(comps.eye_.y(), 0);
+    EXPECT_DOUBLE_EQ(comps.eye_.z(), -1);
+    EXPECT_DOUBLE_EQ(comps.eye_.w(), 0);
+
+    EXPECT_TRUE(comps.inside_);
+
+    EXPECT_DOUBLE_EQ(comps.normal_.x(), 0);
+    EXPECT_DOUBLE_EQ(comps.normal_.y(), 0);
+    EXPECT_DOUBLE_EQ(comps.normal_.z(), -1);
+    EXPECT_DOUBLE_EQ(comps.normal_.w(), 0);
+}
