@@ -2,6 +2,7 @@
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
+#include "../include/PhongMaterial.hpp"
 #include "../include/PhongShading.hpp"
 #include "../include/Ray.hpp"
 #include "../include/Scene.hpp"
@@ -2585,7 +2586,7 @@ TEST(PhongShadingTests, InitPointLight) {
 }
 
 TEST(PhongShadingTests, InitMaterial) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2603,7 +2604,7 @@ TEST(PhongShadingTests, InitMaterial) {
 }
 
 TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2632,7 +2633,7 @@ TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
 }
 
 TEST(PhongShadingTests, EyeAt45Degrees) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2663,7 +2664,7 @@ TEST(PhongShadingTests, EyeAt45Degrees) {
 }
 
 TEST(PhongShadingTests, LightAt45Degrees) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2693,7 +2694,7 @@ TEST(PhongShadingTests, LightAt45Degrees) {
 }
 
 TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2725,7 +2726,7 @@ TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
 }
 
 TEST(PhongShadingTests, LightBehindSurface) {
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
         0.9,
@@ -2774,7 +2775,7 @@ TEST(SceneTests, TestDefaultWorld) {
         raytracer::drawing::Color<double>(1, 1, 1)
     );
 
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double>>(
         raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
         0.1,
         0.7,
@@ -2800,7 +2801,7 @@ TEST(SceneTests, TestWorldRayIntersections) {
         raytracer::drawing::Color<double>(1, 1, 1)
     );
 
-    const auto material = raytracer::shading::Material<double>(
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double>>(
         raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
         0.1,
         0.7,
