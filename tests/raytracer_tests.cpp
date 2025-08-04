@@ -2775,7 +2775,7 @@ TEST(SceneTests, TestDefaultWorld) {
         raytracer::drawing::Color<double>(1, 1, 1)
     );
 
-    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double>>(
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double> >(
         raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
         0.1,
         0.7,
@@ -2801,7 +2801,7 @@ TEST(SceneTests, TestWorldRayIntersections) {
         raytracer::drawing::Color<double>(1, 1, 1)
     );
 
-    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double>>(
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double> >(
         raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
         0.1,
         0.7,
