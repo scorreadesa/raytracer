@@ -4,7 +4,6 @@
 #include <cmath>
 
 namespace raytracer::shading {
-
     enum class ShadingModel {
         Phong,
     };
@@ -12,6 +11,7 @@ namespace raytracer::shading {
     template<std::floating_point T>
     struct Material {
         virtual ~Material() = default;
+
         [[nodiscard]] virtual ShadingModel model() const = 0;
     };
 }

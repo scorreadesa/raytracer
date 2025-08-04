@@ -19,12 +19,13 @@ namespace raytracer::shading {
         maths::Point3D<T> position() const override {
             return position_;
         }
+
         drawing::Color<T> intensity() const override {
             return intensity_;
         };
 
-        std::unique_ptr<Light<T>> clone() const override {
-            return std::make_unique<PointLight<T>>(*this);
+        std::unique_ptr<Light<T> > clone() const override {
+            return std::make_unique<PointLight<T> >(*this);
         }
     };
 }

@@ -86,7 +86,6 @@ namespace raytracer::scene {
 
     template<std::floating_point T>
     IntersectionInfo<T> prepare_computations(const Intersection<T> &intersection, const maths::Ray<T> &ray) {
-
         const auto position = ray.position(intersection.t_);
         auto eye = -ray.direction();
         auto normal = intersection.shape_->normal_at(position);

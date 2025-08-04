@@ -2,18 +2,20 @@
 #define RAY_HPP
 
 namespace raytracer::maths {
-    template <std::floating_point T>
+    template<std::floating_point T>
     class Ray {
     private:
         Point3D<T> origin_;
         Vector3D<T> direction_;
 
     public:
-        Ray(const Point3D<T>& origin, const Vector3D<T> direction) : origin_(origin), direction_(direction) {}
+        Ray(const Point3D<T> &origin, const Vector3D<T> direction) : origin_(origin), direction_(direction) {
+        }
+
         ~Ray() = default;
 
-        decltype(origin_) origin() const {return origin_;}
-        decltype(direction_) direction() const {return direction_;}
+        decltype(origin_) origin() const { return origin_; }
+        decltype(direction_) direction() const { return direction_; }
 
         Point3D<T> position(T t) const {
             auto dt = direction_ * t;
@@ -21,15 +23,14 @@ namespace raytracer::maths {
             return new_pos;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const Ray<T>& r) {
+        friend std::ostream &operator<<(std::ostream &os, const Ray<T> &r) {
             os << "origin: " << r.origin() << "\n" << "direction: " << r.direction();
             return os;
         }
     };
 
-    template <std::floating_point T>
-    Ray<T> transform(const Ray<T>& ray, const Matrix<T>& matrix) {
-
+    template<std::floating_point T>
+    Ray<T> transform(const Ray<T> &ray, const Matrix<T> &matrix) {
         auto origin = ray.origin();
         auto direction = ray.direction();
 

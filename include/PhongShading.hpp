@@ -6,14 +6,13 @@
 #include "Vector3D.hpp"
 
 namespace raytracer::shading {
-    template <std::floating_point T>
+    template<std::floating_point T>
     class PhongShading final : public Shading<T> {
     public:
         drawing::Color<T> shade(
-            const ShadingContext<T>& context
+            const ShadingContext<T> &context
         ) const override {
-
-            const auto* phong_material = dynamic_cast<const PhongMaterial<T>*>(&context.material_);
+            const auto *phong_material = dynamic_cast<const PhongMaterial<T> *>(&context.material_);
 
             const auto effective_color = phong_material->color_ * context.light_.intensity();
             auto lightv = normalize(context.light_.position() - context.position_);

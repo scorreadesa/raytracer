@@ -8,14 +8,16 @@
 #include "Point3D.hpp"
 
 namespace raytracer::shading {
-
-    template <std::floating_point T>
+    template<std::floating_point T>
     class Light {
     public:
         virtual ~Light() = default;
+
         virtual maths::Point3D<T> position() const = 0;
+
         virtual drawing::Color<T> intensity() const = 0;
-        virtual std::unique_ptr<Light<T>> clone() const = 0;
+
+        virtual std::unique_ptr<Light<T> > clone() const = 0;
     };
 }
 

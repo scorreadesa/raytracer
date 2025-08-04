@@ -7,7 +7,6 @@
 #include "Exceptions.hpp"
 
 namespace raytracer::drawing {
-
     template<std::floating_point T>
     class Color {
     private:
@@ -97,7 +96,7 @@ namespace raytracer::drawing {
             return *this;
         }
 
-        friend Color<T> clamp(const Color<T>& color) {
+        friend Color<T> clamp(const Color<T> &color) {
             const auto red = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.red()));
             const auto green = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.green()));
             const auto blue = std::max(static_cast<T>(0), std::min(static_cast<T>(1), color.blue()));
@@ -108,21 +107,24 @@ namespace raytracer::drawing {
     template<std::floating_point T>
     class Canvas {
     private:
-        std::vector<Color<T>> colors_;
+        std::vector<Color<T> > colors_;
         std::size_t height_;
         std::size_t width_;
-    public:
-        Canvas(const std::size_t height, const std::size_t width) : colors_(width * height), height_(height), width_(width) {};
 
-        constexpr const Color<T>& operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
+    public:
+        Canvas(const std::size_t height, const std::size_t width) : colors_(width * height), height_(height),
+                                                                    width_(width) {
+        };
+
+        constexpr const Color<T> &operator()(const std::size_t row, const std::size_t col) const noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-            + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(height_) + ")";
+                                     + std::to_string(row) + "(valid range 0 <= row < " + std::to_string(height_) + ")";
             if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-            + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(width_) + ")";
+                                     + std::to_string(col) + "(valid range 0 <= col < " + std::to_string(width_) + ")";
             if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
@@ -130,15 +132,16 @@ namespace raytracer::drawing {
             return colors_[row * width_ + col];
         }
 
-        constexpr Color<T>& operator()(const std::size_t row, const std::size_t col) noexcept(false) {
+        constexpr Color<T> &operator()(const std::size_t row, const std::size_t col) noexcept(false) {
             const auto err_msg_row = "Row index out of range: "
-            + std::to_string(row) + " (valid range 0 <= row < " + std::to_string(height_) + ")";
+                                     + std::to_string(row) + " (valid range 0 <= row < " + std::to_string(height_) +
+                                     ")";
             if (row >= height_) {
                 throw exceptions::RowOutOfRangeException(err_msg_row);
             }
 
             const auto err_msg_col = "Col index out of range: "
-            + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(width_) + ")";
+                                     + std::to_string(col) + " (valid range 0 <= col < " + std::to_string(width_) + ")";
             if (col >= width_) {
                 throw exceptions::ColumnOutOfRangeException(err_msg_col);
             }
