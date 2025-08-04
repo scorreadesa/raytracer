@@ -25,13 +25,11 @@ int main(int argc, char *argv[]) {
     boost::program_options::variables_map options;
 
     try {
-
         boost::program_options::store(
             boost::program_options::command_line_parser(argc, argv)
             .options(desc).positional(positional).run(), options
         );
         boost::program_options::notify(options);
-
     } catch (const boost::program_options::error &e) {
         std::cerr << "Argument error: " << e.what() << std::endl;
         std::cerr << desc << std::endl;
@@ -62,16 +60,15 @@ int main(int argc, char *argv[]) {
         raytracer::drawing::Color<double>(light_r, light_g, light_b)
     );
     std::clog << "Point Light:\n"
-    << "\tPosition: " << point_light.position() << "\n"
-    << "\tIntensity: " << point_light.intensity() << std::endl;
+            << "\tPosition: " << point_light.position() << "\n"
+            << "\tIntensity: " << point_light.intensity() << std::endl;
 
     // Object
     auto transform = raytracer::maths::Matrix<double>::identity(4);
     auto objects = config["scene"]["objects"]["sphere"];
     auto material = raytracer::shading::PhongMaterial<double>();
 
-    for (const auto& object : objects) {
-
+    for (const auto &object: objects) {
         const auto key = object.first.as<std::string>();
 
         if (key == "transform") {
@@ -82,7 +79,8 @@ int main(int argc, char *argv[]) {
                 const auto scaling_x = scaling[0].as<double>();
                 const auto scaling_y = scaling[1].as<double>();
                 const auto scaling_z = scaling[2].as<double>();
-                const auto scaling_matrix = raytracer::maths::Transform4x4<double>::scaling(scaling_x, scaling_y, scaling_z);
+                const auto scaling_matrix = raytracer::maths::Transform4x4<double>::scaling(
+                    scaling_x, scaling_y, scaling_z);
                 std::clog << "Scaling: " << scaling_matrix << std::endl;
                 transform *= scaling_matrix;
             }
@@ -91,7 +89,8 @@ int main(int argc, char *argv[]) {
                 const auto translation_x = translation[0].as<double>();
                 const auto translation_y = translation[1].as<double>();
                 const auto translation_z = translation[2].as<double>();
-                const auto translation_matrix = raytracer::maths::Transform4x4<double>::translation(translation_x, translation_y, translation_z);
+                const auto translation_matrix = raytracer::maths::Transform4x4<double>::translation(
+                    translation_x, translation_y, translation_z);
                 std::clog << "Translation: " << translation_matrix << std::endl;
                 transform *= translation_matrix;
             }
@@ -119,17 +118,18 @@ int main(int argc, char *argv[]) {
             const auto shininess = objects["material"]["shininess"].as<double>();
             material = raytracer::shading::PhongMaterial<double>(color, ambient, diffuse, specular, shininess);
             std::clog << "Material:\n"
-            << "\tColor: " << color << "\n"
-            << "\tAmbient: " << ambient << "\n"
-            << "\tDiffuse: " << diffuse << "\n"
-            << "\tSpecular: " << specular << "\n"
-            << "\tShininess: " << shininess << std::endl;
+                    << "\tColor: " << color << "\n"
+                    << "\tAmbient: " << ambient << "\n"
+                    << "\tDiffuse: " << diffuse << "\n"
+                    << "\tSpecular: " << specular << "\n"
+                    << "\tShininess: " << shininess << std::endl;
         }
     }
 
     std::clog << "Transform: " << transform << std::endl;
 
-    const auto sphere = raytracer::scene::Sphere<double>(transform, std::make_shared<raytracer::shading::PhongMaterial<double>>(material));
+    const auto sphere = raytracer::scene::Sphere<double>(
+        transform, std::make_shared<raytracer::shading::PhongMaterial<double> >(material));
 
     const raytracer::maths::Point3D<double> ray_origin(0, 0, -5);
     constexpr size_t wall_size = 7;
@@ -156,7 +156,8 @@ int main(int argc, char *argv[]) {
                 const auto point = ray.position(hit.value().t_);
                 const auto normal = sphere.normal_at(point);
                 const auto eye = -ray.direction();
-                const auto context = raytracer::shading::ShadingContext<double>(material, point_light, point, eye, normal);
+                const auto context = raytracer::shading::ShadingContext<double>(
+                    material, point_light, point, eye, normal);
                 const auto color = phong.shade(context);
                 canvas(x, y) = clamp(color);
             }
