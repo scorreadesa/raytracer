@@ -5,30 +5,9 @@
 #include "PhongShading.hpp"
 #include "Point3D.hpp"
 #include "PointLight.hpp"
+#include "Material.hpp"
 
 namespace raytracer::shading {
-    template<std::floating_point T>
-    class Shading;
-
-    template<std::floating_point T>
-    class PhongShading;
-
-    template<std::floating_point T>
-    struct Material {
-        drawing::Color<T> color_;
-        T ambient_;
-        T diffuse_;
-        T specular_;
-        T shininess_;
-        std::shared_ptr<Shading<T> > shading_;
-
-        Material() = default;
-
-        Material(const drawing::Color<T> &color, T ambient, T diffuse, T specular, T shininess)
-            : color_(color), ambient_(ambient), diffuse_(diffuse), specular_(specular), shininess_(shininess),
-              shading_(std::make_shared<PhongShading<T>>()) {
-        }
-    };
 
     template<std::floating_point T>
     struct ShadingContext {
