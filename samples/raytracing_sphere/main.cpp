@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     // Object
     auto transform = raytracer::maths::Matrix<double>::identity(4);
     auto objects = config["scene"]["objects"]["sphere"];
-    auto material = raytracer::shading::Material<double>();
+    auto material = raytracer::shading::PhongMaterial<double>();
 
     for (const auto& object : objects) {
 
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
             const auto diffuse = objects["material"]["diffuse"].as<double>();
             const auto specular = objects["material"]["specular"].as<double>();
             const auto shininess = objects["material"]["shininess"].as<double>();
-            material = raytracer::shading::Material<double>(color, ambient, diffuse, specular, shininess);
+            material = raytracer::shading::PhongMaterial<double>(color, ambient, diffuse, specular, shininess);
             std::clog << "Material:\n"
             << "\tColor: " << color << "\n"
             << "\tAmbient: " << ambient << "\n"
@@ -129,14 +129,14 @@ int main(int argc, char *argv[]) {
 
     std::clog << "Transform: " << transform << std::endl;
 
-    const auto sphere = raytracer::scene::Sphere<double>(transform, material);
+    const auto sphere = raytracer::scene::Sphere<double>(transform, std::make_shared<raytracer::shading::PhongMaterial<double>>(material));
 
     const raytracer::maths::Point3D<double> ray_origin(0, 0, -5);
     constexpr size_t wall_size = 7;
     double pixel_size = static_cast<double>(wall_size) / static_cast<double>(canvas_height);
     constexpr double half = static_cast<double>(wall_size) / 2.0;
 
-    //const auto phong = raytracer::shading::PhongShading<double>();
+    const auto phong = raytracer::shading::PhongShading<double>();
 
     for (size_t y = 0; y < canvas_height; y++) {
         const double world_y = half - pixel_size * (static_cast<double>(y) + 0.5);
@@ -157,15 +157,19 @@ int main(int argc, char *argv[]) {
                 const auto normal = sphere.normal_at(point);
                 const auto eye = -ray.direction();
                 const auto context = raytracer::shading::ShadingContext<double>(material, point_light, point, eye, normal);
-                const auto color = hit->shape_->material().shading_->shade(context);
+                const auto color = phong.shade(context);
                 canvas(x, y) = clamp(color);
             }
         }
     }
 
+    std::clog << "Writing file..." << std::endl;
+
     FileWriter<raytracer::drawing::Canvas<double> > file_writer(
         std::make_unique<PPMFileWriter<raytracer::drawing::Canvas<double> > >());
     file_writer.write(canvas, "", output_file);
+
+    std::clog << "Finished!" << std::endl;
 
     return 0;
 }
