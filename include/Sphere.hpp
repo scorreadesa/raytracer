@@ -5,6 +5,7 @@
 #include "CofactorExpansion.hpp"
 #include "Vector3D.hpp"
 #include "Matrix.hpp"
+#include "PhongMaterial.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
@@ -13,7 +14,7 @@ namespace raytracer::scene {
         using origin = maths::Point3D<T>;
         using intersections = std::vector<Intersection<T> >;
 
-        Sphere() : Shape<T>(maths::Matrix<T>::identity(4), shading::Material<T>()), origin_(origin(0, 0, 0)),
+        Sphere() : Shape<T>(maths::Matrix<T>::identity(4), std::make_shared<shading::PhongMaterial<T>>()), origin_(origin(0, 0, 0)),
                    radius_(1.0) {
         }
 
@@ -21,16 +22,16 @@ namespace raytracer::scene {
                                                  radius_(radius) {
         }
 
-        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform, shading::Material<T>()),
+        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform, std::make_shared<shading::PhongMaterial<T>>()),
                                                              origin_(origin(0, 0, 0)),
                                                              radius_(1.0) {
         }
 
-        explicit Sphere(const shading::Material<T> &material) : Shape<T>(maths::Matrix<T>::identity(4), material),
+        explicit Sphere(const std::shared_ptr<shading::Material<T>> &material) : Shape<T>(maths::Matrix<T>::identity(4), material),
                                                                 origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
-        Sphere(const maths::Matrix<T> &transform, const shading::Material<T> &material) : Shape<T>(transform, material),
+        Sphere(const maths::Matrix<T> &transform, const std::shared_ptr<shading::Material<T>> &material) : Shape<T>(transform, material),
             origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
