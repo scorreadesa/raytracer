@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     double pixel_size = static_cast<double>(wall_size) / static_cast<double>(canvas_height);
     constexpr double half = static_cast<double>(wall_size) / 2.0;
 
-    const auto phong = raytracer::shading::PhongShading<double>();
+    //const auto phong = raytracer::shading::PhongShading<double>();
 
     for (size_t y = 0; y < canvas_height; y++) {
         const double world_y = half - pixel_size * (static_cast<double>(y) + 0.5);
@@ -156,7 +156,8 @@ int main(int argc, char *argv[]) {
                 const auto point = ray.position(hit.value().t_);
                 const auto normal = sphere.normal_at(point);
                 const auto eye = -ray.direction();
-                const auto color = phong.shade(hit.value().shape_.material(), point_light, point, eye, normal);
+                const auto context = raytracer::shading::ShadingContext<double>(material, point_light, point, eye, normal);
+                const auto color = hit->shape_->material().shading_->shade(context);
                 canvas(x, y) = clamp(color);
             }
         }
