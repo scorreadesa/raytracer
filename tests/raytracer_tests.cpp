@@ -2619,11 +2619,11 @@ TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
     const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
+    const auto context = raytracer::shading::ShadingContext<double>(
+        material, light, raytracer::maths::Point3D<double>(0, 0, 0), eye, normal);
+
     const auto result = raytracer::shading::PhongShading<double>().shade(
-        material,
-        light, raytracer::maths::Point3D<double>(0, 0, 0),
-        eye,
-        normal
+        context
     );
 
     EXPECT_DOUBLE_EQ(result.red(), 1.9);
@@ -2649,11 +2649,12 @@ TEST(PhongShadingTests, EyeAt45Degrees) {
     const auto eye = raytracer::maths::Vector3D<double>(0, value, -value);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
+    const auto context = raytracer::shading::ShadingContext<double>(material, light,
+                                                                    raytracer::maths::Point3D<double>(0, 0, 0), eye,
+                                                                    normal);
+
     const auto result = raytracer::shading::PhongShading<double>().shade(
-        material,
-        light, raytracer::maths::Point3D<double>(0, 0, 0),
-        eye,
-        normal
+        context
     );
 
     EXPECT_DOUBLE_EQ(result.red(), 1.0);
@@ -2678,11 +2679,12 @@ TEST(PhongShadingTests, LightAt45Degrees) {
     const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
+    const auto context = raytracer::shading::ShadingContext<double>(
+        material, light, raytracer::maths::Point3D<double>(0, 0, 0), eye, normal
+    );
+
     const auto result = raytracer::shading::PhongShading<double>().shade(
-        material,
-        light, raytracer::maths::Point3D<double>(0, 0, 0),
-        eye,
-        normal
+        context
     );
 
     EXPECT_NEAR(result.red(), 0.7364, 1e-4);
@@ -2708,11 +2710,13 @@ TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
     const auto eye = raytracer::maths::Vector3D<double>(0, -value, -value);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
+    const auto context = raytracer::shading::ShadingContext<double>(material, light,
+                                                                    raytracer::maths::Point3D<double>(0, 0, 0),
+                                                                    eye, normal
+    );
+
     const auto result = raytracer::shading::PhongShading<double>().shade(
-        material,
-        light, raytracer::maths::Point3D<double>(0, 0, 0),
-        eye,
-        normal
+        context
     );
 
     EXPECT_NEAR(result.red(), 1.6364, 1e-4);
@@ -2737,11 +2741,15 @@ TEST(PhongShadingTests, LightBehindSurface) {
     const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
-    const auto result = raytracer::shading::PhongShading<double>().shade(
+    const auto context = raytracer::shading::ShadingContext<double>(
         material,
-        light, raytracer::maths::Point3D<double>(0, 0, 0),
-        eye,
-        normal
+        light,
+        raytracer::maths::Point3D<double>(0, 0, 0),
+        eye, normal
+    );
+
+    const auto result = raytracer::shading::PhongShading<double>().shade(
+        context
     );
 
     EXPECT_NEAR(result.red(), 0.1, 1e-4);
@@ -2827,11 +2835,10 @@ TEST(SceneTests, TestWorldRayIntersections) {
 
 
 TEST(SceneTests, TestIntersectionInfoInitialization) {
-
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, -5),
         raytracer::maths::Vector3D<double>(0, 0, 1)
-        );
+    );
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto intersection = raytracer::scene::Intersection<double>(4, &sphere);
     const auto computations = raytracer::scene::prepare_computations(intersection, ray);
@@ -2855,7 +2862,6 @@ TEST(SceneTests, TestIntersectionInfoInitialization) {
 }
 
 TEST(SceneTests, IntersectionOutsideObject) {
-
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, -5),
         raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2870,7 +2876,7 @@ TEST(SceneTests, IntersectionInsideObject) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, 0),
         raytracer::maths::Vector3D<double>(0, 0, 1)
-        );
+    );
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto intersection = raytracer::scene::Intersection<double>(1, &sphere);
     const auto comps = raytracer::scene::prepare_computations(intersection, ray);
