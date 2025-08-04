@@ -9,17 +9,13 @@ namespace raytracer::shading {
     class PhongShading final : public Shading<T> {
     public:
         drawing::Color<T> shade(
-            const Material<T> &material,
-            const PointLight<T> &point_light,
-            const maths::Point3D<T> &position,
-            const maths::Vector3D<T> &eye,
-            const maths::Vector3D<T> &normal
+            const ShadingContext<T>& context
         ) const override {
 
-            const auto effective_color = material.color_ * point_light.intensity();
-            auto lightv = normalize(point_light.position() - position);
-            const auto ambient = effective_color * material.ambient_;
-            const auto light_dot_normal = dot(lightv, normal);
+            const auto effective_color = context.material_.color_ * context.light_.intensity();
+            auto lightv = normalize(context.light_.position() - context.position_);
+            const auto ambient = effective_color * context.material_.ambient_;
+            const auto light_dot_normal = dot(lightv, context.normal_);
 
             auto diffuse = drawing::Color<T>(0, 0, 0);
             auto specular = drawing::Color<T>(0, 0, 0);
@@ -28,15 +24,15 @@ namespace raytracer::shading {
                 diffuse = drawing::Color<T>(0, 0, 0);
                 specular = drawing::Color<T>(0, 0, 0);
             } else {
-                diffuse = effective_color * material.diffuse_ * light_dot_normal;
-                const auto reflectv = maths::reflect(-lightv, normal);
-                const auto reflect_dot_eye = dot(reflectv, eye);
+                diffuse = effective_color * context.material_.diffuse_ * light_dot_normal;
+                const auto reflectv = maths::reflect(-lightv, context.normal_);
+                const auto reflect_dot_eye = dot(reflectv, context.eye_);
 
                 if (reflect_dot_eye <= static_cast<T>(0)) {
                     specular = drawing::Color<T>(0.0, 0.0, 0.0);
                 } else {
-                    const auto factor = std::pow(reflect_dot_eye, material.shininess_);
-                    specular = point_light.intensity() * material.specular_ * factor;
+                    const auto factor = std::pow(reflect_dot_eye, context.material_.shininess_);
+                    specular = context.light_.intensity() * context.material_.specular_ * factor;
                 }
             }
 
