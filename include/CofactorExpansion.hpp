@@ -8,7 +8,6 @@ namespace raytracer::maths {
     class CofactorExpansion final : public Solver<T> {
     public:
         T determinant(const Matrix<T> &m) const override {
-
             if (m.rows() == 1 and m.cols() == 1) {
                 return m(0, 0);
             }

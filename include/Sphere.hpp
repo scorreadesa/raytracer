@@ -14,7 +14,8 @@ namespace raytracer::scene {
         using origin = maths::Point3D<T>;
         using intersections = std::vector<Intersection<T> >;
 
-        Sphere() : Shape<T>(maths::Matrix<T>::identity(4), std::make_shared<shading::PhongMaterial<T>>()), origin_(origin(0, 0, 0)),
+        Sphere() : Shape<T>(maths::Matrix<T>::identity(4), std::make_shared<shading::PhongMaterial<T> >()),
+                   origin_(origin(0, 0, 0)),
                    radius_(1.0) {
         }
 
@@ -22,17 +23,20 @@ namespace raytracer::scene {
                                                  radius_(radius) {
         }
 
-        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform, std::make_shared<shading::PhongMaterial<T>>()),
+        explicit Sphere(const maths::Matrix<T> &transform) : Shape<T>(transform,
+                                                                      std::make_shared<shading::PhongMaterial<T> >()),
                                                              origin_(origin(0, 0, 0)),
                                                              radius_(1.0) {
         }
 
-        explicit Sphere(const std::shared_ptr<shading::Material<T>> &material) : Shape<T>(maths::Matrix<T>::identity(4), material),
-                                                                origin_(origin(0, 0, 0)), radius_(1.0) {
+        explicit Sphere(const std::shared_ptr<shading::Material<T> > &material) : Shape<T>(
+                maths::Matrix<T>::identity(4), material),
+            origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
-        Sphere(const maths::Matrix<T> &transform, const std::shared_ptr<shading::Material<T>> &material) : Shape<T>(transform, material),
-            origin_(origin(0, 0, 0)), radius_(1.0) {
+        Sphere(const maths::Matrix<T> &transform,
+               const std::shared_ptr<shading::Material<T> > &material) : Shape<T>(transform, material),
+                                                                         origin_(origin(0, 0, 0)), radius_(1.0) {
         }
 
         Sphere(const origin &origin, T radius, const maths::Matrix<T> &transform) : Shape<T>(transform),
@@ -74,8 +78,8 @@ namespace raytracer::scene {
             return normalize(world_normal);
         }
 
-        std::unique_ptr<Shape<T>> clone() const override {
-            return std::make_unique<Sphere<T>>(*this);
+        std::unique_ptr<Shape<T> > clone() const override {
+            return std::make_unique<Sphere<T> >(*this);
         }
 
     private:

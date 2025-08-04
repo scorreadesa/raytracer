@@ -23,14 +23,12 @@ namespace raytracer::exceptions {
     class ShapeMismatchException final : public std::out_of_range {
     public:
         explicit ShapeMismatchException(const std::string &message) : std::out_of_range(message) {
-
         }
     };
 
     class NotInvertibleMatrixException final : public std::invalid_argument {
     public:
         explicit NotInvertibleMatrixException(const std::string &message) : std::invalid_argument(message) {
-
         }
     };
 }

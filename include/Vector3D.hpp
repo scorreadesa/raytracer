@@ -131,7 +131,7 @@ namespace raytracer::maths {
     };
 
     template<std::floating_point T>
-    Vector3D<T> reflect(const Vector3D<T>& in, const Vector3D<T>& normal) {
+    Vector3D<T> reflect(const Vector3D<T> &in, const Vector3D<T> &normal) {
         return in - normal * 2 * dot(in, normal);
     }
 

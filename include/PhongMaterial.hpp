@@ -16,7 +16,7 @@ namespace raytracer::shading {
         PhongMaterial() = default;
 
         PhongMaterial(const drawing::Color<T> &color, T ambient, T diffuse, T specular, T shininess)
-            : color_(color), ambient_(ambient), diffuse_(diffuse), specular_(specular), shininess_(shininess){
+            : color_(color), ambient_(ambient), diffuse_(diffuse), specular_(specular), shininess_(shininess) {
         }
 
         [[nodiscard]] ShadingModel model() const override {

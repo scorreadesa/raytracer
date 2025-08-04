@@ -8,7 +8,6 @@
 #include <cmath>
 
 namespace raytracer::maths {
-
     template<std::floating_point T>
     class Matrix {
     private:
@@ -305,7 +304,7 @@ namespace raytracer::maths {
             throw exceptions::ColumnOutOfRangeException(msg);
         }
 
-        std::vector < T > data;
+        std::vector<T> data;
         for (std::size_t i = 0; i < m_rows; i++) {
             if (i != row) {
                 for (std::size_t j = 0; j < m_cols; j++) {
