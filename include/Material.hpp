@@ -12,7 +12,7 @@ namespace raytracer::shading {
     struct Material {
         virtual ~Material() = default;
 
-        [[nodiscard]] virtual ShadingModel model() const = 0;
+        [[nodiscard]] virtual ShadingModel model() const noexcept = 0;
     };
 }
 
