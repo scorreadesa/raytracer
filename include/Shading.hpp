@@ -2,7 +2,6 @@
 #define SHADING_HPP
 
 #include "drawing.hpp"
-#include "PhongShading.hpp"
 #include "Point3D.hpp"
 #include "PointLight.hpp"
 #include "Material.hpp"
@@ -28,6 +27,8 @@ namespace raytracer::shading {
     class Shading {
     public:
         virtual ~Shading() = default;
+
+        [[nodiscard]] virtual ShadingModel model() const = 0;
 
         virtual drawing::Color<T> shade(
             const ShadingContext<T> &context
