@@ -156,8 +156,7 @@ int main(int argc, char *argv[]) {
                 const auto point = ray.position(hit.value().t_);
                 const auto normal = sphere.normal_at(point);
                 const auto eye = -ray.direction();
-                const auto context = raytracer::shading::ShadingContext<double>(
-                    material, point_light, point, eye, normal);
+                const auto context = raytracer::shading::ShadingContext<double>(material, point_light, point, eye, normal);
                 const auto color = phong.shade(context);
                 canvas(x, y) = clamp(color);
             }
