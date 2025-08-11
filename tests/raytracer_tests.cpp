@@ -5,8 +5,10 @@
 #include "../include/PhongMaterial.hpp"
 #include "../include/PhongShading.hpp"
 #include "../include/Ray.hpp"
+#include "../include/Renderer.hpp"
 #include "../include/Scene.hpp"
 #include "../include/SceneBuilder.hpp"
+#include "../include/ShaderRegistry.hpp"
 #include "../include/Sphere.hpp"
 #include "../include/Transform.hpp"
 
@@ -2620,8 +2622,9 @@ TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
     const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
-    const auto context = raytracer::shading::ShadingContext<double>(
-        material, light, raytracer::maths::Point3D<double>(0, 0, 0), eye, normal);
+    const auto context = raytracer::shading::ShadingContext<double>(material, light,
+                                                                    raytracer::maths::Point3D<double>(0, 0, 0), eye,
+                                                                    normal);
 
     const auto result = raytracer::shading::PhongShading<double>().shade(
         context
@@ -2650,8 +2653,10 @@ TEST(PhongShadingTests, EyeAt45Degrees) {
     const auto eye = raytracer::maths::Vector3D<double>(0, value, -value);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
-    const auto context = raytracer::shading::ShadingContext<double>(material, light,
-                                                                    raytracer::maths::Point3D<double>(0, 0, 0), eye,
+    const auto context = raytracer::shading::ShadingContext<double>(material,
+                                                                    light,
+                                                                    raytracer::maths::Point3D<double>(0, 0, 0),
+                                                                    eye,
                                                                     normal);
 
     const auto result = raytracer::shading::PhongShading<double>().shade(
@@ -2680,8 +2685,9 @@ TEST(PhongShadingTests, LightAt45Degrees) {
     const auto eye = raytracer::maths::Vector3D<double>(0, 0, -1);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
-    const auto context = raytracer::shading::ShadingContext<double>(
-        material, light, raytracer::maths::Point3D<double>(0, 0, 0), eye, normal
+    const auto context = raytracer::shading::ShadingContext<double>(material, light,
+                                                                    raytracer::maths::Point3D<double>(0, 0, 0), eye,
+                                                                    normal
     );
 
     const auto result = raytracer::shading::PhongShading<double>().shade(
@@ -2711,7 +2717,8 @@ TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
     const auto eye = raytracer::maths::Vector3D<double>(0, -value, -value);
     const auto normal = raytracer::maths::Vector3D<double>(0, 0, -1);
 
-    const auto context = raytracer::shading::ShadingContext<double>(material, light,
+    const auto context = raytracer::shading::ShadingContext<double>(material,
+                                                                    light,
                                                                     raytracer::maths::Point3D<double>(0, 0, 0),
                                                                     eye, normal
     );
@@ -2898,4 +2905,53 @@ TEST(SceneTests, IntersectionInsideObject) {
     EXPECT_DOUBLE_EQ(comps.normal_.y(), 0);
     EXPECT_DOUBLE_EQ(comps.normal_.z(), -1);
     EXPECT_DOUBLE_EQ(comps.normal_.w(), 0);
+}
+
+TEST(RendererTests, ShadeIntersection) {
+    const auto point_light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(-10, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double> >(
+        raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
+        0.1,
+        0.7,
+        0.2,
+        200.0
+    );
+    const auto s1 = raytracer::scene::Sphere<double>(material);
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
+    const auto s2 = raytracer::scene::Sphere<double>(scaling);
+
+    const auto scene = raytracer::scene::SceneBuilder<double>()
+            .with_light(point_light)
+            .with_object(s1)
+            .with_object(s2)
+            .build();
+
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1)
+    );
+
+    const auto intersection = raytracer::scene::Intersection<double>(4, &s1);
+    const auto intersection_infos = raytracer::scene::prepare_computations(intersection, ray);
+
+    const auto renderer = raytracer::core::Renderer<double>(scene);
+    const auto color = renderer.shade_hit(intersection_infos);
+
+    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
+    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
+    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
+}
+
+TEST(ShaderRegistryTests, TestAddAndFetchShader) {
+
+    auto registry = raytracer::core::ShaderRegistry<double>();
+    registry.register_shader(raytracer::shading::ShadingModel::Phong);
+    const auto shader = registry.get_shader(raytracer::shading::ShadingModel::Phong);
+
+    EXPECT_EQ(shader->model(), raytracer::shading::ShadingModel::Phong);
 }
