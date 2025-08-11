@@ -19,7 +19,7 @@ namespace raytracer::shading {
             : color_(color), ambient_(ambient), diffuse_(diffuse), specular_(specular), shininess_(shininess) {
         }
 
-        [[nodiscard]] ShadingModel model() const override {
+        [[nodiscard]] ShadingModel model() const noexcept override {
             return ShadingModel::Phong;
         }
     };
