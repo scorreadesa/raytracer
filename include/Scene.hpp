@@ -3,8 +3,6 @@
 
 #include <ranges>
 #include <algorithm>
-#include <list>
-
 #include "Shape.hpp"
 #include "PointLight.hpp"
 
@@ -65,7 +63,7 @@ namespace raytracer::scene {
         [[nodiscard]] bool has_lights() const { return !light_sources_.empty(); }
 
         const Shape<T> &object_at(size_t index) { return objects_.at(index); }
-        const shading::Light<T> &light_at(size_t index) { return light_sources_.at(index); }
+        const shading::Light<T> &light_at(size_t index) const { return *light_sources_.at(index); }
 
         std::vector<Intersection<T> > intersect(const maths::Ray<T> &ray) const {
             std::vector<Intersection<T> > intersections;
