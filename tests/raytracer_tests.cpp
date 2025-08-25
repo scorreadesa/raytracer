@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+
+#include "../include/Camera.hpp"
 #include "../include/CofactorExpansion.hpp"
 #include "../include/drawing.hpp"
 #include "../include/maths.hpp"
@@ -12,7 +14,7 @@
 #include "../include/Sphere.hpp"
 #include "../include/Transform.hpp"
 
-TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
+TEST(FPTests, TestApproximatelyEqualEpsilonAddSmall) {
     float a = 0.0;
     float b = 0.0;
 
@@ -24,7 +26,7 @@ TEST(FPTests, ApproximatelyEqualEpsilonAddSmall) {
     }
 }
 
-TEST(FPTests, ApproximatelyEqualEpsilonMultiplySmall) {
+TEST(FPTests, TestApproximatelyEqualEpsilonMultiplySmall) {
     float a = 0.01;
     float b = 0.01;
 
@@ -87,7 +89,7 @@ TEST(MathsTests, TestRad2Deg2PI) {
     EXPECT_DOUBLE_EQ(res, 360.);
 }
 
-TEST(PointTests, CreatePoint) {
+TEST(PointTests, TestCreatePoint) {
     raytracer::maths::Point3D point(0.0, 0.0, 0.0);
     EXPECT_NEAR(point.x(), 0.0, 1e-6);
     EXPECT_NEAR(point.y(), 0.0, 1e-6);
@@ -95,7 +97,7 @@ TEST(PointTests, CreatePoint) {
     EXPECT_NEAR(point.w(), 1.0, 1e-6);
 }
 
-TEST(PointTests, MovePointWithRightVectorAdd) {
+TEST(PointTests, TestMovePointWithRightVectorAdd) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     raytracer::maths::Point3D p(1.0, 2.0, 3.0);
 
@@ -107,7 +109,7 @@ TEST(PointTests, MovePointWithRightVectorAdd) {
     EXPECT_NEAR(new_p.w(), 1.0, 1e-6);
 }
 
-TEST(PointTests, MovePointWithLeftVectorAdd) {
+TEST(PointTests, TestMovePointWithLeftVectorAdd) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     raytracer::maths::Point3D p(1.0, 2.0, 3.0);
 
@@ -119,7 +121,7 @@ TEST(PointTests, MovePointWithLeftVectorAdd) {
     EXPECT_NEAR(new_p.w(), 1.0, 1e-6);
 }
 
-TEST(PointTests, MovePointBackward) {
+TEST(PointTests, TestMovePointBackward) {
     raytracer::maths::Vector3D v(5.0, 6.0, 7.0);
     raytracer::maths::Point3D p(3.0, 2.0, 1.0);
     auto new_p = p - v;
@@ -130,7 +132,7 @@ TEST(PointTests, MovePointBackward) {
     EXPECT_NEAR(new_p.w(), 1.0, 1e-6);
 }
 
-TEST(PointTests, ChangePoint) {
+TEST(PointTests, TestChangePoint) {
     raytracer::maths::Point3D point(1.0, 2.0, 3.0);
     point.x() = 2.0;
     point.y() = 4.0;
@@ -141,7 +143,7 @@ TEST(PointTests, ChangePoint) {
     EXPECT_NEAR(point.w(), 1.0, 1e-6);
 }
 
-TEST(VectorTests, CreateVector) {
+TEST(VectorTests, TestCreateVector) {
     raytracer::maths::Vector3D vector(0.0, 0.0, 0.0);
     EXPECT_NEAR(vector.x(), 0.0, 1e-6);
     EXPECT_NEAR(vector.y(), 0.0, 1e-6);
@@ -149,7 +151,7 @@ TEST(VectorTests, CreateVector) {
     EXPECT_NEAR(vector.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, ChangeVector) {
+TEST(VectorTests, TestChangeVector) {
     raytracer::maths::Vector3D vector(1.0, 2.0, 3.0);
     vector.x() = 2.0;
     vector.y() = 4.0;
@@ -160,7 +162,7 @@ TEST(VectorTests, ChangeVector) {
     EXPECT_NEAR(vector.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, AddTwoVectors) {
+TEST(VectorTests, TestAddTwoVectors) {
     raytracer::maths::Vector3D v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D v2(2.0, 4.0, 4.0);
     auto result = v1 + v2;
@@ -170,7 +172,7 @@ TEST(VectorTests, AddTwoVectors) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, SubTwoVectors) {
+TEST(VectorTests, TestSubTwoVectors) {
     raytracer::maths::Vector3D v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D v2(2.0, 4.0, 4.0);
     auto result = v1 - v2;
@@ -180,7 +182,7 @@ TEST(VectorTests, SubTwoVectors) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, LeftMultByScalar) {
+TEST(VectorTests, TestLeftMultByScalar) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     auto result = 2 * v;
     EXPECT_NEAR(result.x(), 2.0, 1e-6);
@@ -189,7 +191,7 @@ TEST(VectorTests, LeftMultByScalar) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, RightMultByScalar) {
+TEST(VectorTests, TestRightMultByScalar) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     auto result = v * 2;
     EXPECT_NEAR(result.x(), 2.0, 1e-6);
@@ -198,7 +200,7 @@ TEST(VectorTests, RightMultByScalar) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, CompoundAddTwoVectors) {
+TEST(VectorTests, TestCompoundAddTwoVectors) {
     raytracer::maths::Vector3D v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D v2(2.0, 4.0, 4.0);
     v1 += v2;
@@ -208,7 +210,7 @@ TEST(VectorTests, CompoundAddTwoVectors) {
     EXPECT_NEAR(v1.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, CompoundSubTwoVectors) {
+TEST(VectorTests, TestCompoundSubTwoVectors) {
     raytracer::maths::Vector3D v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D v2(2.0, 4.0, 4.0);
     v1 -= v2;
@@ -218,7 +220,7 @@ TEST(VectorTests, CompoundSubTwoVectors) {
     EXPECT_NEAR(v1.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, CompoundMultVectorScalar) {
+TEST(VectorTests, TestCompoundMultVectorScalar) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     v *= 2;
     EXPECT_NEAR(v.x(), 2.0, 1e-6);
@@ -227,7 +229,7 @@ TEST(VectorTests, CompoundMultVectorScalar) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, GetVectorFromPointSubtraction) {
+TEST(VectorTests, TestGetVectorFromPointSubtraction) {
     raytracer::maths::Point3D v1(3.0, 2.0, 1.0);
     raytracer::maths::Point3D v2(5.0, 6.0, 7.0);
     auto result = v1 - v2;
@@ -238,7 +240,7 @@ TEST(VectorTests, GetVectorFromPointSubtraction) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NegateVector) {
+TEST(VectorTests, TestNegateVector) {
     raytracer::maths::Vector3D v(1.0, -2.0, 1.0);
     -v;
     EXPECT_NEAR(v.x(), -1.0, 1e-6);
@@ -247,7 +249,7 @@ TEST(VectorTests, NegateVector) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, RightDivByScalar) {
+TEST(VectorTests, TestRightDivByScalar) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     auto result = v / 2;
     EXPECT_NEAR(result.x(), 0.5, 1e-6);
@@ -256,67 +258,67 @@ TEST(VectorTests, RightDivByScalar) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthFloat) {
+TEST(VectorTests, TestVectorLengthFloat) {
     raytracer::maths::Vector3D<float> v(1.0, 0.0, 0.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthDouble) {
+TEST(VectorTests, TestVectorLengthDouble) {
     raytracer::maths::Vector3D v(1.0, 0.0, 0.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthFloat2) {
+TEST(VectorTests, TestVectorLengthFloat2) {
     raytracer::maths::Vector3D<float> v(0.0, 1.0, 0.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthDouble2) {
+TEST(VectorTests, TestVectorLengthDouble2) {
     raytracer::maths::Vector3D v(0.0, 1.0, 0.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthFloat3) {
+TEST(VectorTests, TestVectorLengthFloat3) {
     raytracer::maths::Vector3D<float> v(0.0, 0.0, 1.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthDouble3) {
+TEST(VectorTests, TestVectorLengthDouble3) {
     raytracer::maths::Vector3D v(0.0, 0.0, 1.0);
     auto length = v.length();
     EXPECT_NEAR(length, 1.0, 1e-6);
 }
 
-TEST(VectorTests, VectorLengthFloat4) {
+TEST(VectorTests, TestVectorLengthFloat4) {
     raytracer::maths::Vector3D<float> v(1.0, 2.0, 3.0);
     auto length = v.length();
     EXPECT_NEAR(length, std::sqrt(14), 1e-6);
 }
 
-TEST(VectorTests, VectorLengthDouble4) {
+TEST(VectorTests, TestVectorLengthDouble4) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     auto length = v.length();
     EXPECT_NEAR(length, std::sqrt(14), 1e-6);
 }
 
-TEST(VectorTests, VectorLengthFloat5) {
+TEST(VectorTests, TestVectorLengthFloat5) {
     raytracer::maths::Vector3D<float> v(-1.0, -2.0, -3.0);
     auto length = v.length();
     EXPECT_NEAR(length, std::sqrt(14), 1e-6);
 }
 
-TEST(VectorTests, VectorLengthDouble5) {
+TEST(VectorTests, TestVectorLengthDouble5) {
     raytracer::maths::Vector3D v(-1.0, -2.0, -3.0);
     auto length = v.length();
     EXPECT_NEAR(length, std::sqrt(14), 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat) {
+TEST(VectorTests, TestNormalizeVectorWithMemberFunctionFloat) {
     raytracer::maths::Vector3D<float> v(4.0, 0.0, 0.0);
     v.normalize();
     EXPECT_NEAR(v.length(), 1.0, 1e-6);
@@ -326,7 +328,7 @@ TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble) {
+TEST(VectorTests, TestNormalizeVectorWithMemberFunctionDouble) {
     raytracer::maths::Vector3D v(4.0, 0.0, 0.0);
     v.normalize();
     EXPECT_NEAR(v.length(), 1.0, 1e-6);
@@ -336,7 +338,7 @@ TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat2) {
+TEST(VectorTests, TestNormalizeVectorWithMemberFunctionFloat2) {
     raytracer::maths::Vector3D<float> v(1.0, 2.0, 3.0);
     v.normalize();
     EXPECT_NEAR(v.length(), 1.0, 1e-6);
@@ -346,7 +348,7 @@ TEST(VectorTests, NormalizeVectorWithMemberFunctionFloat2) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble2) {
+TEST(VectorTests, TestNormalizeVectorWithMemberFunctionDouble2) {
     raytracer::maths::Vector3D v(1.0, 2.0, 3.0);
     v.normalize();
     EXPECT_NEAR(v.length(), 1.0, 1e-6);
@@ -356,7 +358,7 @@ TEST(VectorTests, NormalizeVectorWithMemberFunctionDouble2) {
     EXPECT_NEAR(v.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithFreeFunctionFloat) {
+TEST(VectorTests, TestNormalizeVectorWithFreeFunctionFloat) {
     raytracer::maths::Vector3D<float> v(1.0, 2.0, 3.0);
     auto result = normalize(v);
     EXPECT_NEAR(result.length(), 1.0, 1e-6);
@@ -366,7 +368,7 @@ TEST(VectorTests, NormalizeVectorWithFreeFunctionFloat) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, NormalizeVectorWithFreeFunctionDouble2) {
+TEST(VectorTests, TestNormalizeVectorWithFreeFunctionDouble2) {
     raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
     auto result = normalize(v);
     EXPECT_NEAR(result.length(), 1.0, 1e-6);
@@ -376,7 +378,7 @@ TEST(VectorTests, NormalizeVectorWithFreeFunctionDouble2) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(VectorTests, VectorDotProductFloat) {
+TEST(VectorTests, TestVectorDotProductFloat) {
     raytracer::maths::Vector3D<float> v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D<float> v2(2.0, 3.0, 4.0);
 
@@ -387,7 +389,7 @@ TEST(VectorTests, VectorDotProductFloat) {
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 }
 
-TEST(VectorTests, VectorDotProductDouble) {
+TEST(VectorTests, TestVectorDotProductDouble) {
     raytracer::maths::Vector3D<double> v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D<double> v2(2.0, 3.0, 4.0);
 
@@ -398,7 +400,7 @@ TEST(VectorTests, VectorDotProductDouble) {
     EXPECT_NEAR(dot_prod, 20.0, 1e-6);
 }
 
-TEST(VectorTests, VectorCrossProductFloat) {
+TEST(VectorTests, TestVectorCrossProductFloat) {
     raytracer::maths::Vector3D<float> v1(1.0, 2.0, 3.0);
     raytracer::maths::Vector3D<float> v2(2.0, 3.0, 4.0);
 
@@ -423,7 +425,7 @@ TEST(VectorTests, VectorCrossProductFloat) {
     EXPECT_NEAR(cross_prod_v2v1.z(), 1.0, 1e-6);
 }
 
-TEST(ColorTests, CreateColor) {
+TEST(ColorTests, TestCreateColor) {
     auto color = raytracer::drawing::Color<double>(1.0, 0.4, 0.6);
 
     EXPECT_NEAR(color.red(), 1.0, 1e-6);
@@ -439,7 +441,7 @@ TEST(ColorTests, CreateColor) {
     EXPECT_NEAR(color.blue(), 0.5, 1e-6);
 }
 
-TEST(ColorTests, AddColors) {
+TEST(ColorTests, TestAddColors) {
     auto c1 = raytracer::drawing::Color<double>(0.9, 0.6, 0.75);
     auto c2 = raytracer::drawing::Color<double>(0.7, 0.1, 0.25);
 
@@ -456,7 +458,7 @@ TEST(ColorTests, AddColors) {
     EXPECT_NEAR(c1.blue(), 1.0, 1e-6);
 }
 
-TEST(ColorTests, SubColors) {
+TEST(ColorTests, TestSubColors) {
     auto c1 = raytracer::drawing::Color<double>(0.9, 0.6, 0.75);
     auto c2 = raytracer::drawing::Color<double>(0.7, 0.1, 0.25);
 
@@ -473,7 +475,7 @@ TEST(ColorTests, SubColors) {
     EXPECT_NEAR(c1.blue(), 0.5, 1e-6);
 }
 
-TEST(ColorTests, RightMultColorByScalar) {
+TEST(ColorTests, TestRightMultColorByScalar) {
     auto c1 = raytracer::drawing::Color<double>(0.2, 0.3, 0.4);
 
     auto result1 = c1 * 2.0;
@@ -488,7 +490,7 @@ TEST(ColorTests, RightMultColorByScalar) {
     EXPECT_NEAR(c1.blue(), 0.8, 1e-6);
 }
 
-TEST(ColorTests, LeftMultColorByScalar) {
+TEST(ColorTests, TestLeftMultColorByScalar) {
     auto c1 = raytracer::drawing::Color<double>(0.2, 0.3, 0.4);
 
     auto result1 = 2.0 * c1;
@@ -503,7 +505,7 @@ TEST(ColorTests, LeftMultColorByScalar) {
     EXPECT_NEAR(c1.blue(), 0.8, 1e-6);
 }
 
-TEST(ColorTests, MultColors) {
+TEST(ColorTests, TestMultColors) {
     auto c1 = raytracer::drawing::Color<double>(1.0, 0.2, 0.4);
     auto c2 = raytracer::drawing::Color<double>(0.9, 1.0, 0.1);
 
@@ -520,7 +522,7 @@ TEST(ColorTests, MultColors) {
     EXPECT_NEAR(c1.blue(), 0.04, 1e-6);
 }
 
-TEST(CanvasTests, CreateBlackCanvas) {
+TEST(CanvasTests, TestCreateBlackCanvas) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
@@ -533,7 +535,7 @@ TEST(CanvasTests, CreateBlackCanvas) {
     }
 }
 
-TEST(CanvasTests, MakeRedCanvas) {
+TEST(CanvasTests, TestMakeRedCanvas) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
@@ -551,17 +553,17 @@ TEST(CanvasTests, MakeRedCanvas) {
     }
 }
 
-TEST(CanvasTests, AccessRowOutsideRange) {
+TEST(CanvasTests, TestAccessRowOutsideRange) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
     EXPECT_THROW(canvas(4, 0), raytracer::exceptions::RowOutOfRangeException);
 }
 
-TEST(CanvasTests, AccessColOutsideRange) {
+TEST(CanvasTests, TestAccessColOutsideRange) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
     EXPECT_THROW(canvas(0, 4), raytracer::exceptions::ColumnOutOfRangeException);
 }
 
-TEST(CanvasTests, NonSquareBlueCanvas) {
+TEST(CanvasTests, TestNonSquareBlueCanvas) {
     raytracer::drawing::Canvas<double> canvas(4, 3);
 
     for (size_t row = 0; row < canvas.height(); ++row) {
@@ -579,7 +581,7 @@ TEST(CanvasTests, NonSquareBlueCanvas) {
     }
 }
 
-TEST(MatrixTests, CreateMatrix) {
+TEST(MatrixTests, TestCreateMatrix) {
     raytracer::maths::Matrix<double> matrix(4, 4);
 
     matrix(0, 0) = 1.0;
@@ -617,7 +619,7 @@ TEST(MatrixTests, CreateMatrix) {
     EXPECT_NEAR(matrix(3, 3), 16.5, 1e-6);
 }
 
-TEST(MatrixTests, CreateIdentityMatrix) {
+TEST(MatrixTests, TestCreateIdentityMatrix) {
     auto identity = raytracer::maths::Matrix<double>::identity(4);
 
     for (size_t row = 0; row < 4; ++row) {
@@ -631,7 +633,7 @@ TEST(MatrixTests, CreateIdentityMatrix) {
     }
 }
 
-TEST(MatrixTests, CreateMatrixWithValues) {
+TEST(MatrixTests, TestCreateMatrixWithValues) {
     auto m = raytracer::maths::Matrix<double>(3, 4, {
                                                   0, 1, 2, 3,
                                                   4, 5, 6, 7,
@@ -652,7 +654,7 @@ TEST(MatrixTests, CreateMatrixWithValues) {
     EXPECT_NEAR(m(2, 3), 11.0, 1e-6);
 }
 
-TEST(MatrixTests, AddMatrices) {
+TEST(MatrixTests, TestAddMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -683,7 +685,7 @@ TEST(MatrixTests, AddMatrices) {
     EXPECT_EQ(res2.cols(), 2);
 }
 
-TEST(MatrixTests, SubtractMatrices) {
+TEST(MatrixTests, TestSubtractMatrices) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                          1, 2,
                                                          3, 4,
@@ -714,7 +716,7 @@ TEST(MatrixTests, SubtractMatrices) {
     EXPECT_EQ(res2.cols(), 2);
 }
 
-TEST(MatrixTests, LeftMultByScalar) {
+TEST(MatrixTests, TestLeftMultByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                          1, 2,
                                                          4, 5,
@@ -730,7 +732,7 @@ TEST(MatrixTests, LeftMultByScalar) {
     EXPECT_EQ(res1.cols(), 2);
 }
 
-TEST(MatrixTests, RightMultByScalar) {
+TEST(MatrixTests, TestRightMultByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                          1, 2,
                                                          4, 5,
@@ -746,7 +748,7 @@ TEST(MatrixTests, RightMultByScalar) {
     EXPECT_EQ(res1.cols(), 2);
 }
 
-TEST(MatrixTests, DivByScalar) {
+TEST(MatrixTests, TestDivByScalar) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                          1, 2,
                                                          4, 5,
@@ -762,7 +764,7 @@ TEST(MatrixTests, DivByScalar) {
     EXPECT_EQ(res1.cols(), 2);
 }
 
-TEST(MatrixTests, CompoundAddTwoMatrices) {
+TEST(MatrixTests, TestCompoundAddTwoMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -783,7 +785,7 @@ TEST(MatrixTests, CompoundAddTwoMatrices) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTests, CompoundSubTwoMatrices) {
+TEST(MatrixTests, TestCompoundSubTwoMatrices) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -804,7 +806,7 @@ TEST(MatrixTests, CompoundSubTwoMatrices) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTests, CompoundMultMatScalar) {
+TEST(MatrixTests, TestCompoundMultMatScalar) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -821,7 +823,7 @@ TEST(MatrixTests, CompoundMultMatScalar) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTests, CompoundDivMatScalar) {
+TEST(MatrixTests, TestCompoundDivMatScalar) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -838,7 +840,7 @@ TEST(MatrixTests, CompoundDivMatScalar) {
     EXPECT_EQ(m1.cols(), 2);
 }
 
-TEST(MatrixTests, CompoundDivMatScalarByZero) {
+TEST(MatrixTests, TestCompoundDivMatScalarByZero) {
     auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                    1, 2,
                                                    3, 4,
@@ -847,7 +849,7 @@ TEST(MatrixTests, CompoundDivMatScalarByZero) {
     EXPECT_THROW(m1 /= 0, std::invalid_argument);
 }
 
-TEST(MatrixTests, DivMatScalarByZero) {
+TEST(MatrixTests, TestDivMatScalarByZero) {
     const auto m1 = raytracer::maths::Matrix<double>(2, 2, {
                                                          1, 2,
                                                          3, 4,
@@ -856,7 +858,7 @@ TEST(MatrixTests, DivMatScalarByZero) {
     EXPECT_THROW(m1 / 0, std::invalid_argument);
 }
 
-TEST(MatrixTests, MatMulSameSize) {
+TEST(MatrixTests, TestMatMulSameSize) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             1, 2, 3, 4,
                                             5, 6, 7, 8,
@@ -922,7 +924,7 @@ TEST(MatrixTests, MatMulSameSize) {
     EXPECT_NEAR(result(3, 3), 232.0, 1e-6);
 }
 
-TEST(MatrixTests, MatMulDifferentSizes) {
+TEST(MatrixTests, TestMatMulDifferentSizes) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             -2, 1, 2, 3,
                                             3, 2, 1, -1,
@@ -966,7 +968,7 @@ TEST(MatrixTests, MatMulDifferentSizes) {
     EXPECT_NEAR(result(3, 4), 423.0, 1e-6);
 }
 
-TEST(MatrixTests, MatMulDifferentSizes2) {
+TEST(MatrixTests, TestMatMulDifferentSizes2) {
     raytracer::maths::Matrix<double> m1(4, 3, {
                                             -2, 1, 2,
                                             3, 2, 1,
@@ -1022,7 +1024,7 @@ TEST(MatrixTests, MatMulDifferentSizes2) {
     EXPECT_NEAR(result2(2, 2), 130.0, 1e-6);
 }
 
-TEST(MatrixTests, MatMulSizeMismatch) {
+TEST(MatrixTests, TestMatMulSizeMismatch) {
     raytracer::maths::Matrix<double> m1(3, 3, {
                                             1, 2, 3,
                                             4, 5, 6,
@@ -1038,7 +1040,7 @@ TEST(MatrixTests, MatMulSizeMismatch) {
     EXPECT_THROW(m1 * m2, raytracer::exceptions::ShapeMismatchException);
 }
 
-TEST(MatrixTests, MatMulIdentity) {
+TEST(MatrixTests, TestMatMulIdentity) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             1, 2, 3, 4,
                                             5, 6, 7, 8,
@@ -1098,7 +1100,7 @@ TEST(MatrixTests, MatMulIdentity) {
     EXPECT_NEAR(result(3, 3), 16.0, 1e-6);
 }
 
-TEST(MatrixTests, CompoundMultMatSameSize) {
+TEST(MatrixTests, TestCompoundMultMatSameSize) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             1, 2, 3, 4,
                                             5, 6, 7, 8,
@@ -1139,7 +1141,7 @@ TEST(MatrixTests, CompoundMultMatSameSize) {
     EXPECT_NEAR(m1(3, 3), 228.0, 1e-6);
 }
 
-TEST(MatrixTests, CompoundMultMatSameSize2) {
+TEST(MatrixTests, TestCompoundMultMatSameSize2) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             1, 2, 3, 4,
                                             5, 6, 7, 8,
@@ -1180,7 +1182,7 @@ TEST(MatrixTests, CompoundMultMatSameSize2) {
     EXPECT_NEAR(m2(3, 3), 232.0, 1e-6);
 }
 
-TEST(MatrixTests, CompoundMulDifferentSizes) {
+TEST(MatrixTests, TestCompoundMulDifferentSizes) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             -2, 1, 2, 3,
                                             3, 2, 1, -1,
@@ -1224,7 +1226,7 @@ TEST(MatrixTests, CompoundMulDifferentSizes) {
     EXPECT_NEAR(m1(3, 4), 423.0, 1e-6);
 }
 
-TEST(MatrixTests, PointToColumnMatrix) {
+TEST(MatrixTests, TestPointToColumnMatrix) {
     raytracer::maths::Point3D<double> p(1.0, 2.0, 4.0);
     auto mat = point_to_column_matrix(p);
 
@@ -1240,7 +1242,7 @@ TEST(MatrixTests, PointToColumnMatrix) {
     EXPECT_NEAR(result.w(), 1.0, 1e-6);
 }
 
-TEST(MatrixTests, PointToRowMatrix) {
+TEST(MatrixTests, TestPointToRowMatrix) {
     raytracer::maths::Point3D<double> p(1.0, 2.0, 4.0);
     auto mat = point_to_row_matrix(p);
 
@@ -1256,7 +1258,7 @@ TEST(MatrixTests, PointToRowMatrix) {
     EXPECT_NEAR(result.w(), 1.0, 1e-6);
 }
 
-TEST(MatrixTests, MatrixPointMultiplication) {
+TEST(MatrixTests, TestMatrixPointMultiplication) {
     const raytracer::maths::Matrix<double> m1(4, 4, {
                                                   1, 2, 3, 4,
                                                   2, 4, 4, 2,
@@ -1276,7 +1278,7 @@ TEST(MatrixTests, MatrixPointMultiplication) {
     EXPECT_NEAR(point_transformed.w(), 1.0, 1e-6);
 }
 
-TEST(MatrixTests, VectorToColumnMatrix) {
+TEST(MatrixTests, TestVectorToColumnMatrix) {
     const raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
     auto mat = vector_to_column_matrix(v);
 
@@ -1293,7 +1295,7 @@ TEST(MatrixTests, VectorToColumnMatrix) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(MatrixTests, VectorToRowMatrix) {
+TEST(MatrixTests, TestVectorToRowMatrix) {
     const raytracer::maths::Vector3D<double> v(1.0, 2.0, 3.0);
     auto mat = vector_to_row_matrix(v);
 
@@ -1310,7 +1312,7 @@ TEST(MatrixTests, VectorToRowMatrix) {
     EXPECT_NEAR(result.w(), 0.0, 1e-6);
 }
 
-TEST(MatrixTests, TransposeMatrixDifferentSizes) {
+TEST(MatrixTests, TestTransposeMatrixDifferentSizes) {
     raytracer::maths::Matrix<double> m1(3, 2, {
                                             1, 2,
                                             3, 4,
@@ -1342,7 +1344,7 @@ TEST(MatrixTests, TransposeMatrixDifferentSizes) {
     EXPECT_NEAR(m1(1, 2), 6.0, 1e-6);
 }
 
-TEST(MatrixTests, TransposeMatrixDifferentSizes2) {
+TEST(MatrixTests, TestTransposeMatrixDifferentSizes2) {
     raytracer::maths::Matrix<double> m1(3, 4, {
                                             1, 2, 3, 4,
                                             5, 6, 7, 8,
@@ -1392,7 +1394,7 @@ TEST(MatrixTests, TransposeMatrixDifferentSizes2) {
     EXPECT_NEAR(m1(3, 2), 12.0, 1e-6);
 }
 
-TEST(MatrixTests, TransposeSquaredMatrix) {
+TEST(MatrixTests, TestTransposeSquaredMatrix) {
     raytracer::maths::Matrix<double> m1(4, 4, {
                                             0, 9, 3, 0,
                                             9, 8, 0, 8,
@@ -1451,7 +1453,7 @@ TEST(MatrixTests, TransposeSquaredMatrix) {
     EXPECT_NEAR(m1(3, 3), 8.0, 1e-6);
 }
 
-TEST(MatrixTests, TransposeIdentity) {
+TEST(MatrixTests, TestTransposeIdentity) {
     auto m = raytracer::maths::Matrix<double>::identity(4);
 
     auto result = transpose(m);
@@ -1505,7 +1507,7 @@ TEST(MatrixTests, TransposeIdentity) {
     EXPECT_NEAR(m(3, 3), 1.0, 1e-6);
 }
 
-TEST(MatrixTests, ConcatenateRowMatrix) {
+TEST(MatrixTests, TestConcatenateRowMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
                                                    1, 2, 3, 4,
                                                    5, 6, 7, 8,
@@ -1532,7 +1534,7 @@ TEST(MatrixTests, ConcatenateRowMatrix) {
     }
 }
 
-TEST(MatrixTests, ConcatenateRowMatrixColMismatch) {
+TEST(MatrixTests, TestConcatenateRowMatrixColMismatch) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
                                                    1, 2, 3, 4,
                                                    5, 6, 7, 8,
@@ -1549,7 +1551,7 @@ TEST(MatrixTests, ConcatenateRowMatrixColMismatch) {
     EXPECT_THROW(m1.extend_row(m2), raytracer::exceptions::ShapeMismatchException);
 }
 
-TEST(MatrixTests, ConcatenateColMatrix) {
+TEST(MatrixTests, TestConcatenateColMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(4, 4, {
                                                    1, 2, 3, 4,
                                                    5, 6, 7, 8,
@@ -1597,7 +1599,7 @@ TEST(MatrixTests, ConcatenateColMatrix) {
     EXPECT_NEAR(m1(3, 5), 1.0, 1e-6);
 }
 
-TEST(MatrixTests, ConcatenateIdentityMatrix) {
+TEST(MatrixTests, TestConcatenateIdentityMatrix) {
     auto m1 = raytracer::maths::Matrix<double>(3, 3, {
                                                    1, 2, 3,
                                                    4, 5, 6,
@@ -2286,7 +2288,7 @@ TEST(RayTests, TestGetCurrentPosition) {
     EXPECT_DOUBLE_EQ(pos4.w(), 1.0);
 }
 
-TEST(SphereTests, SphereBehindRay) {
+TEST(SphereTests, TestSphereBehindRay) {
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto sphere = raytracer::scene::Sphere<double>();
@@ -2300,7 +2302,7 @@ TEST(SphereTests, SphereBehindRay) {
     EXPECT_FALSE(hit.has_value());
 }
 
-TEST(SphereTests, RayOriginInsideSphere) {
+TEST(SphereTests, TestRayOriginInsideSphere) {
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, 0),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto sphere = raytracer::scene::Sphere<double>();
@@ -2316,7 +2318,7 @@ TEST(SphereTests, RayOriginInsideSphere) {
     EXPECT_DOUBLE_EQ(hit.value().t_, 1.0);
 }
 
-TEST(SphereTests, SphereIntersectionMissed) {
+TEST(SphereTests, TestSphereIntersectionMissed) {
     const auto unit_sphere = raytracer::scene::Sphere<double>();
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 2, -5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2325,7 +2327,7 @@ TEST(SphereTests, SphereIntersectionMissed) {
     EXPECT_EQ(intersections.size(), 0);
 }
 
-TEST(SphereTests, SphereIntersectionTangent) {
+TEST(SphereTests, TestSphereIntersectionTangent) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 1, -5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2339,7 +2341,7 @@ TEST(SphereTests, SphereIntersectionTangent) {
     EXPECT_DOUBLE_EQ(hit.value().t_, 5.0);
 }
 
-TEST(SphereTests, SphereIntersections) {
+TEST(SphereTests, TestSphereIntersections) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2355,7 +2357,7 @@ TEST(SphereTests, SphereIntersections) {
     EXPECT_DOUBLE_EQ(hit.value().t_, 4.0);
 }
 
-TEST(SphereTests, CheckDefaultTransformation) {
+TEST(SphereTests, TestCheckDefaultTransformation) {
     const auto sphere = raytracer::scene::Sphere<double>();
     auto sphere_transform = sphere.transform();
 
@@ -2370,7 +2372,7 @@ TEST(SphereTests, CheckDefaultTransformation) {
     }
 }
 
-TEST(SphereTests, CheckTransformation) {
+TEST(SphereTests, TestCheckTransformation) {
     const auto translation = raytracer::maths::Transform4x4<double>::translation(2, 3, 4);
     const auto sphere = raytracer::scene::Sphere<double>(translation);
     const auto sphere_transform = sphere.transform();
@@ -2390,7 +2392,7 @@ TEST(SphereTests, CheckTransformation) {
     EXPECT_DOUBLE_EQ(sphere_transform(2, 3), 4.0);
 }
 
-TEST(SphereTests, CheckTransformationSetter) {
+TEST(SphereTests, TestCheckTransformationSetter) {
     const auto translation = raytracer::maths::Transform4x4<double>::translation(2, 3, 4);
     auto sphere = raytracer::scene::Sphere<double>();
     sphere.set_transform(translation);
@@ -2411,7 +2413,7 @@ TEST(SphereTests, CheckTransformationSetter) {
     EXPECT_DOUBLE_EQ(sphere_transform(2, 3), 4.0);
 }
 
-TEST(RayTransformationTests, TranslateRay) {
+TEST(RayTransformationTests, TestTranslateRay) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(1, 2, 3),
         raytracer::maths::Vector3D<double>(0, 1, 0)
@@ -2431,7 +2433,7 @@ TEST(RayTransformationTests, TranslateRay) {
     EXPECT_DOUBLE_EQ(translated_ray.direction().w(), 0.0);
 }
 
-TEST(RayTransformationTests, ScaleRay) {
+TEST(RayTransformationTests, TestScaleRay) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(1, 2, 3),
         raytracer::maths::Vector3D<double>(0, 1, 0)
@@ -2450,7 +2452,7 @@ TEST(RayTransformationTests, ScaleRay) {
     EXPECT_DOUBLE_EQ(scaled_ray.direction().w(), 0.0);
 }
 
-TEST(RayTransformationTests, IntersectScaledSphere) {
+TEST(RayTransformationTests, TestIntersectScaledSphere) {
     const auto ray = raytracer::maths::Ray<double>(raytracer::maths::Point3D<double>(0, 0, -5),
                                                    raytracer::maths::Vector3D<double>(0, 0, 1));
     const auto transform = raytracer::maths::Transform4x4<double>::scaling(2, 2, 2);
@@ -2462,7 +2464,7 @@ TEST(RayTransformationTests, IntersectScaledSphere) {
     EXPECT_DOUBLE_EQ(intersections.at(1).t_, 7.0);
 }
 
-TEST(ShapeNormalComputationTests, SphereNormalXAxis) {
+TEST(ShapeNormalComputationTests, TestSphereNormalXAxis) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(1, 0, 0);
     const auto normal = sphere.normal_at(point);
@@ -2473,7 +2475,7 @@ TEST(ShapeNormalComputationTests, SphereNormalXAxis) {
     EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
 
-TEST(ShapeNormalComputationTests, SphereNormalYAxis) {
+TEST(ShapeNormalComputationTests, TestSphereNormalYAxis) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(0, 1, 0);
     const auto normal = sphere.normal_at(point);
@@ -2484,7 +2486,7 @@ TEST(ShapeNormalComputationTests, SphereNormalYAxis) {
     EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
 
-TEST(ShapeNormalComputationTests, SphereNormalZAxis) {
+TEST(ShapeNormalComputationTests, TestSphereNormalZAxis) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto point = raytracer::maths::Point3D<double>(0, 0, 1);
     const auto normal = sphere.normal_at(point);
@@ -2495,7 +2497,7 @@ TEST(ShapeNormalComputationTests, SphereNormalZAxis) {
     EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
 
-TEST(ShapeNormalComputationTests, SphereNormalNonAxialPoint) {
+TEST(ShapeNormalComputationTests, TestSphereNormalNonAxialPoint) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto value = std::sqrt(3) / 3;
     const auto point = raytracer::maths::Point3D<double>(value, value, value);
@@ -2507,7 +2509,7 @@ TEST(ShapeNormalComputationTests, SphereNormalNonAxialPoint) {
     EXPECT_DOUBLE_EQ(normal.w(), 0.0);
 }
 
-TEST(ShapeNormalComputationTests, NormalIsNormalized) {
+TEST(ShapeNormalComputationTests, TestNormalIsNormalized) {
     const auto sphere = raytracer::scene::Sphere<double>();
     const auto value = std::sqrt(3) / 3;
     const auto point = raytracer::maths::Point3D<double>(value, value, value);
@@ -2521,7 +2523,7 @@ TEST(ShapeNormalComputationTests, NormalIsNormalized) {
     EXPECT_DOUBLE_EQ(normal.w(), normal_vector.w());
 }
 
-TEST(ShapeNormalComputationTests, TranslatedSphereNormal) {
+TEST(ShapeNormalComputationTests, TestTranslatedSphereNormal) {
     const auto translation = raytracer::maths::Transform4x4<double>::translation(0, 1, 0);
     const auto sphere = raytracer::scene::Sphere<double>(translation);
     const auto point = raytracer::maths::Point3D<double>(0, 1.70711, -0.70711);
@@ -2533,7 +2535,7 @@ TEST(ShapeNormalComputationTests, TranslatedSphereNormal) {
     EXPECT_NEAR(normal.w(), 0.0, 1e-5);
 }
 
-TEST(ShapeNormalComputationTests, TrnasformedSphereNormal) {
+TEST(ShapeNormalComputationTests, TestTransformedSphereNormal) {
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(1, 0.5, 1);
     const auto rotation = raytracer::maths::Transform4x4<double>::rotation_z(std::numbers::pi / 5);
     const auto transform = scaling * rotation;
@@ -2571,8 +2573,7 @@ TEST(ShadingTests, TestReflectionOffSlantedSurface) {
     EXPECT_DOUBLE_EQ(reflected.w(), 0.0);
 }
 
-
-TEST(PhongShadingTests, InitPointLight) {
+TEST(PhongShadingTests, TestInitPointLight) {
     const auto light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(0, 0, 0),
         raytracer::drawing::Color<double>(1, 1, 1)
@@ -2587,7 +2588,7 @@ TEST(PhongShadingTests, InitPointLight) {
     EXPECT_DOUBLE_EQ(light.intensity().blue(), 1.0);
 }
 
-TEST(PhongShadingTests, InitMaterial) {
+TEST(PhongShadingTests, TestInitMaterial) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2605,7 +2606,7 @@ TEST(PhongShadingTests, InitMaterial) {
     EXPECT_DOUBLE_EQ(material.shininess_, 200.0);
 }
 
-TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
+TEST(PhongShadingTests, TestEyeBetweenLightAndSurface) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2635,7 +2636,7 @@ TEST(PhongShadingTests, EyeBetweenLightAndSurface) {
     EXPECT_DOUBLE_EQ(result.blue(), 1.9);
 }
 
-TEST(PhongShadingTests, EyeAt45Degrees) {
+TEST(PhongShadingTests, TestEyeAt45Degrees) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2668,7 +2669,7 @@ TEST(PhongShadingTests, EyeAt45Degrees) {
     EXPECT_DOUBLE_EQ(result.blue(), 1.0);
 }
 
-TEST(PhongShadingTests, LightAt45Degrees) {
+TEST(PhongShadingTests, TestLightAt45Degrees) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2699,7 +2700,7 @@ TEST(PhongShadingTests, LightAt45Degrees) {
     EXPECT_NEAR(result.blue(), 0.7364, 1e-4);
 }
 
-TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
+TEST(PhongShadingTests, TestEyeInPathOfReflectionVector) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2732,7 +2733,7 @@ TEST(PhongShadingTests, EyeInPathOfReflectionVector) {
     EXPECT_NEAR(result.blue(), 1.6364, 1e-4);
 }
 
-TEST(PhongShadingTests, LightBehindSurface) {
+TEST(PhongShadingTests, TestLightBehindSurface) {
     const auto material = raytracer::shading::PhongMaterial<double>(
         raytracer::drawing::Color<double>(1, 1, 1),
         0.1,
@@ -2841,7 +2842,6 @@ TEST(SceneTests, TestWorldRayIntersections) {
     EXPECT_DOUBLE_EQ(intersections.at(3).t_, 6.0);
 }
 
-
 TEST(SceneTests, TestIntersectionInfoInitialization) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, -5),
@@ -2869,7 +2869,7 @@ TEST(SceneTests, TestIntersectionInfoInitialization) {
     EXPECT_EQ(computations.shape_, &sphere);
 }
 
-TEST(SceneTests, IntersectionOutsideObject) {
+TEST(SceneTests, TestIntersectionOutsideObject) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, -5),
         raytracer::maths::Vector3D<double>(0, 0, 1));
@@ -2880,7 +2880,7 @@ TEST(SceneTests, IntersectionOutsideObject) {
     EXPECT_FALSE(comps.inside_);
 }
 
-TEST(SceneTests, IntersectionInsideObject) {
+TEST(SceneTests, TestIntersectionInsideObject) {
     const auto ray = raytracer::maths::Ray<double>(
         raytracer::maths::Point3D<double>(0, 0, 0),
         raytracer::maths::Vector3D<double>(0, 0, 1)
@@ -2907,7 +2907,7 @@ TEST(SceneTests, IntersectionInsideObject) {
     EXPECT_DOUBLE_EQ(comps.normal_.w(), 0);
 }
 
-TEST(RendererTests, ShadeIntersection) {
+TEST(RendererTests, TestShadeIntersection) {
     const auto point_light = raytracer::shading::PointLight<double>(
         raytracer::maths::Point3D<double>(-10, 10, -10),
         raytracer::drawing::Color<double>(1, 1, 1)
@@ -2947,7 +2947,7 @@ TEST(RendererTests, ShadeIntersection) {
     EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
 }
 
-TEST(RendererTests, ColorAtRayMiss) {
+TEST(RendererTests, TestColorAtRayMiss) {
 
     const auto scene = raytracer::scene::default_scene<double>();
     const auto ray = raytracer::maths::Ray<double>(
@@ -2961,7 +2961,7 @@ TEST(RendererTests, ColorAtRayMiss) {
     EXPECT_DOUBLE_EQ(color.blue(), 0);
 }
 
-TEST(RendererTests, ColorAtRayHit) {
+TEST(RendererTests, TestColorAtRayHit) {
 
     const auto scene = raytracer::scene::default_scene<double>();
     const auto ray = raytracer::maths::Ray(
@@ -2975,7 +2975,7 @@ TEST(RendererTests, ColorAtRayHit) {
     EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
 }
 
-TEST(RendererTests, IntersectionBehindRay) {
+TEST(RendererTests, TestIntersectionBehindRay) {
 
     const auto scene = raytracer::scene::default_scene<double>();
 
@@ -3007,4 +3007,78 @@ TEST(ShaderRegistryTests, TestAddAndFetchShader) {
     const auto shader = registry.get_shader(raytracer::shading::ShadingModel::Phong);
 
     EXPECT_EQ(shader->model(), raytracer::shading::ShadingModel::Phong);
+}
+
+TEST(CameraTests, TestDefaultOrientation) {
+
+    const auto from = raytracer::maths::Point3D<double>(0, 0, 0);
+    const auto to = raytracer::maths::Point3D<double>(0, 0, -1);
+    const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
+    const auto camera = raytracer::scene::Camera<double>();
+    const auto view_transform = camera.view_transform(from, to, up);
+
+    EXPECT_TRUE(raytracer::maths::is_identity(view_transform));
+}
+
+TEST(CameraTests, TestViewTransformLookPositiveZ) {
+
+    const auto from = raytracer::maths::Point3D<double>(0, 0, 0);
+    const auto to = raytracer::maths::Point3D<double>(0, 0, 1);
+    const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
+    const auto camera = raytracer::scene::Camera<double>();
+    const auto view_transform = camera.view_transform(from, to, up);
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(-1, 1, -1);
+
+    for (size_t i = 0; i < view_transform.rows(); i++) {
+        for (size_t j = 0; j < view_transform.cols(); j++) {
+            EXPECT_DOUBLE_EQ(view_transform(i, j), scaling(i, j));
+        }
+    }
+}
+
+TEST(CameraTests, TestViewTransformMovesWorld) {
+
+    const auto from = raytracer::maths::Point3D<double>(0, 0, 8);
+    const auto to = raytracer::maths::Point3D<double>(0, 0, 0);
+    const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
+    const auto camera = raytracer::scene::Camera<double>();
+    const auto view_transform = camera.view_transform(from, to, up);
+
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(0, 0, -8);
+
+    for (size_t i = 0; i < view_transform.rows(); i++) {
+        for (size_t j = 0; j < view_transform.cols(); j++) {
+            EXPECT_DOUBLE_EQ(view_transform(i, j), translation(i, j));
+        }
+    }
+}
+
+TEST(CameraTests, TestArbitraryViewTransform) {
+
+    const auto from = raytracer::maths::Point3D<double>(1, 3, 2);
+    const auto to = raytracer::maths::Point3D<double>(4, -2, 8);
+    const auto up = raytracer::maths::Vector3D<double>(1, 1, 0);
+    const auto camera = raytracer::scene::Camera<double>();
+    const auto view_transform = camera.view_transform(from, to, up);
+
+    EXPECT_NEAR(view_transform(0, 0), -0.50709, 1e-5);
+    EXPECT_NEAR(view_transform(0, 1), 0.50709, 1e-5);
+    EXPECT_NEAR(view_transform(0, 2), 0.67612, 1e-5);
+    EXPECT_NEAR(view_transform(0, 3), -2.36643, 1e-5);
+
+    EXPECT_NEAR(view_transform(1, 0), 0.76772, 1e-5);
+    EXPECT_NEAR(view_transform(1, 1), 0.60609, 1e-5);
+    EXPECT_NEAR(view_transform(1, 2), 0.12122, 1e-5);
+    EXPECT_NEAR(view_transform(1, 3), -2.82843, 1e-5);
+
+    EXPECT_NEAR(view_transform(2, 0), -0.35857, 1e-5);
+    EXPECT_NEAR(view_transform(2, 1), 0.59761, 1e-5);
+    EXPECT_NEAR(view_transform(2, 2), -0.71714, 1e-5);
+    EXPECT_NEAR(view_transform(2, 3), 0.00000, 1e-5);
+
+    EXPECT_NEAR(view_transform(3, 0), 0.00000, 1e-5);
+    EXPECT_NEAR(view_transform(3, 1), 0.00000, 1e-5);
+    EXPECT_NEAR(view_transform(3, 2), 0.00000, 1e-5);
+    EXPECT_NEAR(view_transform(3, 3), 1.00000, 1e-5);
 }
