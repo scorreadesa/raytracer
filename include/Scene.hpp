@@ -62,7 +62,7 @@ namespace raytracer::scene {
         [[nodiscard]] bool has_objects() const { return !objects_.empty(); }
         [[nodiscard]] bool has_lights() const { return !light_sources_.empty(); }
 
-        const Shape<T> &object_at(size_t index) { return objects_.at(index); }
+        const Shape<T> &object_at(size_t index) const { return *objects_.at(index); }
         const shading::Light<T> &light_at(size_t index) const { return *light_sources_.at(index); }
 
         std::vector<Intersection<T> > intersect(const maths::Ray<T> &ray) const {
