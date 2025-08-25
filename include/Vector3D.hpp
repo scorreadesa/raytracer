@@ -1,7 +1,7 @@
 #ifndef VECTOR3D_HPP
 #define VECTOR3D_HPP
 
-#include "Matrix.hpp"
+#include <cmath>
 #include "Point3D.hpp"
 
 namespace raytracer::maths {
