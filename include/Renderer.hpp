@@ -34,6 +34,18 @@ namespace raytracer::core {
             return color;
         }
 
+        drawing::Color<T> color_at(const maths::Ray<T>& ray) const {
+
+            auto intersections = scene_.intersect(ray);
+            auto hit = scene::hit(intersections);
+            if (!hit) {
+                return drawing::Color<T>(0, 0, 0);
+            }
+
+            auto comps = scene::prepare_computations(hit.value(), ray);
+            return shade_hit(comps);
+        }
+
     private:
         const scene::Scene<T>& scene_;
     };
