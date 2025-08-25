@@ -328,6 +328,26 @@ namespace raytracer::maths {
             matrix(0, 2)
         );
     }
+
+    template<std::floating_point T>
+    bool is_identity(const Matrix<T>& m) {
+        if (m.rows() != m.cols()) {
+            return false;
+        }
+
+        for (size_t i = 0; i < m.rows(); i++) {
+            for (size_t j = 0; j < m.cols(); j++) {
+                if (i == j and m(i, j) != static_cast<T>(1)) {
+                    return false;
+                }
+                if (i != j and m(i, j) != static_cast<T>(0)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
 
 #endif //MATRIX_HPP
