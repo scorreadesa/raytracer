@@ -2947,6 +2947,59 @@ TEST(RendererTests, ShadeIntersection) {
     EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
 }
 
+TEST(RendererTests, ColorAtRayMiss) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 1, 0));
+    const auto renderer = raytracer::core::Renderer<double>(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_DOUBLE_EQ(color.red(), 0);
+    EXPECT_DOUBLE_EQ(color.green(), 0);
+    EXPECT_DOUBLE_EQ(color.blue(), 0);
+}
+
+TEST(RendererTests, ColorAtRayHit) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+    const auto ray = raytracer::maths::Ray(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto renderer = raytracer::core::Renderer(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
+    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
+    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
+}
+
+TEST(RendererTests, IntersectionBehindRay) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+
+    const auto& outer = scene.object_at(0);
+    const auto outer_material = outer.material();
+    auto& outer_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*outer_material);
+    outer_phong_material.ambient_ = 1;
+
+    const auto& inner = scene.object_at(1);
+    const auto inner_material = inner.material();
+    auto& inner_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*inner_material);
+    inner_phong_material.ambient_ = 1;
+
+    const auto ray = raytracer::maths::Ray(
+        raytracer::maths::Point3D<double>(0, 0, 0.75),
+        raytracer::maths::Vector3D<double>(0, 0, -1));
+    const auto renderer = raytracer::core::Renderer(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_DOUBLE_EQ(color.red(), inner_phong_material.color_.red());
+    EXPECT_DOUBLE_EQ(color.green(), inner_phong_material.color_.green());
+    EXPECT_DOUBLE_EQ(color.blue(), inner_phong_material.color_.blue());
+}
+
 TEST(ShaderRegistryTests, TestAddAndFetchShader) {
 
     auto registry = raytracer::core::ShaderRegistry<double>();
