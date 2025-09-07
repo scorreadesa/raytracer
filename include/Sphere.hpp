@@ -6,6 +6,7 @@
 #include "Vector3D.hpp"
 #include "Matrix.hpp"
 #include "PhongMaterial.hpp"
+#include "maths.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
