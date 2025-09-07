@@ -53,6 +53,10 @@ namespace raytracer::maths {
             }
             return inverse;
         }
+
+        std::unique_ptr<Solver<T>> clone() const override {
+            return std::make_unique<CofactorExpansion<T>>(*this);
+        }
     };
 }
 
