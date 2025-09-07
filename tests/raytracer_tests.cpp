@@ -3014,7 +3014,7 @@ TEST(CameraTests, TestDefaultOrientation) {
     const auto from = raytracer::maths::Point3D<double>(0, 0, 0);
     const auto to = raytracer::maths::Point3D<double>(0, 0, -1);
     const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
-    const auto camera = raytracer::scene::Camera<double>();
+    const auto camera = raytracer::scene::Camera<double>(160, 120, std::numbers::pi / 2);
     const auto view_transform = camera.view_transform(from, to, up);
 
     EXPECT_TRUE(raytracer::maths::is_identity(view_transform));
@@ -3025,7 +3025,7 @@ TEST(CameraTests, TestViewTransformLookPositiveZ) {
     const auto from = raytracer::maths::Point3D<double>(0, 0, 0);
     const auto to = raytracer::maths::Point3D<double>(0, 0, 1);
     const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
-    const auto camera = raytracer::scene::Camera<double>();
+    const auto camera = raytracer::scene::Camera<double>(160, 120, std::numbers::pi / 2);
     const auto view_transform = camera.view_transform(from, to, up);
 
     const auto scaling = raytracer::maths::Transform4x4<double>::scaling(-1, 1, -1);
@@ -3042,7 +3042,7 @@ TEST(CameraTests, TestViewTransformMovesWorld) {
     const auto from = raytracer::maths::Point3D<double>(0, 0, 8);
     const auto to = raytracer::maths::Point3D<double>(0, 0, 0);
     const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
-    const auto camera = raytracer::scene::Camera<double>();
+    const auto camera = raytracer::scene::Camera<double>(160, 120, std::numbers::pi / 2);
     const auto view_transform = camera.view_transform(from, to, up);
 
     const auto translation = raytracer::maths::Transform4x4<double>::translation(0, 0, -8);
@@ -3059,7 +3059,7 @@ TEST(CameraTests, TestArbitraryViewTransform) {
     const auto from = raytracer::maths::Point3D<double>(1, 3, 2);
     const auto to = raytracer::maths::Point3D<double>(4, -2, 8);
     const auto up = raytracer::maths::Vector3D<double>(1, 1, 0);
-    const auto camera = raytracer::scene::Camera<double>();
+    const auto camera = raytracer::scene::Camera<double>(160, 120, std::numbers::pi / 2);
     const auto view_transform = camera.view_transform(from, to, up);
 
     EXPECT_NEAR(view_transform(0, 0), -0.50709, 1e-5);
@@ -3081,4 +3081,81 @@ TEST(CameraTests, TestArbitraryViewTransform) {
     EXPECT_NEAR(view_transform(3, 1), 0.00000, 1e-5);
     EXPECT_NEAR(view_transform(3, 2), 0.00000, 1e-5);
     EXPECT_NEAR(view_transform(3, 3), 1.00000, 1e-5);
+}
+
+TEST(CameraTests, TestConstructCamera) {
+
+    const auto camera = raytracer::scene::Camera<double>(160, 120, std::numbers::pi / 2);
+
+    EXPECT_EQ(camera.hsize(), 160);
+    EXPECT_EQ(camera.vsize(), 120);
+    EXPECT_DOUBLE_EQ(camera.fov(), std::numbers::pi / 2);
+    EXPECT_TRUE(raytracer::maths::is_identity(camera.transform()));
+}
+
+TEST(CameraTests, TestPixelSize) {
+
+    const auto c1 = raytracer::scene::Camera<double>(200, 125, std::numbers::pi / 2);
+    EXPECT_DOUBLE_EQ(c1.pixel_size(), 0.01);
+
+    const auto c2 = raytracer::scene::Camera<double>(125, 200, std::numbers::pi / 2);
+    EXPECT_DOUBLE_EQ(c2.pixel_size(), 0.01);
+}
+
+TEST(CameraTests, ConstructRayThroughtCanvasCenter) {
+
+    const auto camera = raytracer::scene::Camera<double>(201, 101, std::numbers::pi / 2);
+    const auto ray = camera.ray_for_pixel(100, 50);
+    const auto origin = ray.origin();
+    const auto direction = ray.direction();
+
+    EXPECT_DOUBLE_EQ(origin.x(), 0);
+    EXPECT_DOUBLE_EQ(origin.y(), 0);
+    EXPECT_DOUBLE_EQ(origin.z(), 0);
+    EXPECT_DOUBLE_EQ(origin.w(), 1);
+
+    EXPECT_NEAR(direction.x(), 0, 1e-9);
+    EXPECT_NEAR(direction.y(), 0, 1e-9);
+    EXPECT_NEAR(direction.z(), -1, 1e-9);
+    EXPECT_NEAR(direction.w(), 0, 1e-9);
+}
+
+TEST(CameraTests, ConstructRayThroughCanvasCorner) {
+
+    const auto camera = raytracer::scene::Camera<double>(201, 101, std::numbers::pi / 2);
+    const auto ray = camera.ray_for_pixel(0, 0);
+    const auto origin = ray.origin();
+    const auto direction = ray.direction();
+
+    EXPECT_DOUBLE_EQ(origin.x(), 0);
+    EXPECT_DOUBLE_EQ(origin.y(), 0);
+    EXPECT_DOUBLE_EQ(origin.z(), 0);
+    EXPECT_DOUBLE_EQ(origin.w(), 1);
+
+    EXPECT_NEAR(direction.x(), 0.66519, 1e-5);
+    EXPECT_NEAR(direction.y(), 0.33259, 1e-5);
+    EXPECT_NEAR(direction.z(), -0.66851, 1e-5);
+    EXPECT_NEAR(direction.w(), 0, 1e-5);
+}
+
+TEST(CameraTests, ConstructRayCameraWithTransform) {
+
+    const auto translation = raytracer::maths::Transform4x4<double>::translation(0, -2, 5);
+    const auto rotation = raytracer::maths::Transform4x4<double>::rotation_y(std::numbers::pi / 4);
+    const auto transform = rotation * translation;
+    const auto camera = raytracer::scene::Camera<double>(201, 101, std::numbers::pi / 2, transform);
+    const auto ray = camera.ray_for_pixel(100, 50);
+    const auto origin = ray.origin();
+    const auto direction = ray.direction();
+
+    EXPECT_DOUBLE_EQ(origin.x(), 0);
+    EXPECT_DOUBLE_EQ(origin.y(), 2);
+    EXPECT_DOUBLE_EQ(origin.z(), -5);
+    EXPECT_DOUBLE_EQ(origin.w(), 1);
+
+    EXPECT_NEAR(direction.x(), std::sqrt(2) / 2, 1e-9);
+    EXPECT_NEAR(direction.y(), 0, 1e-9);
+    EXPECT_NEAR(direction.z(), -std::sqrt(2) / 2, 1e-9);
+    EXPECT_NEAR(direction.w(), 0, 1e-9);
+
 }
