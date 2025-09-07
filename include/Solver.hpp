@@ -14,6 +14,8 @@ namespace raytracer::maths {
         virtual T determinant(const Matrix<T> &m) const = 0;
 
         virtual Matrix<T> inverse(const Matrix<T> &m) const = 0;
+
+        virtual std::unique_ptr<Solver<T>> clone() const = 0;
     };
 }
 
