@@ -1,8 +1,7 @@
 #ifndef SOLVER_HPP
 #define SOLVER_HPP
 
-#include <cmath>
-#include "maths.hpp"
+#include <memory>
 #include "Matrix.hpp"
 
 namespace raytracer::maths {
