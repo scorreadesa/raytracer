@@ -46,6 +46,18 @@ namespace raytracer::core {
             return shade_hit(comps);
         }
 
+        drawing::Canvas<T> render(const scene::Camera<T>& camera) const {
+            auto canvas = drawing::Canvas<T>(camera.vsize(), camera.hsize());
+            for (size_t y = 0; y < camera.vsize(); y++) {
+                for (size_t x = 0; x < camera.hsize(); x++) {
+                    const auto ray = camera.ray_for_pixel(x, y);
+                    const auto color = color_at(ray);
+                    canvas(y, x) = clamp(color);
+                }
+            }
+            return canvas;
+        }
+
     private:
         const scene::Scene<T>& scene_;
     };
