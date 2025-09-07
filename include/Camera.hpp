@@ -11,7 +11,18 @@ namespace raytracer::scene {
     class Camera {
     public:
         Camera(const size_t h_size, const size_t v_size, const T fov,
-               const maths::Matrix<T>& transform = maths::Matrix<T>::identity(4),
+               const maths::Point3D<T> from, const maths::Point3D<T> &to, const maths::Vector3D<T> &up,
+               const maths::Solver<T> &solver = maths::CofactorExpansion<T>())
+            : h_size_(h_size), v_size_(v_size), fov_(fov), transform_(view_transform(from, to, up)),
+              aspect_(static_cast<T>(h_size) / static_cast<T>(v_size)),
+              half_view_(std::tan(fov / 2)),
+              half_width_(aspect_ >= static_cast<T>(1) ? half_view_ : half_view_ * static_cast<T>(aspect_)),
+              half_height_(aspect_ >= static_cast<T>(1) ? half_view_ / static_cast<T>(aspect_) : half_view_),
+              pixel_size_(half_width_ * static_cast<T>(2) / static_cast<T>(h_size)), solver_(solver.clone()) {
+        }
+
+        Camera(const size_t h_size, const size_t v_size, const T fov,
+               const maths::Matrix<T> &transform = maths::Matrix<T>::identity(4),
                const maths::Solver<T> &solver = maths::CofactorExpansion<T>())
             : h_size_(h_size), v_size_(v_size), fov_(fov),
               transform_(transform), aspect_(static_cast<T>(h_size) / static_cast<T>(v_size)),
@@ -50,8 +61,8 @@ namespace raytracer::scene {
         T fov() const { return fov_; }
         maths::Matrix<T> transform() const { return transform_; }
         T pixel_size() const { return pixel_size_; }
-        maths::Ray<T> ray_for_pixel(size_t px, size_t py) const {
 
+        maths::Ray<T> ray_for_pixel(size_t px, size_t py) const {
             T x_offset = (static_cast<T>(px) + static_cast<T>(0.5)) * pixel_size_;
             T y_offset = (static_cast<T>(py) + static_cast<T>(0.5)) * pixel_size_;
 
@@ -75,7 +86,7 @@ namespace raytracer::scene {
         T half_width_;
         T half_height_;
         T pixel_size_;
-        std::unique_ptr<maths::Solver<T>> solver_;
+        std::unique_ptr<maths::Solver<T> > solver_;
     };
 } // namespace raytracer::scene
 
