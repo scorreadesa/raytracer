@@ -2907,99 +2907,6 @@ TEST(SceneTests, TestIntersectionInsideObject) {
     EXPECT_DOUBLE_EQ(comps.normal_.w(), 0);
 }
 
-TEST(RendererTests, TestShadeIntersection) {
-    const auto point_light = raytracer::shading::PointLight<double>(
-        raytracer::maths::Point3D<double>(-10, 10, -10),
-        raytracer::drawing::Color<double>(1, 1, 1)
-    );
-
-    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double> >(
-        raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
-        0.1,
-        0.7,
-        0.2,
-        200.0
-    );
-    const auto s1 = raytracer::scene::Sphere<double>(material);
-
-    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
-    const auto s2 = raytracer::scene::Sphere<double>(scaling);
-
-    const auto scene = raytracer::scene::SceneBuilder<double>()
-            .with_light(point_light)
-            .with_object(s1)
-            .with_object(s2)
-            .build();
-
-    const auto ray = raytracer::maths::Ray<double>(
-        raytracer::maths::Point3D<double>(0, 0, -5),
-        raytracer::maths::Vector3D<double>(0, 0, 1)
-    );
-
-    const auto intersection = raytracer::scene::Intersection<double>(4, &s1);
-    const auto intersection_infos = raytracer::scene::prepare_computations(intersection, ray);
-
-    const auto renderer = raytracer::core::Renderer<double>(scene);
-    const auto color = renderer.shade_hit(intersection_infos);
-
-    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
-    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
-    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
-}
-
-TEST(RendererTests, TestColorAtRayMiss) {
-
-    const auto scene = raytracer::scene::default_scene<double>();
-    const auto ray = raytracer::maths::Ray<double>(
-        raytracer::maths::Point3D<double>(0, 0, -5),
-        raytracer::maths::Vector3D<double>(0, 1, 0));
-    const auto renderer = raytracer::core::Renderer<double>(scene);
-    const auto color = renderer.color_at(ray);
-
-    EXPECT_DOUBLE_EQ(color.red(), 0);
-    EXPECT_DOUBLE_EQ(color.green(), 0);
-    EXPECT_DOUBLE_EQ(color.blue(), 0);
-}
-
-TEST(RendererTests, TestColorAtRayHit) {
-
-    const auto scene = raytracer::scene::default_scene<double>();
-    const auto ray = raytracer::maths::Ray(
-        raytracer::maths::Point3D<double>(0, 0, -5),
-        raytracer::maths::Vector3D<double>(0, 0, 1));
-    const auto renderer = raytracer::core::Renderer(scene);
-    const auto color = renderer.color_at(ray);
-
-    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
-    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
-    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
-}
-
-TEST(RendererTests, TestIntersectionBehindRay) {
-
-    const auto scene = raytracer::scene::default_scene<double>();
-
-    const auto& outer = scene.object_at(0);
-    const auto outer_material = outer.material();
-    auto& outer_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*outer_material);
-    outer_phong_material.ambient_ = 1;
-
-    const auto& inner = scene.object_at(1);
-    const auto inner_material = inner.material();
-    auto& inner_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*inner_material);
-    inner_phong_material.ambient_ = 1;
-
-    const auto ray = raytracer::maths::Ray(
-        raytracer::maths::Point3D<double>(0, 0, 0.75),
-        raytracer::maths::Vector3D<double>(0, 0, -1));
-    const auto renderer = raytracer::core::Renderer(scene);
-    const auto color = renderer.color_at(ray);
-
-    EXPECT_DOUBLE_EQ(color.red(), inner_phong_material.color_.red());
-    EXPECT_DOUBLE_EQ(color.green(), inner_phong_material.color_.green());
-    EXPECT_DOUBLE_EQ(color.blue(), inner_phong_material.color_.blue());
-}
-
 TEST(ShaderRegistryTests, TestAddAndFetchShader) {
 
     auto registry = raytracer::core::ShaderRegistry<double>();
@@ -3157,5 +3064,113 @@ TEST(CameraTests, ConstructRayCameraWithTransform) {
     EXPECT_NEAR(direction.y(), 0, 1e-9);
     EXPECT_NEAR(direction.z(), -std::sqrt(2) / 2, 1e-9);
     EXPECT_NEAR(direction.w(), 0, 1e-9);
+}
 
+TEST(RendererTests, TestShadeIntersection) {
+    const auto point_light = raytracer::shading::PointLight<double>(
+        raytracer::maths::Point3D<double>(-10, 10, -10),
+        raytracer::drawing::Color<double>(1, 1, 1)
+    );
+
+    const auto material = std::make_shared<raytracer::shading::PhongMaterial<double> >(
+        raytracer::drawing::Color<double>(0.8, 1.0, 0.6),
+        0.1,
+        0.7,
+        0.2,
+        200.0
+    );
+    const auto s1 = raytracer::scene::Sphere<double>(material);
+
+    const auto scaling = raytracer::maths::Transform4x4<double>::scaling(0.5, 0.5, 0.5);
+    const auto s2 = raytracer::scene::Sphere<double>(scaling);
+
+    const auto scene = raytracer::scene::SceneBuilder<double>()
+            .with_light(point_light)
+            .with_object(s1)
+            .with_object(s2)
+            .build();
+
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1)
+    );
+
+    const auto intersection = raytracer::scene::Intersection<double>(4, &s1);
+    const auto intersection_infos = raytracer::scene::prepare_computations(intersection, ray);
+
+    const auto renderer = raytracer::core::Renderer<double>(scene);
+    const auto color = renderer.shade_hit(intersection_infos);
+
+    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
+    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
+    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
+}
+
+TEST(RendererTests, TestColorAtRayMiss) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+    const auto ray = raytracer::maths::Ray<double>(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 1, 0));
+    const auto renderer = raytracer::core::Renderer<double>(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_DOUBLE_EQ(color.red(), 0);
+    EXPECT_DOUBLE_EQ(color.green(), 0);
+    EXPECT_DOUBLE_EQ(color.blue(), 0);
+}
+
+TEST(RendererTests, TestColorAtRayHit) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+    const auto ray = raytracer::maths::Ray(
+        raytracer::maths::Point3D<double>(0, 0, -5),
+        raytracer::maths::Vector3D<double>(0, 0, 1));
+    const auto renderer = raytracer::core::Renderer(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_NEAR(color.red(), 0.38066, 1e-5);
+    EXPECT_NEAR(color.green(), 0.47583, 1e-5);
+    EXPECT_NEAR(color.blue(), 0.2855, 1e-4);
+}
+
+TEST(RendererTests, TestIntersectionBehindRay) {
+
+    const auto scene = raytracer::scene::default_scene<double>();
+
+    const auto& outer = scene.object_at(0);
+    const auto outer_material = outer.material();
+    auto& outer_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*outer_material);
+    outer_phong_material.ambient_ = 1;
+
+    const auto& inner = scene.object_at(1);
+    const auto inner_material = inner.material();
+    auto& inner_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*inner_material);
+    inner_phong_material.ambient_ = 1;
+
+    const auto ray = raytracer::maths::Ray(
+        raytracer::maths::Point3D<double>(0, 0, 0.75),
+        raytracer::maths::Vector3D<double>(0, 0, -1));
+    const auto renderer = raytracer::core::Renderer(scene);
+    const auto color = renderer.color_at(ray);
+
+    EXPECT_DOUBLE_EQ(color.red(), inner_phong_material.color_.red());
+    EXPECT_DOUBLE_EQ(color.green(), inner_phong_material.color_.green());
+    EXPECT_DOUBLE_EQ(color.blue(), inner_phong_material.color_.blue());
+}
+
+TEST(RendererTests, RenderWorldWithCamera) {
+
+    const auto world = raytracer::scene::default_scene<double>();
+    const auto from = raytracer::maths::Point3D<double>(0, 0, -5);
+    const auto to = raytracer::maths::Point3D<double>(0, 0, 0);
+    const auto up = raytracer::maths::Vector3D<double>(0, 1, 0);
+    const auto camera = raytracer::scene::Camera<double>(11, 11, std::numbers::pi / 2, from, to, up);
+    const auto renderer = raytracer::core::Renderer<double>(world);
+    const auto image = renderer.render(camera);
+    const auto color_px55 = image(5, 5);
+
+    EXPECT_NEAR(color_px55.red(), 0.38066, 1e-5);
+    EXPECT_NEAR(color_px55.green(), 0.47583, 1e-5);
+    EXPECT_NEAR(color_px55.blue(), 0.2855, 1e-4);
 }
