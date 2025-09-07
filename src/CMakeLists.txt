@@ -5,4 +5,5 @@ add_executable(raytracer main.cpp
         ../include/PPMFileWriter.hpp
         ../include/FileWriter.hpp
         ../include/Transform.hpp
+        ../include/Camera.hpp
 )
