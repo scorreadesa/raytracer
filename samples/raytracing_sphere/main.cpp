@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
         );
         boost::program_options::notify(options);
     } catch (const boost::program_options::error &e) {
-        std::cerr << "Argument error: " << e.what() << std::endl;
-        std::cerr << desc << std::endl;
+        std::cerr << "Argument error: " << e.what() << "\n";
+        std::cerr << desc << "\n";
         return 1;
     }
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     );
     std::clog << "Point Light:\n"
             << "\tPosition: " << point_light.position() << "\n"
-            << "\tIntensity: " << point_light.intensity() << std::endl;
+            << "\tIntensity: " << point_light.intensity() << "\n";
 
     // Object
     auto transform = raytracer::maths::Matrix<double>::identity(4);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
                 const auto scaling_z = scaling[2].as<double>();
                 const auto scaling_matrix = raytracer::maths::Transform4x4<double>::scaling(
                     scaling_x, scaling_y, scaling_z);
-                std::clog << "Scaling: " << scaling_matrix << std::endl;
+                std::clog << "Scaling: " << scaling_matrix << "\n";
                 transform *= scaling_matrix;
             }
             if (transform_node["translation"]) {
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
                 const auto translation_z = translation[2].as<double>();
                 const auto translation_matrix = raytracer::maths::Transform4x4<double>::translation(
                     translation_x, translation_y, translation_z);
-                std::clog << "Translation: " << translation_matrix << std::endl;
+                std::clog << "Translation: " << translation_matrix << "\n";
                 transform *= translation_matrix;
             }
             if (transform_node["shearing"]) {
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
                 const auto zx = shearing[4].as<double>();
                 const auto zy = shearing[5].as<double>();
                 const auto shearing_matrix = raytracer::maths::Transform4x4<double>::shearing(xy, xz, yx, yz, zx, zy);
-                std::clog << "Shearing: " << shearing_matrix << std::endl;
+                std::clog << "Shearing: " << shearing_matrix << "\n";
                 transform *= shearing_matrix;
             }
         }
@@ -122,11 +122,11 @@ int main(int argc, char *argv[]) {
                     << "\tAmbient: " << ambient << "\n"
                     << "\tDiffuse: " << diffuse << "\n"
                     << "\tSpecular: " << specular << "\n"
-                    << "\tShininess: " << shininess << std::endl;
+                    << "\tShininess: " << shininess << "\n";
         }
     }
 
-    std::clog << "Transform: " << transform << std::endl;
+    std::clog << "Transform: " << transform << "\n";
 
     const auto sphere = raytracer::scene::Sphere<double>(
         transform, std::make_shared<raytracer::shading::PhongMaterial<double> >(material));
@@ -163,13 +163,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    std::clog << "Writing file..." << std::endl;
+    std::clog << "Writing file..." << "\n";
 
     FileWriter<raytracer::drawing::Canvas<double> > file_writer(
         std::make_unique<PPMFileWriter<raytracer::drawing::Canvas<double> > >());
     file_writer.write(canvas, "", output_file);
 
-    std::clog << "Finished!" << std::endl;
+    std::clog << "Finished!" << "\n";
 
     return 0;
 }
