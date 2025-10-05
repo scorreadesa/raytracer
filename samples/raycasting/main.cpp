@@ -3,6 +3,7 @@
 #include "../../include/Point3D.hpp"
 #include "../../include/Vector3D.hpp"
 #include "../../include/PPMFileWriter.hpp"
+#include "../../include/PhongMaterial.hpp"
 #include "../../include/Scene.hpp"
 #include "../../include/Sphere.hpp"
 
