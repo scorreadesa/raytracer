@@ -52,7 +52,6 @@ namespace raytracer::maths {
             T nx = m(0, 0) * rhs.x() + m(0, 1) * rhs.y() + m(0, 2) * rhs.z() + m(0, 3) * rhs.w();
             T ny = m(1, 0) * rhs.x() + m(1, 1) * rhs.y() + m(1, 2) * rhs.z() + m(1, 3) * rhs.w();
             T nz = m(2, 0) * rhs.x() + m(2, 1) * rhs.y() + m(2, 2) * rhs.z() + m(2, 3) * rhs.w();
-            T nw = m(3, 0) * rhs.x() + m(3, 1) * rhs.y() + m(3, 2) * rhs.z() + m(3, 3) * rhs.w();
             return Vector3D<T>(nx, ny, nz);
         }
 
