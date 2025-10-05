@@ -69,11 +69,9 @@ int main(int argc, char **argv) {
 
     raytracer::drawing::Canvas<double> canvas(height, width);
 
-    unsigned steps = 0;
     while (projectile.position_.y() > 0.0) {
         canvas(static_cast<std::size_t>(static_cast<double>(canvas.height()) - projectile.position_.y()),
                static_cast<std::size_t>(projectile.position_.x())) = raytracer::drawing::Color<double>(r, g, b);
-        steps++;
         tick(environment, projectile);
     }
 
