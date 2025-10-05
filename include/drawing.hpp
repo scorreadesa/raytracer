@@ -10,9 +10,9 @@ namespace raytracer::drawing {
     template<std::floating_point T>
     class Color {
     private:
-        T red_;
-        T green_;
-        T blue_;
+        T red_ {};
+        T green_ {};
+        T blue_ {};
 
     public:
         Color() = default;
