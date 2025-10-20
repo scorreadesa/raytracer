@@ -8,6 +8,8 @@
 template<typename Canvas>
 class PPMFileWriter final : public IFileWriter<Canvas> {
 public:
+    PPMFileWriter() = default;
+
     void write(const Canvas &canvas, const std::filesystem::path &path, const std::string &filename) const override {
         std::stringstream ss;
         ss << "P3\n" << canvas.width() << " " << canvas.height() << "\n255\n";
