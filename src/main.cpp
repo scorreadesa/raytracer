@@ -13,7 +13,7 @@ int main() {
         // have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
         // for you, but you can always add more by pressing <shortcut
         // actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+        std::cout << "i = " << i << "\n";
     }
 
     return 0;
