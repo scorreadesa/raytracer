@@ -8,10 +8,10 @@ namespace raytracer::shading {
     template<std::floating_point T>
     struct PhongMaterial final : Material<T> {
         drawing::Color<T> color_;
-        T ambient_;
-        T diffuse_;
-        T specular_;
-        T shininess_;
+        T ambient_ {};
+        T diffuse_ {};
+        T specular_ {};
+        T shininess_ {};
 
         PhongMaterial() = default;
 
