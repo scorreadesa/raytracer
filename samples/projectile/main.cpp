@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
         tick(environment, projectile);
         // std::cout << "Current position: " << projectile.position_ << std::endl;
     }
-    std::cout << steps << " steps required before the projectile hit the ground." << std::endl;
-    std::cout << "Projectile's position: " << projectile.position_ << "." << std::endl;
+    std::cout << steps << " steps required before the projectile hit the ground.\n";
+    std::cout << "Projectile's position: " << projectile.position_ << ".\n";
     return 0;
 }
