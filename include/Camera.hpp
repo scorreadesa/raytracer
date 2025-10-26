@@ -11,7 +11,7 @@ namespace raytracer::scene {
     class Camera {
     public:
         Camera(const size_t h_size, const size_t v_size, const T fov,
-               const maths::Point3D<T> from, const maths::Point3D<T> &to, const maths::Vector3D<T> &up,
+               const maths::Point3D<T>& from, const maths::Point3D<T> &to, const maths::Vector3D<T> &up,
                std::unique_ptr<maths::Solver<T>> solver = std::make_unique<maths::CofactorExpansion<T>>())
             : h_size_(h_size), v_size_(v_size), fov_(fov), transform_(view_transform(from, to, up)),
               aspect_(static_cast<T>(h_size) / static_cast<T>(v_size)),
