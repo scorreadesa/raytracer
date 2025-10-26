@@ -7,6 +7,13 @@ namespace raytracer::maths {
     template<std::floating_point T>
     class CofactorExpansion final : public Solver<T> {
     public:
+        CofactorExpansion() = default;
+
+        CofactorExpansion(const CofactorExpansion&) = delete;
+        CofactorExpansion& operator&(const CofactorExpansion&) = delete;
+        CofactorExpansion(CofactorExpansion&&) = delete;
+        CofactorExpansion& operator=(CofactorExpansion&&) = delete;
+
         T determinant(const Matrix<T> &m) const override {
             if (m.rows() == 1 and m.cols() == 1) {
                 return m(0, 0);
@@ -52,10 +59,6 @@ namespace raytracer::maths {
                 }
             }
             return inverse;
-        }
-
-        std::unique_ptr<Solver<T>> clone() const override {
-            return std::make_unique<CofactorExpansion<T>>(*this);
         }
     };
 }
