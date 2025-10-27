@@ -10,7 +10,7 @@ namespace raytracer::maths {
         CofactorExpansion() = default;
 
         CofactorExpansion(const CofactorExpansion&) = delete;
-        CofactorExpansion& operator&(const CofactorExpansion&) = delete;
+        CofactorExpansion& operator=(const CofactorExpansion&) = delete;
         CofactorExpansion(CofactorExpansion&&) = delete;
         CofactorExpansion& operator=(CofactorExpansion&&) = delete;
 
