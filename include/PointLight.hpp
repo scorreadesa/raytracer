@@ -12,6 +12,11 @@ namespace raytracer::shading {
     public:
         PointLight() = default;
 
+        PointLight(const PointLight&) = default;
+        PointLight& operator=(const PointLight&) = default;
+        PointLight(PointLight&&) = default;
+        PointLight& operator=(PointLight&&) = default;
+
         PointLight(const maths::Point3D<T> &position, const drawing::Color<T> &color)
             : position_(position), intensity_(color) {
         }

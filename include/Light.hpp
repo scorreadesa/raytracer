@@ -11,7 +11,14 @@ namespace raytracer::shading {
     template<std::floating_point T>
     class Light {
     public:
+        Light() = default;
         virtual ~Light() = default;
+
+        Light(const Light&) = default;
+        Light& operator=(const Light&) = default;
+        Light(Light&&) = default;
+        Light& operator=(Light&&) = default;
+
 
         virtual maths::Point3D<T> position() const = 0;
 
