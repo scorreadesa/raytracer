@@ -30,8 +30,8 @@ configure_cmake() {
 run_codechecker_analysis() {
   echo "Running CodeChecker analysis"
   cd "$BUILD_DIR"
-  CodeChecker log --build "make" --output ./compile_commands.json
-  CodeChecker analyze ./compile_commands.json --enable sensitive --output "$REPORT_DIR"
+  CodeChecker log --build "make -j24" --output ./compile_commands.json
+  CodeChecker analyze -j24 ./compile_commands.json --enable sensitive --output "$REPORT_DIR"
   CodeChecker parse --export html --output "$REPORT_HTML_DIR" "$REPORT_DIR"
 }
 
