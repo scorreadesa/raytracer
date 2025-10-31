@@ -12,8 +12,6 @@ namespace raytracer::maths {
         Ray(const Point3D<T> &origin, const Vector3D<T> direction) : origin_(origin), direction_(direction) {
         }
 
-        ~Ray() = default;
-
         decltype(origin_) origin() const { return origin_; }
         decltype(direction_) direction() const { return direction_; }
 
