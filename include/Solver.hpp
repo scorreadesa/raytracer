@@ -12,7 +12,7 @@ namespace raytracer::maths {
         virtual ~Solver() = default;
 
         Solver(const Solver&) = delete;
-        Solver& operator&(const Solver&) = delete;
+        Solver& operator=(const Solver&) = delete;
         Solver(Solver&&) = delete;
         Solver& operator=(Solver&&) = delete;
 
