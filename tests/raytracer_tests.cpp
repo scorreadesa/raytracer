@@ -3140,12 +3140,12 @@ TEST(RendererTests, TestIntersectionBehindRay) {
 
     const auto& outer = scene.object_at(0);
     const auto outer_material = outer.material();
-    auto& outer_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*outer_material);
+    auto& outer_phong_material = dynamic_cast<raytracer::shading::PhongMaterial<double>&>(*outer_material);
     outer_phong_material.ambient_ = 1;
 
     const auto& inner = scene.object_at(1);
     const auto inner_material = inner.material();
-    auto& inner_phong_material = static_cast<raytracer::shading::PhongMaterial<double>&>(*inner_material);
+    auto& inner_phong_material = dynamic_cast<raytracer::shading::PhongMaterial<double>&>(*inner_material);
     inner_phong_material.ambient_ = 1;
 
     const auto ray = raytracer::maths::Ray(
