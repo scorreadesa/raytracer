@@ -20,12 +20,12 @@ namespace raytracer::core {
     class ShaderRegistry {
     public:
         ShaderRegistry() = default;
-
         ~ShaderRegistry() = default;
 
         ShaderRegistry(const ShaderRegistry &) = delete;
-
-        ShaderRegistry &operator=(ShaderRegistry &) = delete;
+        ShaderRegistry &operator=(const ShaderRegistry &) = delete;
+        ShaderRegistry(ShaderRegistry&&) = delete;
+        ShaderRegistry& operator=(ShaderRegistry&&) = delete;
 
         void register_shader(shading::ShadingModel model) {
             const auto shader = create_shader<T>(model);
