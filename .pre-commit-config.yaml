@@ -5,4 +5,15 @@ repos:
         name: clang-format
         entry: clang-format -i
         language: system
-        files: \.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
+        types_or: [c, c++, cuda]
+
+  - repo: local
+    hooks:
+      - id: clang-tidy-debug-coverage
+        name: clang-tidy
+        entry: clang-tidy
+        language: system
+        types_or: [c, c++, cuda]
+        args:
+          - "-p"
+          - "cmake-build-debug-coverage"
