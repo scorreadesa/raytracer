@@ -1,7 +1,6 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include <cmath>
 #include <memory>
 
 #include "drawing.hpp"

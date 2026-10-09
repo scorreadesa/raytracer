@@ -1,8 +1,8 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <cmath>
 
+#include <concepts>
 namespace raytracer::shading {
     enum class ShadingModel {
         Phong,

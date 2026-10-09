@@ -3,9 +3,9 @@
 
 #include "Vector3D.hpp"
 #include "Exceptions.hpp"
+#include <iostream>
 #include <vector>
 #include <iomanip>
-#include <cmath>
 
 namespace raytracer::maths {
     template<std::floating_point T>

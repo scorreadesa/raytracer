@@ -2,6 +2,7 @@
 #define VECTOR3D_HPP
 
 #include <cmath>
+#include <iostream>
 #include "Point3D.hpp"
 
 namespace raytracer::maths {

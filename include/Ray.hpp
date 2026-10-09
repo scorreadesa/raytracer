@@ -1,6 +1,9 @@
 #ifndef RAY_HPP
 #define RAY_HPP
 
+#include <iostream>
+#include "Point3D.hpp"
+
 namespace raytracer::maths {
     template<std::floating_point T>
     class Ray {

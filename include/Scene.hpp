@@ -4,7 +4,6 @@
 #include <ranges>
 #include <algorithm>
 #include "Shape.hpp"
-#include "PointLight.hpp"
 
 namespace raytracer::scene {
     template<std::floating_point T>
